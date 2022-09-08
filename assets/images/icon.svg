@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="250" viewBox="0 0 250 250">
+  <defs>
+    <clipPath id="clip-icon">
+      <rect width="250" height="250"/>
+    </clipPath>
+  </defs>
+  <g id="icon" clip-path="url(#clip-icon)">
+    <path id="Subtraction_1" data-name="Subtraction 1" d="M170,52H0A39.966,39.966,0,0,1,40,12h4v8.5a8.5,8.5,0,0,0,17,0V12h48v8.5a8.5,8.5,0,0,0,17,0V12h4a39.967,39.967,0,0,1,40,40h0Z" transform="translate(40 32)" fill="#f22f2f"/>
+    <path id="bottom_main" d="M0,0H170a0,0,0,0,1,0,0V65a50,50,0,0,1-50,50H50A50,50,0,0,1,0,65V0A0,0,0,0,1,0,0Z" transform="translate(40 88)" fill="#1397cf"/>
+    <g id="notification" transform="translate(-108.149 -81.879)">
+      <g id="notification-2" data-name="notification" transform="translate(176 186)">
+        <path id="Vector" d="M67.014,48.773l-4.459-6.482a13.135,13.135,0,0,1-1.784-5.779v-9.88c0-9.177-6.153-17.1-15.026-20.813A13.47,13.47,0,0,0,34.241,0,13.606,13.606,0,0,0,22.693,5.936C14,9.723,7.979,17.572,7.979,26.632v9.88A12.827,12.827,0,0,1,6.2,42.252l-4.5,6.521a8.379,8.379,0,0,0-1.07,8.161,10.348,10.348,0,0,0,6.911,5.623,94.22,94.22,0,0,0,26.842,3.827A95.586,95.586,0,0,0,61.217,62.6a10.189,10.189,0,0,0,6.688-5.662A8.285,8.285,0,0,0,67.014,48.773Z" transform="translate(23.077)" fill="#fff"/>
+        <path id="Vector-2" data-name="Vector" d="M21.158.033A11.29,11.29,0,0,1,10.56,6.69,11.8,11.8,0,0,1,2.621,3.713,9.167,9.167,0,0,1,0,0C.487.067.974.1,1.5.167c.861.1,1.76.2,2.659.268C6.291.6,8.463.7,10.635.7,12.769.7,14.9.6,17,.435c.786-.067,1.573-.1,2.322-.2C19.922.167,20.521.1,21.158.033Z" transform="translate(47.075 67.807)" fill="#fff"/>
+        <path id="Vector-3" data-name="Vector" d="M0,0H114.856V83.5H0Z" transform="translate(114.856 83.497) rotate(180)" fill="none" opacity="0"/>
+      </g>
+    </g>
+    <rect id="Rectangle_1" data-name="Rectangle 1" width="11" height="22" rx="5.5" transform="translate(87 36)" fill="#f22f2f"/>
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="11" height="22" rx="5.5" transform="translate(152 36)" fill="#f22f2f"/>
+  </g>
+</svg>
