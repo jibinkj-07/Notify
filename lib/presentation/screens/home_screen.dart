@@ -152,7 +152,7 @@ class ListViewItem extends StatelessWidget {
                   fit: BoxFit.fitWidth,
                   filterQuality: FilterQuality.high,
                   image: AssetImage(
-                    'assets/images/travel.png',
+                    'assets/images/others.png',
                   ),
                 ),
                 color: Colors.transparent),
