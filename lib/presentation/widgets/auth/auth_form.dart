@@ -19,6 +19,7 @@ class _AuthFormState extends State<AuthForm> {
   //variables declaration
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = false;
+  bool _isObscure = true;
 
 //form submission function
   void submitAuthForm() {
@@ -59,10 +60,12 @@ class _AuthFormState extends State<AuthForm> {
                   return "Username should have atleast 4 letters";
                 }
               },
+              style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
               //decoration
               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                 hintText: 'Enter username',
                 labelText: 'Username',
@@ -93,7 +96,7 @@ class _AuthFormState extends State<AuthForm> {
             const SizedBox(height: 10),
             TextFormField(
               key: const ValueKey('password'),
-              obscureText: true,
+              obscureText: _isObscure,
 
               //validator
               validator: (data) {
@@ -103,10 +106,26 @@ class _AuthFormState extends State<AuthForm> {
                   return 'Password should have the length atleast 6';
                 }
               },
+              style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
+
               //decoration
               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscure ? Iconsax.eye4 : Iconsax.eye_slash5,
+                    color: AppColors().primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                  splashColor: AppColors().primaryColor.withOpacity(.7),
+                  splashRadius: 20,
+                ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                 hintText: 'Enter password',
                 labelText: 'Password',

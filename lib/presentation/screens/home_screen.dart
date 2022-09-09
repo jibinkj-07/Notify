@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/constants/app_colors.dart';
+import 'package:mynotify/presentation/screens/add_event_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -119,7 +121,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: TextButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/add-event');
+          },
           icon: Icon(
             Iconsax.add_circle,
             color: AppColors().primaryColor,
