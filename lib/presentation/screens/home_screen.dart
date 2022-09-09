@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -89,29 +91,13 @@ class HomeScreen extends StatelessWidget {
                     overscroll.disallowIndicator();
                     return true;
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30)),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors().primaryColor,
-                          AppColors().primaryColor.withOpacity(.6),
-                          Colors.white.withOpacity(.5),
-                          Colors.white
-                        ],
-                      ),
-                    ),
                     child: ListView.builder(
                       itemBuilder: (ctx, index) {
                         return const ListViewItem();
                       },
-                      itemCount: 0,
+                      itemCount: 10,
                     ),
                   ),
                 ),
@@ -120,21 +106,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: TextButton.icon(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/add-event');
-          },
-          icon: Icon(
-            Iconsax.add_circle,
-            color: AppColors().primaryColor,
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/add-event');
+        },
+        style: ElevatedButton.styleFrom(
+          primary: AppColors().primaryColor,
+          onPrimary: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
-          label: Text(
-            'Add Event',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: AppColors().primaryColor),
-          )),
+        ),
+        child: const Text(
+          'Add Event',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -157,7 +148,14 @@ class ListViewItem extends StatelessWidget {
             height: 130,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: AppColors().greenColor),
+                image: const DecorationImage(
+                  fit: BoxFit.fitWidth,
+                  filterQuality: FilterQuality.high,
+                  image: AssetImage(
+                    'assets/images/travel.png',
+                  ),
+                ),
+                color: Colors.transparent),
           ),
           const SizedBox(height: 10),
           const Text(

@@ -38,6 +38,7 @@ dependencies:
   iconsax: ^0.0.8
   page_transition: "^2.0.9"
   toggle_switch: ^2.0.1
+  flutter_svg_provider: ^1.0.3
 
 dev_dependencies:
   flutter_test:
