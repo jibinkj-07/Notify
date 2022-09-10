@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+//main
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,30 +33,46 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: AppColors().primaryColor,
-                        ),
-                        splashRadius: 20,
-                      ),
-                      const Text(
-                        'Today',
-                        style: TextStyle(
-                            fontSize: 23, fontWeight: FontWeight.w900),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: AppColors().primaryColor,
-                        ),
-                        splashRadius: 20,
-                      ),
-                    ],
+                  BlocBuilder<DateCubit, DateState>(
+                    builder: (context, state) {
+                      return Row(
+                        children: [
+                          IconButton(
+                            onPressed: state.day == 'Yesterday'
+                                ? null
+                                : () {
+                                    context.read<DateCubit>().prevDay();
+                                  },
+                            icon: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: state.day == 'Yesterday'
+                                  ? Colors.transparent
+                                  : AppColors().primaryColor,
+                            ),
+                            splashRadius: 20,
+                          ),
+                          Text(
+                            state.day,
+                            style: const TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.w900),
+                          ),
+                          IconButton(
+                            onPressed: state.day == 'Tomorrow'
+                                ? null
+                                : () {
+                                    context.read<DateCubit>().nextDay();
+                                  },
+                            icon: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: state.day == 'Tomorrow'
+                                  ? Colors.transparent
+                                  : AppColors().primaryColor,
+                            ),
+                            splashRadius: 20,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   //right part
 
@@ -105,12 +124,16 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '07 September 2022',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors().primaryColor),
+                  BlocBuilder<DateCubit, DateState>(
+                    builder: (context, state) {
+                      return Text(
+                        DateFormat.MMMMEEEEd().format(state.dateTime),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors().primaryColor),
+                      );
+                    },
                   ),
 
                   //bloc builder for rendering cloud icon

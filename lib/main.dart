@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/authentication_screen.dart';
 import 'package:mynotify/presentation/screens/home_screen.dart';
@@ -44,8 +45,15 @@ class _MyAppState extends State<MyApp> {
   final AppRoutes _appRoutes = AppRoutes();
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthenticationCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthenticationCubit(),
+        ),
+        BlocProvider(
+          create: (_) => DateCubit(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Notify',
         theme: ThemeData(
@@ -55,10 +63,11 @@ class _MyAppState extends State<MyApp> {
         // onGenerateRoute: _appRoutes.onGenerateRoute,
         home: BlocBuilder<AuthenticationCubit, AuthenticationState>(
           builder: (context, state) {
-            if (state.isNew)
-              return WelcomeScreen();
-            else
-              return HomeScreen();
+            if (state.isNew) {
+              return const WelcomeScreen();
+            } else {
+              return const HomeScreen();
+            }
           },
         ),
         routes: {

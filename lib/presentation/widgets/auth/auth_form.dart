@@ -24,6 +24,7 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = false;
   bool _isObscure = true;
+  bool _isLoading = false;
   String _email = '';
   String _password = '';
 
@@ -31,8 +32,11 @@ class _AuthFormState extends State<AuthForm> {
   void _submitForm({required bool signUp}) {
     final valid = _formKey.currentState!.validate();
     if (valid) {
+      setState(() {
+        _isLoading = true;
+      });
       _formKey.currentState!.save();
-      //calling if user is signup
+
       if (signUp) {
         AuthenticationHelper(parentContext: context)
             .signUp(email: _email, password: _password);
@@ -40,6 +44,9 @@ class _AuthFormState extends State<AuthForm> {
         AuthenticationHelper(parentContext: context)
             .signIn(email: _email, password: _password);
       }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -178,73 +185,86 @@ class _AuthFormState extends State<AuthForm> {
               ),
             ),
             const SizedBox(height: 40),
-            _isLogin
-                ? ElevatedButton(
-                    onPressed: () {
-                      _submitForm(signUp: false);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: AppColors().primaryColor,
-                      onPrimary: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 90, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+
+            //submit buttons
+            _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors().primaryColor, strokeWidth: 1.5),
                   )
-                : ElevatedButton(
-                    onPressed: () {
-                      _submitForm(signUp: true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: AppColors().primaryColor,
-                      onPrimary: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 90, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-            _isLogin
-                ? TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLogin = !_isLogin;
-                      });
-                    },
-                    child: Text(
-                      "Create a new account?",
-                      style: TextStyle(
-                          fontSize: 16, color: AppColors().primaryColor),
-                    ),
-                  )
-                : TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLogin = !_isLogin;
-                      });
-                    },
-                    child: Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                          fontSize: 16, color: AppColors().primaryColor),
-                    ),
+                : Column(
+                    children: [
+                      _isLogin
+                          ? ElevatedButton(
+                              onPressed: () {
+                                _submitForm(signUp: false);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors().primaryColor,
+                                onPrimary: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 90, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            )
+                          : ElevatedButton(
+                              onPressed: () {
+                                _submitForm(signUp: true);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors().primaryColor,
+                                onPrimary: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 90, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                      _isLogin
+                          ? TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isLogin = !_isLogin;
+                                });
+                              },
+                              child: Text(
+                                "Create a new account?",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors().primaryColor),
+                              ),
+                            )
+                          : TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isLogin = !_isLogin;
+                                });
+                              },
+                              child: Text(
+                                "Already have an account?",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors().primaryColor),
+                              ),
+                            ),
+                    ],
                   ),
           ],
         ),
