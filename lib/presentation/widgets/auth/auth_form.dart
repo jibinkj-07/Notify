@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:mynotify/logic/database/authentication_helper.dart';
 
 import '../../../constants/app_colors.dart';
 
@@ -7,9 +9,11 @@ class AuthForm extends StatefulWidget {
   const AuthForm({
     Key? key,
     required this.screen,
+    required this.parentContext,
   }) : super(key: key);
 
   final Size screen;
+  final BuildContext parentContext;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -20,10 +24,23 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = false;
   bool _isObscure = true;
+  String _email = '';
+  String _password = '';
 
-//form submission function
-  void submitAuthForm() {
-    _formKey.currentState!.validate();
+  //submit function
+  void _submitForm({required bool signUp}) {
+    final valid = _formKey.currentState!.validate();
+    if (valid) {
+      _formKey.currentState!.save();
+      //calling if user is signup
+      if (signUp) {
+        AuthenticationHelper(parentContext: context)
+            .signUp(email: _email, password: _password);
+      } else {
+        AuthenticationHelper(parentContext: context)
+            .signIn(email: _email, password: _password);
+      }
+    }
   }
 
   //main part
@@ -49,16 +66,20 @@ class _AuthFormState extends State<AuthForm> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              key: const ValueKey('username'),
+              key: const ValueKey('email'),
               textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
 
               //validation
               validator: (data) {
                 if (data!.isEmpty) {
-                  return 'Enter an username';
-                } else if (data.length < 4) {
-                  return "Username should have atleast 4 letters";
+                  return 'Enter an email';
+                } else if (!EmailValidator.validate(data)) {
+                  return 'Enter a valid email address';
                 }
+              },
+              onSaved: (value) {
+                _email = value.toString().trim();
               },
               style: const TextStyle(
                   fontSize: 18.0,
@@ -67,8 +88,8 @@ class _AuthFormState extends State<AuthForm> {
               //decoration
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                hintText: 'Enter username',
-                labelText: 'Username',
+                hintText: 'Enter email',
+                labelText: 'Email',
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                   borderSide: const BorderSide(width: 1, color: Colors.grey),
@@ -105,6 +126,9 @@ class _AuthFormState extends State<AuthForm> {
                 } else if (data.length < 6) {
                   return 'Password should have the length atleast 6';
                 }
+              },
+              onSaved: (value) {
+                _password = value.toString().trim();
               },
               style: const TextStyle(
                   fontSize: 18.0,
@@ -157,7 +181,7 @@ class _AuthFormState extends State<AuthForm> {
             _isLogin
                 ? ElevatedButton(
                     onPressed: () {
-                      submitAuthForm();
+                      _submitForm(signUp: false);
                     },
                     style: ElevatedButton.styleFrom(
                       primary: AppColors().primaryColor,
@@ -178,7 +202,7 @@ class _AuthFormState extends State<AuthForm> {
                   )
                 : ElevatedButton(
                     onPressed: () {
-                      submitAuthForm();
+                      _submitForm(signUp: true);
                     },
                     style: ElevatedButton.styleFrom(
                       primary: AppColors().primaryColor,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mynotify/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -76,7 +78,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      context.read<AuthenticationCubit>().loggingWithoutCloud();
                     },
                     child: Text(
                       "Skip for now",

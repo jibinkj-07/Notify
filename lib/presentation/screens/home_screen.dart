@@ -1,10 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/constants/app_colors.dart';
+import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/user_profile_screen.dart';
+import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
@@ -24,27 +28,77 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: AppColors().primaryColor,
-                    ),
-                    splashRadius: 20,
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: AppColors().primaryColor,
+                        ),
+                        splashRadius: 20,
+                      ),
+                      const Text(
+                        'Today',
+                        style: TextStyle(
+                            fontSize: 23, fontWeight: FontWeight.w900),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: AppColors().primaryColor,
+                        ),
+                        splashRadius: 20,
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Today',
-                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: AppColors().primaryColor,
-                    ),
-                    splashRadius: 20,
-                  ),
+                  //right part
+
+                  //bloc listener for rendering connect now button
+
+                  BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                    builder: (context, state) {
+                      if (!state.isCloudConnected) {
+                        return TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/auth');
+                          },
+                          child: const Text(
+                            'Connect Now',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }
+
+                      //profile button
+                      return CircleAvatar(
+                        radius: 20,
+                        backgroundColor: AppColors().primaryColor,
+                        foregroundColor: Colors.white,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                reverseDuration:
+                                    const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
+                                type: PageTransitionType.rightToLeft,
+                                child: const UserProfileScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Iconsax.user,
+                          ),
+                          iconSize: 20,
+                        ),
+                      );
+                    },
+                  )
                 ],
               ),
               const SizedBox(height: 10),
@@ -58,11 +112,21 @@ class HomeScreen extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color: AppColors().primaryColor),
                   ),
-                  Icon(
-                    // Iconsax.cloud,
-                    // color: AppColors().primaryColor,
-                    Iconsax.cloud_cross,
-                    color: AppColors().redColor,
+
+                  //bloc builder for rendering cloud icon
+                  BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                    builder: (context, state) {
+                      if (state.isCloudConnected) {
+                        return Icon(
+                          // Iconsax.cloud,
+                          // color: AppColors().primaryColor,
+                          Iconsax.cloud_cross,
+                          color: AppColors().redColor,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                 ],
               ),
@@ -95,7 +159,7 @@ class HomeScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ListView.builder(
                       itemBuilder: (ctx, index) {
-                        return const ListViewItem();
+                        return const EventListItem();
                       },
                       itemCount: 10,
                     ),
@@ -108,7 +172,15 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pushNamed('/add-event');
+          Navigator.push(
+            context,
+            PageTransition(
+              reverseDuration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
+              type: PageTransitionType.bottomToTop,
+              child: const AddEventScreen(),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           primary: AppColors().primaryColor,
@@ -125,52 +197,6 @@ class HomeScreen extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ListViewItem extends StatelessWidget {
-  const ListViewItem({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            height: 130,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: const DecorationImage(
-                  fit: BoxFit.fitWidth,
-                  filterQuality: FilterQuality.high,
-                  image: AssetImage(
-                    'assets/images/others.png',
-                  ),
-                ),
-                color: Colors.transparent),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            "Title",
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
-          ),
-          Text(
-            'notes',
-            style: TextStyle(
-                fontSize: 14,
-                color: Colors.black.withOpacity(.5),
-                fontWeight: FontWeight.w500),
-          )
-        ],
       ),
     );
   }

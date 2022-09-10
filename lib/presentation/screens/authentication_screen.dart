@@ -40,7 +40,11 @@ class AuthenticationScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Expanded(child: AuthForm(screen: screen)),
+              Expanded(
+                  child: AuthForm(
+                screen: screen,
+                parentContext: context,
+              )),
             ],
           ),
         ),
