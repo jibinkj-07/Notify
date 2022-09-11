@@ -1,9 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/logic/database/authentication_helper.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../logic/cubit/internet_cubit.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({
@@ -24,17 +26,14 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = false;
   bool _isObscure = true;
-  bool _isLoading = false;
   String _email = '';
   String _password = '';
 
   //submit function
   void _submitForm({required bool signUp}) {
+    FocusScope.of(context).unfocus();
     final valid = _formKey.currentState!.validate();
     if (valid) {
-      setState(() {
-        _isLoading = true;
-      });
       _formKey.currentState!.save();
 
       if (signUp) {
@@ -44,9 +43,6 @@ class _AuthFormState extends State<AuthForm> {
         AuthenticationHelper(parentContext: context)
             .signIn(email: _email, password: _password);
       }
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -187,12 +183,10 @@ class _AuthFormState extends State<AuthForm> {
             const SizedBox(height: 40),
 
             //submit buttons
-            _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                        color: AppColors().primaryColor, strokeWidth: 1.5),
-                  )
-                : Column(
+            BlocBuilder<InternetCubit, InternetState>(
+              builder: (context, state) {
+                if (state is InternetEnabled) {
+                  return Column(
                     children: [
                       _isLogin
                           ? ElevatedButton(
@@ -265,7 +259,15 @@ class _AuthFormState extends State<AuthForm> {
                               ),
                             ),
                     ],
-                  ),
+                  );
+                } else {
+                  return const Text(
+                    "Enable mobile data or WiFi for connecting",
+                    style: TextStyle(color: Colors.black),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

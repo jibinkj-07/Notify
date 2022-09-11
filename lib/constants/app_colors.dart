@@ -5,3 +5,8 @@ class AppColors {
   Color greenColor = const Color(0xff0F9D58);
   Color redColor = const Color(0xffDB4437);
 }
+
+enum ConnectionType {
+  mobile,
+  wifi,
+}

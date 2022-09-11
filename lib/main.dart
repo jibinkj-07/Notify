@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:mynotify/presentation/screens/welcome_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'logic/cubit/internet_cubit.dart';
 import 'routes/app_routes.dart';
 
 void main() async {
@@ -27,32 +29,40 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]).then(
     (value) => HydratedBlocOverrides.runZoned(
-      () => runApp(const MyApp()),
+      () => runApp(MyApp(
+        connectivity: Connectivity(),
+      )),
       storage: storage,
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  final Connectivity connectivity;
+  MyApp({Key? key, required this.connectivity}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   //route instance
   final AppRoutes _appRoutes = AppRoutes();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        //cubit for authentication feature
         BlocProvider(
           create: (_) => AuthenticationCubit(),
         ),
+        //cubit for calender feature
         BlocProvider(
           create: (_) => DateCubit(),
         ),
+        //cubit for internet connectivity feature
+        BlocProvider(
+          create: (_) => InternetCubit(connectivity: connectivity),
+        ),
+        //  //bloc for eventlist connectivity feature
+        // BlocProvider(
+        //   create: (_) => InternetCubit(connectivity: connectivity),
+        // ),
       ],
       child: MaterialApp(
         title: 'Notify',
@@ -78,11 +88,5 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    print('disposing page');
-    super.dispose();
   }
 }

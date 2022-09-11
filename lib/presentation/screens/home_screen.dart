@@ -7,12 +7,16 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+
 import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
+import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+
+import '../../logic/cubit/internet_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,6 +24,37 @@ class HomeScreen extends StatelessWidget {
 //main
   @override
   Widget build(BuildContext context) {
+    //floating button
+    var elevatedButton = ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          PageTransition(
+            reverseDuration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
+            type: PageTransitionType.bottomToTop,
+            child: const AddEventScreen(),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        primary: AppColors().primaryColor,
+        onPrimary: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+      child: const Text(
+        'Add Event',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+
+    //main
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -53,8 +88,10 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Text(
                             state.day,
-                            style: const TextStyle(
-                                fontSize: 23, fontWeight: FontWeight.w900),
+                            style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors().primaryColor),
                           ),
                           IconButton(
                             onPressed: state.day == 'Tomorrow'
@@ -77,7 +114,6 @@ class HomeScreen extends StatelessWidget {
                   //right part
 
                   //bloc listener for rendering connect now button
-
                   BlocBuilder<AuthenticationCubit, AuthenticationState>(
                     builder: (context, state) {
                       if (!state.isCloudConnected) {
@@ -92,29 +128,50 @@ class HomeScreen extends StatelessWidget {
                         );
                       }
 
-                      //profile button
-                      return CircleAvatar(
-                        radius: 20,
-                        backgroundColor: AppColors().primaryColor,
-                        foregroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                reverseDuration:
-                                    const Duration(milliseconds: 300),
-                                duration: const Duration(milliseconds: 300),
-                                type: PageTransitionType.rightToLeft,
-                                child: const UserProfileScreen(),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Iconsax.user,
+                      return Row(
+                        children: [
+                          //bloc builder for rendering cloud icon
+                          BlocBuilder<InternetCubit, InternetState>(
+                            builder: (context, state) {
+                              if (state is InternetEnabled) {
+                                return Icon(
+                                  Iconsax.cloud5,
+                                  color: AppColors().greenColor,
+                                );
+                              } else {
+                                return Icon(
+                                  Iconsax.cloud_cross5,
+                                  color: AppColors().redColor,
+                                );
+                              }
+                            },
                           ),
-                          iconSize: 20,
-                        ),
+                          const SizedBox(width: 10),
+                          //profile iconbutton
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundColor: AppColors().primaryColor,
+                            foregroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    reverseDuration:
+                                        const Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
+                                    type: PageTransitionType.rightToLeft,
+                                    child: const UserProfileScreen(),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Iconsax.user,
+                              ),
+                              iconSize: 20,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   )
@@ -128,99 +185,24 @@ class HomeScreen extends StatelessWidget {
                     builder: (context, state) {
                       return Text(
                         DateFormat.MMMMEEEEd().format(state.dateTime),
-                        style: TextStyle(
-                            fontSize: 18,
+                        style: const TextStyle(
+                            fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: AppColors().primaryColor),
+                            color: Colors.black),
                       );
-                    },
-                  ),
-
-                  //bloc builder for rendering cloud icon
-                  BlocBuilder<AuthenticationCubit, AuthenticationState>(
-                    builder: (context, state) {
-                      if (state.isCloudConnected) {
-                        return Icon(
-                          // Iconsax.cloud,
-                          // color: AppColors().primaryColor,
-                          Iconsax.cloud_cross,
-                          color: AppColors().redColor,
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
                     },
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
-              Expanded(
-                // child: Center(
-                //     child: Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Icon(
-                //       Iconsax.note_text,
-                //       color: AppColors().primaryColor,
-                //       size: 50,
-                //     ),
-                //     Text(
-                //       "No Events",
-                //       style: TextStyle(
-                //           fontSize: 18,
-                //           fontWeight: FontWeight.w700,
-                //           color: AppColors().primaryColor),
-                //     )
-                //   ],
-                // )),
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (overscroll) {
-                    overscroll.disallowIndicator();
-                    return true;
-                  },
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ListView.builder(
-                      itemBuilder: (ctx, index) {
-                        return const EventListItem();
-                      },
-                      itemCount: 10,
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 10),
+              const Expanded(
+                child: EventList(),
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              reverseDuration: const Duration(milliseconds: 300),
-              duration: const Duration(milliseconds: 300),
-              type: PageTransitionType.bottomToTop,
-              child: const AddEventScreen(),
-            ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          primary: AppColors().primaryColor,
-          onPrimary: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: const Text(
-          'Add Event',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
+      floatingActionButton: elevatedButton,
     );
   }
 }
