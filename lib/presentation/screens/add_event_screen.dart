@@ -1,17 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
+import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:mynotify/models/event_list_model.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:mynotify/constants/app_colors.dart';
 
-class AddEventScreen extends StatelessWidget {
+class AddEventScreen extends StatefulWidget {
   const AddEventScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AddEventScreen> createState() => _AddEventScreenState();
+}
+
+class _AddEventScreenState extends State<AddEventScreen> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+  String _notes = '';
+  String _title = '';
+  DateTime _dateTime = DateTime.now();
+  String _eventType = 'Birthday';
+  bool _alertMe = false;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     //variables
     final screen = MediaQuery.of(context).size;
+//pick date and time function
+    Future<DateTime?> pickDate() => showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
 
-    //functions
+    Future<TimeOfDay?> pickTime() => showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+
+    Future pickDateAndTime() async {
+      FocusScope.of(context).unfocus();
+      DateTime? dateTime = await pickDate();
+      if (dateTime == null) return;
+
+      TimeOfDay? time = await pickTime();
+      if (time == null) return;
+
+      final selectedDateTime = DateTime(
+          dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute);
+
+      setState(() {
+        _dateTime = selectedDateTime;
+      });
+    }
 
     //main
     return Scaffold(
@@ -47,16 +97,32 @@ class AddEventScreen extends StatelessWidget {
                     ],
                   ),
                   //right portion
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Add",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors().primaryColor,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  )
+                  _title.trim() != ''
+                      ? TextButton(
+                          onPressed: () {
+                            Provider.of<EventDataServices>(context,
+                                    listen: false)
+                                .addNewEvent(
+                              id: _dateTime.toString(),
+                              title: _title,
+                              notes: _notes,
+                              dateTime: _dateTime,
+                              eventType: _eventType,
+                              alertMe: _alertMe,
+                            );
+                            _titleController.clear();
+                            _notesController.clear();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Add",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors().primaryColor,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
 
@@ -74,12 +140,17 @@ class AddEventScreen extends StatelessWidget {
                   children: [
                     TextField(
                       key: const ValueKey('title'),
+                      controller: _titleController,
+                      onChanged: (value) {
+                        setState(() {
+                          _title = value.trim();
+                        });
+                      },
                       maxLength: 25,
                       textCapitalization: TextCapitalization.sentences,
                       textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 5),
                         hintText: 'Title',
                         hintStyle: TextStyle(color: Colors.grey),
                         enabledBorder: InputBorder.none,
@@ -93,13 +164,16 @@ class AddEventScreen extends StatelessWidget {
                     ),
                     TextField(
                       key: const ValueKey('note'),
+                      controller: _notesController,
                       minLines: 1,
                       maxLines: 10,
+                      onChanged: (value) {
+                        _notes = value.trim();
+                      },
                       keyboardType: TextInputType.multiline,
                       textCapitalization: TextCapitalization.sentences,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 5),
                         hintText: 'Note',
                         hintStyle: TextStyle(color: Colors.grey),
                         enabledBorder: InputBorder.none,
@@ -121,13 +195,7 @@ class AddEventScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          //DateTime.now() -not to allow to choose before today.
-                          lastDate: DateTime(2100));
-                      print(pickedDate);
+                      pickDateAndTime();
                     },
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
@@ -145,7 +213,7 @@ class AddEventScreen extends StatelessWidget {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "01/Sep/2022",
+                                DateFormat('dd MMM').add_jm().format(_dateTime),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: AppColors().primaryColor,
@@ -196,7 +264,12 @@ class AddEventScreen extends StatelessWidget {
                               children: [
                                 //buttons
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Birthday';
+                                    });
+                                  },
                                   child: Text(
                                     'Birthday',
                                     style: TextStyle(
@@ -207,7 +280,12 @@ class AddEventScreen extends StatelessWidget {
                                 ),
 
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Travel';
+                                    });
+                                  },
                                   child: Text(
                                     'Travel',
                                     style: TextStyle(
@@ -218,7 +296,12 @@ class AddEventScreen extends StatelessWidget {
                                 ),
 
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Meeting';
+                                    });
+                                  },
                                   child: Text(
                                     'Meeting',
                                     style: TextStyle(
@@ -229,7 +312,12 @@ class AddEventScreen extends StatelessWidget {
                                 ),
 
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Exam';
+                                    });
+                                  },
                                   child: Text(
                                     'Exam',
                                     style: TextStyle(
@@ -239,7 +327,12 @@ class AddEventScreen extends StatelessWidget {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Alert';
+                                    });
+                                  },
                                   child: Text(
                                     'Alert',
                                     style: TextStyle(
@@ -249,7 +342,12 @@ class AddEventScreen extends StatelessWidget {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Others';
+                                    });
+                                  },
                                   child: Text(
                                     'Others',
                                     style: TextStyle(
@@ -282,7 +380,7 @@ class AddEventScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "Birthday",
+                                _eventType,
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -338,7 +436,9 @@ class AddEventScreen extends StatelessWidget {
                       curve: Curves
                           .easeInOut, // animate must be set to true when using custom curve
                       onToggle: (index) {
-                        print('switched to: $index');
+                        if (index == 1) {
+                          _alertMe = true;
+                        }
                       },
                     ),
                   ],

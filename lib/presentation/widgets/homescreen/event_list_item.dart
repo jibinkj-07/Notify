@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventListItem extends StatelessWidget {
+  final String id;
   final String title;
   final String notes;
   final String type;
+  final DateTime dateTime;
   const EventListItem({
+    required this.id,
     required this.title,
     required this.notes,
     required this.type,
+    required this.dateTime,
     Key? key,
   }) : super(key: key);
 
@@ -37,15 +42,29 @@ class EventListItem extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
-          ),
-          Text(
-            notes,
             style: TextStyle(
-                fontSize: 14,
-                color: Colors.black.withOpacity(.5),
-                fontWeight: FontWeight.w500),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.black.withOpacity(.8)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                notes,
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black.withOpacity(.5),
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                DateFormat.jm().format(dateTime),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black.withOpacity(.6),
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           )
         ],
       ),

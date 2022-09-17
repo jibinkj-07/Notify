@@ -9,12 +9,14 @@ import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 
 import 'package:mynotify/logic/cubit/date_cubit.dart';
+import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../logic/cubit/internet_cubit.dart';
 
@@ -121,9 +123,11 @@ class HomeScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pushNamed('/auth');
                           },
-                          child: const Text(
+                          child: Text(
                             'Connect Now',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors().primaryColor),
                           ),
                         );
                       }
@@ -192,11 +196,23 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  TextButton(
+                      onPressed: () {
+                        Provider.of<EventDataServices>(context, listen: false)
+                            .clearFile();
+                      },
+                      child: Text('Clear Data')),
                 ],
               ),
               const SizedBox(height: 10),
-              const Expanded(
-                child: EventList(),
+              Expanded(
+                child: BlocBuilder<DateCubit, DateState>(
+                  builder: (context, state) {
+                    return EventList(
+                        currentDateTime:
+                            DateFormat('yyyy-MM-dd').format(state.dateTime));
+                  },
+                ),
               ),
             ],
           ),
