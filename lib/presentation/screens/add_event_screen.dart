@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/models/event_list_model.dart';
 import 'package:provider/provider.dart';
@@ -98,29 +99,64 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                   //right portion
                   _title.trim() != ''
-                      ? TextButton(
-                          onPressed: () {
-                            Provider.of<EventDataServices>(context,
-                                    listen: false)
-                                .addNewEvent(
-                              id: _dateTime.toString(),
-                              title: _title,
-                              notes: _notes,
-                              dateTime: _dateTime,
-                              eventType: _eventType,
-                              alertMe: _alertMe,
-                            );
-                            _titleController.clear();
-                            _notesController.clear();
-                            Navigator.of(context).pop();
+                      ? BlocBuilder<EventFileHandlerCubit,
+                          EventFileHandlerState>(
+                          builder: (ctx, state) {
+                            if (state.isFileExists) {
+                              return TextButton(
+                                onPressed: () {
+                                  Provider.of<EventDataServices>(context,
+                                          listen: false)
+                                      .addNewEvent(
+                                    id: _dateTime.toString(),
+                                    title: _title,
+                                    notes: _notes,
+                                    dateTime: _dateTime,
+                                    eventType: _eventType,
+                                    fileExists: true,
+                                    parentContext: context,
+                                    filePath: state.filePath,
+                                  );
+                                  _titleController.clear();
+                                  _notesController.clear();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors().primaryColor,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              );
+                            } else {
+                              return TextButton(
+                                onPressed: () {
+                                  Provider.of<EventDataServices>(context,
+                                          listen: false)
+                                      .addNewEvent(
+                                    id: _dateTime.toString(),
+                                    title: _title,
+                                    notes: _notes,
+                                    dateTime: _dateTime,
+                                    eventType: _eventType,
+                                    parentContext: context,
+                                    fileExists: false,
+                                  );
+                                  _titleController.clear();
+                                  _notesController.clear();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors().primaryColor,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              );
+                            }
                           },
-                          child: Text(
-                            "Add",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors().primaryColor,
-                                fontWeight: FontWeight.w700),
-                          ),
                         )
                       : const SizedBox(),
                 ],

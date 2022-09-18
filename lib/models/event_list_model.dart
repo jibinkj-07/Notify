@@ -7,14 +7,13 @@ class EventListModel {
   final String notes;
   final DateTime dateTime;
   final String eventType;
-  final bool alertMe;
+
   const EventListModel({
     required this.id,
     required this.title,
     required this.notes,
     required this.dateTime,
     required this.eventType,
-    required this.alertMe,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +23,6 @@ class EventListModel {
       'notes': notes,
       'dateTime': dateTime.millisecondsSinceEpoch,
       'eventType': eventType,
-      'alertMe': alertMe,
     };
   }
 
@@ -35,7 +33,6 @@ class EventListModel {
       notes: map['notes'] as String,
       dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime'] as int),
       eventType: map['eventType'] as String,
-      alertMe: map['alertMe'] as bool,
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/logic/cubit/date_cubit.dart';
+import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/authentication_screen.dart';
@@ -60,9 +61,9 @@ class MyApp extends StatelessWidget {
           create: (_) => InternetCubit(connectivity: connectivity),
         ),
         //  //bloc for eventlist connectivity feature
-        // BlocProvider(
-        //   create: (_) => UserEventsBloc(),
-        // ),
+        BlocProvider(
+          create: (_) => EventFileHandlerCubit(),
+        ),
       ],
       child: MultiProvider(
         providers: [

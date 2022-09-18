@@ -2,99 +2,86 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../models/event_list_model.dart';
 
 class EventDataServices with ChangeNotifier {
   ///FILE HANDLERS
-  late File _fileName;
-  late Directory _fileDirectory;
-  bool _fileExists = false;
   List<dynamic> _allEvents = [];
 
-  //init
-
-  void initFileStorage() {
-    log('Initialising  file');
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      _fileDirectory = directory;
-      _fileName = File("${_fileDirectory.path}/all_event_datas");
-      _fileExists = _fileName.existsSync();
-    });
-  }
-
   //Reading data from file
-  dynamic readDataFromFile() {
-    if (_fileExists) {
-      _allEvents = jsonDecode(_fileName.readAsStringSync());
-      return _allEvents;
-    }
-    return false;
+  dynamic readDataFromFile({required String filePath}) {
+    File fileName = File(filePath);
+    _allEvents = jsonDecode(fileName.readAsStringSync());
+    return _allEvents;
   }
 
 //CREATING FILE
-  void createFile(EventListModel content) {
-    log('creating file');
+  void createFile(
+      {required EventListModel content, required BuildContext parentContext}) {
     List<EventListModel> newData = [content];
-    File file = File("${_fileDirectory.path}/all_event_datas");
-    _fileExists = true;
-    file.createSync();
-    file.writeAsStringSync(jsonEncode(newData));
+    getApplicationDocumentsDirectory().then((dir) {
+      final name = '${dir.path}/userEvents';
+      File fileName = File(name);
+      fileName.createSync();
+      fileName.writeAsStringSync(jsonEncode(newData));
+
+      //updating the cubit
+      parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
+      log('file path in string in create file $name');
+    });
   }
 
 //WRITING DATA INTO FILE
-  void writeToFile({required EventListModel event}) {
-    log('writing into file');
-    log('File exists in writing file section');
+  void writeToFile({required EventListModel event, required String filePath}) {
+    log('reached writetofile');
     List<EventListModel> newData = [event];
-    File fileName = File("${_fileDirectory.path}/all_event_datas");
-    List<dynamic> currentData = jsonDecode(fileName.readAsStringSync());
-    currentData.addAll(newData);
-    fileName.writeAsStringSync(jsonEncode(currentData));
+    File fileName = File(filePath);
+    List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
+    oldData.addAll(newData);
+    fileName.writeAsStringSync(jsonEncode(oldData));
   }
 
   //For adding items to event list
-  void addNewEvent({
-    required String id,
-    required String title,
-    required String notes,
-    required DateTime dateTime,
-    required String eventType,
-    required bool alertMe,
-  }) {
+  void addNewEvent(
+      {required String id,
+      required String title,
+      required String notes,
+      required DateTime dateTime,
+      required String eventType,
+      required bool fileExists,
+      required BuildContext parentContext,
+      String? filePath}) {
     //body part
-    Directory fileDir;
-    File fileName;
-    bool fileExist = false;
+
     _allEvents.add(EventListModel(
-        id: id,
-        title: title,
-        notes: notes,
-        dateTime: dateTime,
-        eventType: eventType,
-        alertMe: alertMe));
+      id: id,
+      title: title,
+      notes: notes,
+      dateTime: dateTime,
+      eventType: eventType,
+    ));
 
     //storing into file
     EventListModel newData = EventListModel(
-        id: id,
-        title: title,
-        notes: notes,
-        dateTime: dateTime,
-        eventType: eventType,
-        alertMe: alertMe);
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      fileDir = directory;
-      fileName = File("${fileDir.path}/all_event_datas");
-      fileExist = fileName.existsSync();
-
-      if (fileExist) {
-        writeToFile(event: newData);
-      } else {
-        createFile(newData);
-      }
-    });
+      id: id,
+      title: title,
+      notes: notes,
+      dateTime: dateTime,
+      eventType: eventType,
+    );
+    if (fileExists) {
+      log('yes file exists from add event');
+      writeToFile(event: newData, filePath: filePath!);
+    } else {
+      createFile(content: newData, parentContext: parentContext);
+      log('no file  exists from add event');
+    }
     notifyListeners();
   }
 
