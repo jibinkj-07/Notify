@@ -9,6 +9,7 @@ import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/models/event_list_model.dart';
 import 'package:mynotify/presentation/screens/user_events_list_details.dart';
+import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -53,27 +54,63 @@ class EventList extends StatelessWidget {
                     DateTime.fromMillisecondsSinceEpoch(eventItem['dateTime']);
                 final eventType = eventItem['eventType'].toString();
                 if (id.contains(currentDateTime)) {
-                  return ListTile(
-                    title: Text(title),
-                    subtitle: Text(DateFormat.jm().format(time)),
-                    trailing: Text(eventType),
-                    onTap: () {
-                      //MOVING INTO DETAIL SCREEN
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          reverseDuration: const Duration(milliseconds: 300),
-                          duration: const Duration(milliseconds: 300),
-                          type: PageTransitionType.rightToLeft,
-                          child: UserEventListDetails(
-                              id: id,
-                              title: title,
-                              notes: notes,
-                              dateTime: time,
-                              eventType: eventType),
-                        ),
-                      );
-                    },
+                  // return ListTile(
+                  //     title: Text(title),
+                  //     subtitle: Text(DateFormat.jm().format(time)),
+                  //     trailing: Text(eventType),
+                  //     onTap: () {
+                  //       //MOVING INTO DETAIL SCREEN
+                  //       Navigator.push(
+                  //         context,
+                  //         PageTransition(
+                  //           reverseDuration: const Duration(milliseconds: 300),
+                  //           duration: const Duration(milliseconds: 300),
+                  //           type: PageTransitionType.rightToLeft,
+                  //           child: UserEventListDetails(
+                  //               id: id,
+                  //               title: title,
+                  //               notes: notes,
+                  //               dateTime: time,
+                  //               eventType: eventType),
+                  //         ),
+                  //       );
+                  //     });
+
+                  return Column(
+                    children: [
+                      InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          //       //MOVING INTO DETAIL SCREEN
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              reverseDuration:
+                                  const Duration(milliseconds: 300),
+                              duration: const Duration(milliseconds: 300),
+                              type: PageTransitionType.rightToLeft,
+                              child: UserEventListDetails(
+                                  id: id,
+                                  title: title,
+                                  notes: notes,
+                                  dateTime: time,
+                                  eventType: eventType),
+                            ),
+                          );
+                        },
+                        child: EventListItem(
+                            id: id,
+                            title: title,
+                            notes: notes,
+                            eventType: eventType,
+                            dateTime: time),
+                      ),
+                      const Divider(
+                        height: 1,
+                        // thickness: 1,
+                        indent: 20.0,
+                      ),
+                    ],
                   );
                 } else {
                   return const SizedBox();
