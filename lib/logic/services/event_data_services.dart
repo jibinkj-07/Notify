@@ -11,13 +11,13 @@ import 'package:path_provider/path_provider.dart';
 import '../../models/event_list_model.dart';
 
 class EventDataServices with ChangeNotifier {
-  ///FILE HANDLERS
   List<dynamic> _allEvents = [];
 
   //Reading data from file
   dynamic readDataFromFile({required String filePath}) {
     File fileName = File(filePath);
     _allEvents = jsonDecode(fileName.readAsStringSync());
+    _allEvents.sort();
     return _allEvents;
   }
 
@@ -82,25 +82,6 @@ class EventDataServices with ChangeNotifier {
       createFile(content: newData, parentContext: parentContext);
       log('no file  exists from add event');
     }
-    notifyListeners();
-  }
-
-  //clear all data from file
-  void clearFile() {
-    Directory fileDir;
-    File fileName;
-    bool fileExist = false;
-
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      fileDir = directory;
-      fileName = File("${fileDir.path}/all_event_datas");
-      fileExist = fileName.existsSync();
-
-      if (fileExist) {
-        fileName.deleteSync();
-        log('file delted');
-      }
-    });
     notifyListeners();
   }
 }

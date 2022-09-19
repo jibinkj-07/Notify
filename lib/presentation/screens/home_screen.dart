@@ -196,12 +196,6 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  TextButton(
-                      onPressed: () {
-                        Provider.of<EventDataServices>(context, listen: false)
-                            .clearFile();
-                      },
-                      child: Text('Clear Data')),
                 ],
               ),
               const SizedBox(height: 10),

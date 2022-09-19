@@ -1,38 +1,37 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/logic/services/event_data_services.dart';
-import 'package:provider/provider.dart';
 import 'package:mynotify/constants/app_colors.dart';
 
-class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({Key? key}) : super(key: key);
+class UserEventListDetails extends StatefulWidget {
+  final String id, title, notes, eventType;
+  final DateTime dateTime;
+  const UserEventListDetails(
+      {Key? key,
+      required this.id,
+      required this.title,
+      required this.notes,
+      required this.dateTime,
+      required this.eventType})
+      : super(key: key);
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<UserEventListDetails> createState() => _UserEventListDetailsState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
+class _UserEventListDetailsState extends State<UserEventListDetails> {
   String _notes = '';
   String _title = '';
-  DateTime _dateTime = DateTime.now();
-  String _eventType = 'Birthday';
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _notesController.dispose();
-    super.dispose();
-  }
+  DateTime? _dateTime;
+  String _eventType = '';
 
   @override
   Widget build(BuildContext context) {
     //variables
     final screen = MediaQuery.of(context).size;
+
 //pick date and time function
     Future<DateTime?> pickDate() => showDatePicker(
           context: context,
@@ -64,122 +63,48 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     //main
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors().primaryColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+          ),
+          splashRadius: 20.0,
+        ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+        ),
+        titleSpacing: 1.0,
+      ),
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              //head part
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //left portion
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: AppColors().primaryColor,
-                        ),
-                        splashRadius: 20,
-                      ),
-                      const Text(
-                        "New Event",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                    ],
-                  ),
-                  //right portion
-                  _title.trim() != ''
-                      ? BlocBuilder<EventFileHandlerCubit,
-                          EventFileHandlerState>(
-                          builder: (ctx, state) {
-                            if (state.isFileExists) {
-                              return TextButton(
-                                onPressed: () {
-                                  Provider.of<EventDataServices>(context,
-                                          listen: false)
-                                      .addNewEvent(
-                                    id: _dateTime.toString(),
-                                    title: _title,
-                                    notes: _notes,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                    fileExists: true,
-                                    parentContext: context,
-                                    filePath: state.filePath,
-                                  );
-                                  _titleController.clear();
-                                  _notesController.clear();
-                                  Navigator.of(context).pop();
-                                },
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors().primaryColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              );
-                            } else {
-                              return TextButton(
-                                onPressed: () {
-                                  Provider.of<EventDataServices>(context,
-                                          listen: false)
-                                      .addNewEvent(
-                                    id: _dateTime.toString(),
-                                    title: _title,
-                                    notes: _notes,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                    parentContext: context,
-                                    fileExists: false,
-                                  );
-                                  _titleController.clear();
-                                  _notesController.clear();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors().primaryColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              );
-                            }
-                          },
-                        )
-                      : const SizedBox(),
-                ],
-              ),
-
               //form
               Container(
-                width: screen.width * .9,
+                width: screen.width,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                margin: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(.2),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
                   children: [
-                    TextField(
+                    TextFormField(
                       key: const ValueKey('title'),
-                      controller: _titleController,
+                      initialValue: widget.title,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                       onChanged: (value) {
                         setState(() {
                           _title = value.trim();
@@ -190,8 +115,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                        hintText: 'Title',
-                        hintStyle: TextStyle(color: Colors.grey),
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         counterText: '',
@@ -201,20 +124,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       thickness: 1,
                       height: 1,
                     ),
-                    TextField(
+                    TextFormField(
                       key: const ValueKey('note'),
-                      controller: _notesController,
+                      initialValue: widget.notes,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w500),
                       minLines: 1,
                       maxLines: 10,
                       onChanged: (value) {
-                        _notes = value.trim();
+                        setState(() {
+                          _notes = value.trim();
+                        });
                       },
                       keyboardType: TextInputType.multiline,
                       textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 5),
                         hintText: 'Note',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.normal),
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                       ),
@@ -226,7 +154,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
               //calender picker
 
               Container(
-                width: screen.width * .9,
                 margin: const EdgeInsets.only(top: 20),
                 child: Material(
                   color: Colors.grey.withOpacity(.2),
@@ -246,17 +173,24 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 "Date",
                                 style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors().primaryColor),
                               ),
                               Text(
-                                DateFormat('dd MMM').add_jm().format(_dateTime),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors().primaryColor,
-                                  fontWeight: FontWeight.w500,
+                                _dateTime == null
+                                    ? DateFormat('dd MMM')
+                                        .add_jm()
+                                        .format(widget.dateTime)
+                                    : DateFormat('dd MMM')
+                                        .add_jm()
+                                        .format(_dateTime!),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
@@ -274,7 +208,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
               //event type
               Container(
-                width: screen.width * .9,
                 margin: const EdgeInsets.only(top: 20),
                 child: Material(
                   color: Colors.grey.withOpacity(.2),
@@ -411,19 +344,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Event Type",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
                               Text(
-                                _eventType,
+                                "Event Type",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors().primaryColor),
+                              ),
+                              Text(
+                                _eventType == ''
+                                    ? widget.eventType
+                                    : _eventType,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -438,6 +373,191 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 ),
               ),
 
+              //BOTTOM BUTTONS
+
+//update button
+              // if (_title != '' && _title != widget.title)
+              // Material(
+              //   // color: AppColors().primaryColor.withOpacity(.15),
+              //   color: Colors.grey.withOpacity(.2),
+              //   shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(10)),
+              //   child: InkWell(
+              //     splashColor: AppColors().primaryColor.withOpacity(.3),
+              //     onTap: () async {
+              //       // pickDateAndTime();
+              //     },
+              //     borderRadius: BorderRadius.circular(10),
+              //     child: Container(
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 20, vertical: 10),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Text(
+              //             'Update',
+              //             style: TextStyle(
+              //                 fontSize: 16,
+              //                 fontWeight: FontWeight.bold,
+              //                 color: AppColors().primaryColor),
+              //           ),
+              //           Icon(
+              //             Iconsax.edit,
+              //             color: AppColors().primaryColor,
+              //             size: 20.0,
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(height: 10),
+              ((_title != '' && _title != widget.title) ||
+                      (_notes != '' && _notes != widget.notes) ||
+                      (_dateTime != null && _dateTime != widget.dateTime) ||
+                      (_eventType != '' && _eventType != widget.eventType))
+                  ? ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors().primaryColor,
+                        onPrimary: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text(
+                        'Update',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  : const TextButton(
+                      onPressed: null,
+                      child: Text(
+                        '.',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.transparent),
+                      ),
+                    ),
+//delete button
+              const SizedBox(height: 30),
+              Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: Material(
+                  color: AppColors().redColor.withOpacity(.2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: InkWell(
+                    splashColor: AppColors().redColor.withOpacity(.3),
+                    onTap: () async {
+                      FocusScope.of(context).unfocus();
+                      showModalBottomSheet(
+                          context: context,
+                          //elevates modal bottom screen
+                          elevation: 20,
+                          // gives rounded corner to modal bottom screen
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                          builder: (ctx) {
+                            return SizedBox(
+                              height: screen.width * .35,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 30),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      'Delete the event ${widget.title}',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color:
+                                                    AppColors().primaryColor),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            primary: AppColors().redColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: AppColors().redColor),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Delete',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors().redColor),
+                          ),
+                          Icon(
+                            Iconsax.minus_cirlce5,
+                            color: AppColors().redColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               //end of main column
             ],
           ),
