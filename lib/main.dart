@@ -93,6 +93,7 @@ class MyApp extends StatelessWidget {
             '/add-event': (_) => const AddEventScreen(),
             '/user': (_) => const UserProfileScreen(),
           },
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );
