@@ -32,9 +32,11 @@ class EventList extends StatelessWidget {
       if (state.isFileExists) {
         //CALLING READ FUNC FROM PROVIDER
         userEvents = eventsProvider.readDataFromFile(filePath: state.filePath);
-        //SORTING THE READED DATA
 
-        // eventsProvider.sortEvents(eventsList: userEvents);
+        //Checking whether current day has any events, if not displaying no events widget
+        if (!userEvents.toString().contains(currentDateTime)) {
+          return noEvents();
+        }
 
         //Returing listview
         return NotificationListener<OverscrollIndicatorNotification>(
@@ -54,34 +56,12 @@ class EventList extends StatelessWidget {
                     DateTime.fromMillisecondsSinceEpoch(eventItem['dateTime']);
                 final eventType = eventItem['eventType'].toString();
                 if (id.contains(currentDateTime)) {
-                  // return ListTile(
-                  //     title: Text(title),
-                  //     subtitle: Text(DateFormat.jm().format(time)),
-                  //     trailing: Text(eventType),
-                  //     onTap: () {
-                  //       //MOVING INTO DETAIL SCREEN
-                  //       Navigator.push(
-                  //         context,
-                  //         PageTransition(
-                  //           reverseDuration: const Duration(milliseconds: 300),
-                  //           duration: const Duration(milliseconds: 300),
-                  //           type: PageTransitionType.rightToLeft,
-                  //           child: UserEventListDetails(
-                  //               id: id,
-                  //               title: title,
-                  //               notes: notes,
-                  //               dateTime: time,
-                  //               eventType: eventType),
-                  //         ),
-                  //       );
-                  //     });
-
                   return Column(
                     children: [
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          //       //MOVING INTO DETAIL SCREEN
+                          //MOVING INTO DETAIL SCREEN
                           Navigator.push(
                             context,
                             PageTransition(
@@ -121,60 +101,30 @@ class EventList extends StatelessWidget {
           ),
         );
       } else {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Iconsax.note_text,
-                color: AppColors().primaryColor,
-                size: 50,
-              ),
-              Text(
-                "No Events",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors().primaryColor),
-              )
-            ],
-          ),
-        );
+        return noEvents();
       }
     });
+  }
 
-    // //reading data from file handelers
-    // userEvents = eventsProvider.readDataFromFile();
-
-    // return (userEvents != '' &&
-    //         userEvents != false &&
-    //         userEvents.toString().contains(currentDateTime))
-    //     ? NotificationListener<OverscrollIndicatorNotification>(
-    //         onNotification: (overscroll) {
-    //           overscroll.disallowIndicator();
-    //           return true;
-    //         },
-    //         child: SizedBox(
-    //           width: double.infinity,
-    //           child: ListView.builder(
-    //             itemBuilder: (ctx, index) {
-    //               Map eventItem = jsonDecode(userEvents[index]);
-    //               final time = DateTime.fromMillisecondsSinceEpoch(
-    //                   eventItem['dateTime']);
-    //               if (eventItem['id'].toString().contains(currentDateTime)) {
-    //                 return ListTile(
-    //                   title: Text(eventItem['title']),
-    //                   subtitle: Text(DateFormat.jm().format(time)),
-    //                   trailing: Text(eventItem['eventType']),
-    //                 );
-    //               } else {
-    //                 return const SizedBox();
-    //               }
-    //             },
-    //             itemCount: userEvents.length,
-    //           ),
-    //         ),
-    //       )
-    //     :
+  Center noEvents() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Iconsax.note_text,
+            color: AppColors().primaryColor,
+            size: 50,
+          ),
+          Text(
+            "No Events",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors().primaryColor),
+          )
+        ],
+      ),
+    );
   }
 }
