@@ -27,193 +27,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    //floating button
-    var addEventButton = ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          PageTransition(
-            reverseDuration: const Duration(milliseconds: 300),
-            duration: const Duration(milliseconds: 300),
-            type: PageTransitionType.bottomToTop,
-            child: const AddEventScreen(),
-          ),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        primary: AppColors().primaryColor,
-        onPrimary: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
-      child: const Text(
-        'Add Event',
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-    );
 
-    //main
-    // return Scaffold(
-    //   backgroundColor: Colors.white,
-    //   body: SafeArea(
-    //     child: Container(
-    //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    //       width: double.infinity,
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           const SizedBox(height: 10),
-    //           Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               BlocBuilder<DateCubit, DateState>(
-    //                 builder: (context, state) {
-    //                   return Row(
-    //                     children: [
-    //                       IconButton(
-    //                         onPressed: state.day == 'Yesterday'
-    //                             ? null
-    //                             : () {
-    //                                 context.read<DateCubit>().prevDay();
-    //                               },
-    //                         icon: Icon(
-    //                           Icons.arrow_back_ios_new_rounded,
-    //                           color: state.day == 'Yesterday'
-    //                               ? Colors.transparent
-    //                               : AppColors().primaryColor,
-    //                         ),
-    //                         splashRadius: 20,
-    //                       ),
-    //                       Text(
-    //                         state.day,
-    //                         style: TextStyle(
-    //                             fontSize: 23,
-    //                             fontWeight: FontWeight.w900,
-    //                             color: AppColors().primaryColor),
-    //                       ),
-    //                       IconButton(
-    //                         onPressed: state.day == 'Tomorrow'
-    //                             ? null
-    //                             : () {
-    //                                 context.read<DateCubit>().nextDay();
-    //                               },
-    //                         icon: Icon(
-    //                           Icons.arrow_forward_ios_rounded,
-    //                           color: state.day == 'Tomorrow'
-    //                               ? Colors.transparent
-    //                               : AppColors().primaryColor,
-    //                         ),
-    //                         splashRadius: 20,
-    //                       ),
-    //                     ],
-    //                   );
-    //                 },
-    //               ),
-    //               //right part
-
-    //               //bloc listener for rendering connect now button
-    //               BlocBuilder<AuthenticationCubit, AuthenticationState>(
-    //                 builder: (context, state) {
-    //                   if (!state.isCloudConnected) {
-    //                     return TextButton(
-    //                       onPressed: () {
-    //                         Navigator.of(context).pushNamed('/auth');
-    //                       },
-    //                       child: Text(
-    //                         'Connect Now',
-    //                         style: TextStyle(
-    //                             fontWeight: FontWeight.bold,
-    //                             color: AppColors().primaryColor),
-    //                       ),
-    //                     );
-    //                   }
-
-    //                   return Row(
-    //                     children: [
-    //                       //bloc builder for rendering cloud icon
-    //                       BlocBuilder<InternetCubit, InternetState>(
-    //                         builder: (context, state) {
-    //                           if (state is InternetEnabled) {
-    //                             return Icon(
-    //                               Iconsax.cloud5,
-    //                               color: AppColors().greenColor,
-    //                             );
-    //                           } else {
-    //                             return Icon(
-    //                               Iconsax.cloud_cross5,
-    //                               color: AppColors().redColor,
-    //                             );
-    //                           }
-    //                         },
-    //                       ),
-    //                       const SizedBox(width: 10),
-    //                       //profile iconbutton
-    //                       CircleAvatar(
-    //                         radius: 20,
-    //                         backgroundColor: AppColors().primaryColor,
-    //                         foregroundColor: Colors.white,
-    //                         child: IconButton(
-    //                           onPressed: () {
-    //                             Navigator.push(
-    //                               context,
-    //                               PageTransition(
-    //                                 reverseDuration:
-    //                                     const Duration(milliseconds: 300),
-    //                                 duration: const Duration(milliseconds: 300),
-    //                                 type: PageTransitionType.rightToLeft,
-    //                                 child: const UserProfileScreen(),
-    //                               ),
-    //                             );
-    //                           },
-    //                           icon: const Icon(
-    //                             Iconsax.user,
-    //                           ),
-    //                           iconSize: 20,
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   );
-    //                 },
-    //               )
-    //             ],
-    //           ),
-    //           const SizedBox(height: 10),
-    //           Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               BlocBuilder<DateCubit, DateState>(
-    //                 builder: (context, state) {
-    //                   return Text(
-    //                     DateFormat.MMMMEEEEd().format(state.dateTime),
-    //                     style: const TextStyle(
-    //                         fontSize: 20,
-    //                         fontWeight: FontWeight.w700,
-    //                         color: Colors.black),
-    //                   );
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //           const SizedBox(height: 10),
-    //           Expanded(
-    //             child: BlocBuilder<DateCubit, DateState>(
-    //               builder: (context, state) {
-    //                 return EventList(
-    //                     currentDateTime:
-    //                         DateFormat('yyyy-MM-dd').format(state.dateTime));
-    //               },
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    //   floatingActionButton: elevatedButton,
-    // );
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -371,6 +185,7 @@ class HomeScreen extends StatelessWidget {
             ),
             child: BlocBuilder<DateCubit, DateState>(
               builder: (context, state) {
+                final day = DateFormat.d().format(state.dateTime);
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -411,7 +226,7 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                           child: Text(
-                            DateFormat.d().format(state.dateTime),
+                            day.length < 2 ? '0$day' : day,
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.w900,
@@ -447,7 +262,25 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: addEventButton,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              reverseDuration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
+              type: PageTransitionType.bottomToTop,
+              child: const AddEventScreen(),
+            ),
+          );
+        },
+        backgroundColor: AppColors().primaryColor,
+        foregroundColor: Colors.white,
+        child: const Icon(
+          Iconsax.note_add5,
+          size: 30,
+        ),
+      ),
     );
   }
 }

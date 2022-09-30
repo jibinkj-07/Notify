@@ -85,11 +85,11 @@ class EventList extends StatelessWidget {
                             eventType: eventType,
                             dateTime: time),
                       ),
-                      const Divider(
-                        height: 1,
-                        // thickness: 1,
-                        indent: 20.0,
-                      ),
+                      // const Divider(
+                      //   height: 1,
+                      //   // thickness: 1,
+                      //   indent: 20.0,
+                      // ),
                     ],
                   );
                 } else {

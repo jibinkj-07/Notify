@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 
@@ -26,67 +27,94 @@ class EventListItem extends StatelessWidget {
       newNotes = '$newNotes...';
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      margin: const EdgeInsets.symmetric(vertical: 15),
-      child: Row(
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.grey.withOpacity(.15),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 150,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image(
-                image: AssetImage('assets/images/$imageName.png'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              if (eventType == 'Birthday')
+                Icon(
+                  Iconsax.cake5,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Travel')
+                Icon(
+                  Iconsax.routing,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Meeting')
+                Icon(
+                  Iconsax.brifecase_timer5,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Exam')
+                Icon(
+                  Iconsax.menu_board5,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Alert')
+                Icon(
+                  Iconsax.alarm5,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Others')
+                Icon(
+                  Iconsax.calendar_25,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+            ],
           ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  //event type
-                  Text(
-                    eventType,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors().primaryColor),
-                  ),
-
-                  //notes
-                  Text(
-                    '  $newNotes',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-
-                  //time type
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      DateFormat.jm().format(dateTime),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
+          const SizedBox(height: 10),
+          //event type
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                eventType,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors().primaryColor),
               ),
-            ),
+              //time
+              Text(
+                DateFormat.jm().format(dateTime),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.right,
+              ),
+            ],
           ),
+
+          //notes
+          // Text(
+          //   '  $newNotes',
+          //   style: const TextStyle(
+          //     fontSize: 16,
+          //   ),
+          // ),
         ],
       ),
     );

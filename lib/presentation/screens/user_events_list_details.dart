@@ -61,12 +61,103 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
       });
     }
 
+    //event icon widget
+    Widget eventIcon() {
+      //Checking if user updated the eventtype or not
+      if (_eventType != '') {
+        switch (_eventType) {
+          case 'Birthday':
+            return const Icon(
+              Iconsax.cake5,
+              color: Colors.white,
+              size: 100.0,
+            );
+          case 'Travel':
+            return const Icon(
+              Iconsax.routing,
+              color: Colors.white,
+              size: 100.0,
+            );
+          case 'Meeting':
+            return const Icon(
+              Iconsax.brifecase_timer5,
+              color: Colors.white,
+              size: 100.0,
+            );
+          case 'Exam':
+            return const Icon(
+              Iconsax.menu_board5,
+              color: Colors.white,
+              size: 100.0,
+            );
+          case 'Alert':
+            return const Icon(
+              Iconsax.alarm5,
+              color: Colors.white,
+              size: 100.0,
+            );
+          case 'Others':
+            return const Icon(
+              Iconsax.calendar_25,
+              color: Colors.white,
+              size: 100.0,
+            );
+        }
+      } else {}
+      //Icon choosing depends on eventtype
+      switch (widget.eventType) {
+        case 'Birthday':
+          return const Icon(
+            Iconsax.cake5,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Travel':
+          return const Icon(
+            Iconsax.routing,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Meeting':
+          return const Icon(
+            Iconsax.brifecase_timer5,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Exam':
+          return const Icon(
+            Iconsax.menu_board5,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Alert':
+          return const Icon(
+            Iconsax.alarm5,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Others':
+          return const Icon(
+            Iconsax.calendar_25,
+            color: Colors.white,
+            size: 100.0,
+          );
+        default:
+          return const Icon(
+            Iconsax.calendar5,
+            color: Colors.white,
+            size: 100.0,
+          );
+          ;
+      }
+    }
+
     //main
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors().primaryColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors().primaryColor,
+        backgroundColor: AppColors().primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -78,24 +169,28 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
           splashRadius: 20.0,
         ),
         title: Text(
-          widget.title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          _title == '' ? '${widget.title} Event' : '$_title Event',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         titleSpacing: 1.0,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.only(top: 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              //icon displaying
+              eventIcon(),
+              const SizedBox(height: 30),
               //form
               Container(
                 width: screen.width,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.white.withOpacity(.9),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
@@ -156,7 +251,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               Container(
                 margin: const EdgeInsets.only(top: 20),
                 child: Material(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.white.withOpacity(.9),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
@@ -210,7 +305,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               Container(
                 margin: const EdgeInsets.only(top: 20),
                 child: Material(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.white.withOpacity(.9),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
@@ -375,7 +470,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
 
               //BOTTOM BUTTONS
 
-//update button
+              //update button
               // if (_title != '' && _title != widget.title)
               // Material(
               //   // color: AppColors().primaryColor.withOpacity(.15),
@@ -421,8 +516,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                         FocusScope.of(context).unfocus();
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: AppColors().primaryColor,
-                        onPrimary: Colors.white,
+                        primary: Colors.white,
+                        onPrimary: AppColors().primaryColor,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 5),
                         shape: RoundedRectangleBorder(
@@ -447,12 +542,12 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             color: Colors.transparent),
                       ),
                     ),
-//delete button
+              //delete button
               const SizedBox(height: 30),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 child: Material(
-                  color: AppColors().redColor.withOpacity(.2),
+                  color: AppColors().redColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
@@ -540,17 +635,17 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                           horizontal: 20, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: const [
                           Text(
                             'Delete',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors().redColor),
+                                color: Colors.white),
                           ),
                           Icon(
                             Iconsax.minus_cirlce5,
-                            color: AppColors().redColor,
+                            color: Colors.white,
                           ),
                         ],
                       ),

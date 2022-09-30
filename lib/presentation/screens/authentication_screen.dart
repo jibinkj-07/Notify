@@ -29,13 +29,15 @@ class AuthenticationScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
+                    splashRadius: 20.0,
                   ),
                   // const SizedBox(width: 20),
-                  const Text(
+                  Text(
                     'Connect Now',
                     style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors().primaryColor,
                     ),
                   ),
                 ],

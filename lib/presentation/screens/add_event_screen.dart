@@ -86,11 +86,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         ),
                         splashRadius: 20,
                       ),
-                      const Text(
-                        "New Event",
+                      Text(
+                        "Create Event",
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors().primaryColor,
                         ),
                       )
                     ],
@@ -125,7 +126,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  "Add",
+                                  "Done",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: AppColors().primaryColor,
