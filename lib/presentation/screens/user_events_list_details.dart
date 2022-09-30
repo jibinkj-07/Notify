@@ -1,9 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
+import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:provider/provider.dart';
+
+import '../../logic/cubit/event_file_handler_cubit.dart';
 
 class UserEventListDetails extends StatefulWidget {
   final String id, title, notes, eventType;
@@ -468,70 +473,42 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                 ),
               ),
 
-              //BOTTOM BUTTONS
-
-              //update button
-              // if (_title != '' && _title != widget.title)
-              // Material(
-              //   // color: AppColors().primaryColor.withOpacity(.15),
-              //   color: Colors.grey.withOpacity(.2),
-              //   shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(10)),
-              //   child: InkWell(
-              //     splashColor: AppColors().primaryColor.withOpacity(.3),
-              //     onTap: () async {
-              //       // pickDateAndTime();
-              //     },
-              //     borderRadius: BorderRadius.circular(10),
-              //     child: Container(
-              //       padding: const EdgeInsets.symmetric(
-              //           horizontal: 20, vertical: 10),
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             'Update',
-              //             style: TextStyle(
-              //                 fontSize: 16,
-              //                 fontWeight: FontWeight.bold,
-              //                 color: AppColors().primaryColor),
-              //           ),
-              //           Icon(
-              //             Iconsax.edit,
-              //             color: AppColors().primaryColor,
-              //             size: 20.0,
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 10),
               ((_title != '' && _title != widget.title) ||
                       (_notes != '' && _notes != widget.notes) ||
                       (_dateTime != null && _dateTime != widget.dateTime) ||
                       (_eventType != '' && _eventType != widget.eventType))
-                  ? ElevatedButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: AppColors().primaryColor,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                  ? BlocBuilder<EventFileHandlerCubit, EventFileHandlerState>(
+                      builder: (ctx1, state) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          //deleting exiting items
+                          Provider.of<EventDataServices>(context, listen: false)
+                              .deleteEvent(
+                                  id: widget.id, filePath: state.filePath);
+                          //adding new data into the list
+                          updateEventList(state.filePath);
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          onPrimary: AppColors().primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Update',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        child: const Text(
+                          'Update',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    )
+                      );
+                    })
                   : const TextButton(
                       onPressed: null,
                       child: Text(
@@ -603,24 +580,35 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                                     AppColors().primaryColor),
                                           ),
                                         ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(ctx).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            primary: AppColors().redColor,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                        BlocBuilder<EventFileHandlerCubit,
+                                                EventFileHandlerState>(
+                                            builder: (ctx1, state) {
+                                          return TextButton(
+                                            onPressed: () {
+                                              Navigator.of(ctx).pop();
+                                              Navigator.of(context).pop();
+                                              Provider.of<EventDataServices>(
+                                                      context,
+                                                      listen: false)
+                                                  .deleteEvent(
+                                                      id: widget.id,
+                                                      filePath: state.filePath);
+                                            },
+                                            style: TextButton.styleFrom(
+                                              primary: AppColors().redColor,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
                                             ),
-                                          ),
-                                          child: Text(
-                                            'Delete',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: AppColors().redColor),
-                                          ),
-                                        ),
+                                            child: Text(
+                                              'Delete',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: AppColors().redColor),
+                                            ),
+                                          );
+                                        }),
                                       ],
                                     )
                                   ],
@@ -659,5 +647,36 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         ),
       ),
     );
+  }
+
+  void updateEventList(String filePath) {
+    String newId = widget.id,
+        newTitle = widget.title,
+        newNotes = widget.notes,
+        newEventType = widget.eventType;
+    DateTime newDateTime = widget.dateTime;
+    if (_dateTime != null) {
+      newId = _dateTime.toString();
+      newDateTime = _dateTime!;
+    }
+    if (_title != '') {
+      newTitle = _title;
+    }
+    if (_notes != '') {
+      newNotes = _notes;
+    }
+    if (_eventType != '') {
+      newEventType = _eventType;
+    }
+
+    Provider.of<EventDataServices>(context, listen: false).addNewEvent(
+        id: newId,
+        title: newTitle,
+        notes: newNotes,
+        dateTime: newDateTime,
+        eventType: newEventType,
+        fileExists: true,
+        filePath: filePath,
+        parentContext: context);
   }
 }

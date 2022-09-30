@@ -30,16 +30,13 @@ class EventDataServices with ChangeNotifier {
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(newData));
-
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
-      log('file path in string in create file $name');
     });
   }
 
 //WRITING DATA INTO FILE
   void writeToFile({required EventListModel event, required String filePath}) {
-    log('reached writetofile');
     List<EventListModel> newData = [event];
     File fileName = File(filePath);
     List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
@@ -76,12 +73,19 @@ class EventDataServices with ChangeNotifier {
       eventType: eventType,
     );
     if (fileExists) {
-      log('yes file exists from add event');
       writeToFile(event: newData, filePath: filePath!);
     } else {
       createFile(content: newData, parentContext: parentContext);
-      log('no file  exists from add event');
     }
+    notifyListeners();
+  }
+
+  //function to delete an event from list
+  void deleteEvent({required String id, required String filePath}) {
+    _allEvents.removeWhere((element) => element.toString().contains(id));
+    //writing the data to file
+    File fileName = File(filePath);
+    fileName.writeAsStringSync(jsonEncode(_allEvents));
     notifyListeners();
   }
 }

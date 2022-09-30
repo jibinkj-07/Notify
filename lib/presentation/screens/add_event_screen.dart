@@ -152,7 +152,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   Navigator.of(context).pop();
                                 },
                                 child: Text(
-                                  "Add",
+                                  "Done",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: AppColors().primaryColor,
@@ -186,6 +186,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           _title = value.trim();
                         });
                       },
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                       maxLength: 25,
                       textCapitalization: TextCapitalization.sentences,
                       textInputAction: TextInputAction.next,
