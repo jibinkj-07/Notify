@@ -7,6 +7,8 @@ import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:provider/provider.dart';
 import 'package:mynotify/constants/app_colors.dart';
 
+import '../../logic/services/notification_service.dart';
+
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({Key? key}) : super(key: key);
 
@@ -104,6 +106,19 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             if (state.isFileExists) {
                               return TextButton(
                                 onPressed: () {
+                                  //calling notification
+                                  NotificationService().showNotification(
+                                    id: int.parse(_dateTime
+                                        .millisecondsSinceEpoch
+                                        .toString()
+                                        .substring(0, 10)),
+                                    title: _title,
+                                    body:
+                                        '$_eventType event is going to happen in 5 minutes',
+                                    dateTime: _dateTime,
+                                    eventType: _eventType,
+                                  );
+                                  //main part
                                   Provider.of<EventDataServices>(context,
                                           listen: false)
                                       .addNewEvent(
@@ -136,6 +151,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             } else {
                               return TextButton(
                                 onPressed: () {
+                                  //calling notification
+                                  NotificationService().showNotification(
+                                    id: int.parse(_dateTime
+                                        .millisecondsSinceEpoch
+                                        .toString()
+                                        .substring(0, 10)),
+                                    title: _title,
+                                    body:
+                                        '$_eventType event is going to happen in 5 minutes',
+                                    dateTime: _dateTime,
+                                    eventType: _eventType,
+                                  );
                                   Provider.of<EventDataServices>(context,
                                           listen: false)
                                       .addNewEvent(

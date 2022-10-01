@@ -19,9 +19,21 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../logic/cubit/internet_cubit.dart';
+import '../../logic/services/notification_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    NotificationService().initializePlatformNotifications();
+    super.initState();
+  }
 
 //main
   @override
@@ -273,6 +285,13 @@ class HomeScreen extends StatelessWidget {
               child: const AddEventScreen(),
             ),
           );
+
+          // NotificationService().showNotification(
+          //     id: 23,
+          //     title: 'title',
+          //     body: 'body',
+          //     eventType: 'birthday',
+          //     dateTime: DateTime.now());
         },
         backgroundColor: AppColors().primaryColor,
         foregroundColor: Colors.white,
