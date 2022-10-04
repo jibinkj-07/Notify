@@ -1,13 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../../models/event_list_model.dart';
 
 class EventDataServices with ChangeNotifier {
@@ -47,6 +43,7 @@ class EventDataServices with ChangeNotifier {
   //For adding items to event list
   void addNewEvent(
       {required String id,
+      required int notificationId,
       required String title,
       required String notes,
       required DateTime dateTime,
@@ -58,18 +55,22 @@ class EventDataServices with ChangeNotifier {
 
     _allEvents.add(EventListModel(
       id: id,
+      notificationId: notificationId,
       title: title,
       notes: notes,
       dateTime: dateTime,
+      eventDate: dateTime.toString(),
       eventType: eventType,
     ));
 
     //storing into file
     EventListModel newData = EventListModel(
       id: id,
+      notificationId: notificationId,
       title: title,
       notes: notes,
       dateTime: dateTime,
+      eventDate: dateTime.toString(),
       eventType: eventType,
     );
     if (fileExists) {

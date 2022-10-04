@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,16 +7,19 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:mynotify/logic/services/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../logic/cubit/event_file_handler_cubit.dart';
 
 class UserEventListDetails extends StatefulWidget {
   final String id, title, notes, eventType;
+  final int notificationId;
   final DateTime dateTime;
   const UserEventListDetails(
       {Key? key,
       required this.id,
+      required this.notificationId,
       required this.title,
       required this.notes,
       required this.dateTime,
@@ -95,9 +99,9 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               color: Colors.white,
               size: 100.0,
             );
-          case 'Alert':
+          case 'Reminder':
             return const Icon(
-              Iconsax.alarm5,
+              Iconsax.notification5,
               color: Colors.white,
               size: 100.0,
             );
@@ -135,9 +139,9 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
             color: Colors.white,
             size: 100.0,
           );
-        case 'Alert':
+        case 'Reminder':
           return const Icon(
-            Iconsax.alarm5,
+            Iconsax.notification5,
             color: Colors.white,
             size: 100.0,
           );
@@ -329,7 +333,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                         ),
                         builder: (ctx) {
                           return SizedBox(
-                            height: screen.height * .35,
+                            // height: screen.height * .35,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -402,11 +406,11 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     setState(() {
-                                      _eventType = 'Alert';
+                                      _eventType = 'Reminder';
                                     });
                                   },
                                   child: Text(
-                                    'Alert',
+                                    'Reminder',
                                     style: TextStyle(
                                         fontSize: 17,
                                         color: AppColors().primaryColor,
@@ -585,6 +589,11 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                             builder: (ctx1, state) {
                                           return TextButton(
                                             onPressed: () {
+                                              NotificationService()
+                                                  .cancelNotification(
+                                                      id: widget
+                                                          .notificationId);
+                                              //main
                                               Navigator.of(ctx).pop();
                                               Navigator.of(context).pop();
                                               Provider.of<EventDataServices>(
@@ -650,12 +659,18 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
   }
 
   void updateEventList(String filePath) {
+    String notiBody;
+    int notiID = widget.notificationId;
+    //cancelling existing notification
+    NotificationService().cancelNotification(id: notiID);
     String newId = widget.id,
         newTitle = widget.title,
         newNotes = widget.notes,
         newEventType = widget.eventType;
     DateTime newDateTime = widget.dateTime;
     if (_dateTime != null) {
+      Random random = Random();
+      notiID = random.nextInt(999999999) + 1000000000;
       newId = _dateTime.toString();
       newDateTime = _dateTime!;
     }
@@ -669,8 +684,10 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
       newEventType = _eventType;
     }
 
+    //adding new event
     Provider.of<EventDataServices>(context, listen: false).addNewEvent(
         id: newId,
+        notificationId: notiID,
         title: newTitle,
         notes: newNotes,
         dateTime: newDateTime,
@@ -678,5 +695,19 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         fileExists: true,
         filePath: filePath,
         parentContext: context);
+    if (newEventType == 'Others') {
+      notiBody = 'You have one event which is going to happen in 5 minutes';
+    } else {
+      notiBody =
+          'You have one $newEventType which is going to happen in 5 minutes';
+    }
+
+    //adding new notification
+    NotificationService().showNotification(
+        id: notiID,
+        title: newTitle,
+        body: notiBody,
+        eventType: newEventType,
+        dateTime: newDateTime);
   }
 }

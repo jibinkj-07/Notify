@@ -119,161 +119,151 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          //Day selecting section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BlocBuilder<DateCubit, DateState>(
-                builder: (context, state) {
-                  return SizedBox(
-                    width: screen.width * .9,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: state.day == 'Yesterday'
-                              ? null
-                              : () {
-                                  context.read<DateCubit>().prevDay();
-                                },
-                          icon: Icon(
-                            Iconsax.arrow_circle_left5,
-                            color: state.day == 'Yesterday'
-                                ? Colors.transparent
-                                : AppColors().primaryColor,
-                          ),
-                          iconSize: 40,
-                          splashRadius: 20,
+      body: BlocBuilder<DateCubit, DateState>(builder: (context, state) {
+        final day = DateFormat.d().format(state.dateTime);
+        return Column(
+          children: [
+            //Day selecting section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: screen.width * .9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: state.day == 'Yesterday'
+                            ? null
+                            : () {
+                                context.read<DateCubit>().prevDay();
+                              },
+                        icon: Icon(
+                          Iconsax.arrow_circle_left5,
+                          color: state.day == 'Yesterday'
+                              ? Colors.transparent
+                              : AppColors().primaryColor,
                         ),
-                        Text(
-                          state.day,
+                        iconSize: 40,
+                        splashRadius: 20,
+                      ),
+                      Text(
+                        state.day,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors().primaryColor,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: state.day == 'Tomorrow'
+                            ? null
+                            : () {
+                                context.read<DateCubit>().nextDay();
+                              },
+                        icon: Icon(
+                          Iconsax.arrow_circle_right5,
+                          color: state.day == 'Tomorrow'
+                              ? Colors.transparent
+                              : AppColors().primaryColor,
+                        ),
+                        splashRadius: 20,
+                        iconSize: 40,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            //day in full format
+            Container(
+              width: screen.width * .94,
+              height: screen.height * .2,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors().primaryColor,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 6,
+                    blurRadius: 8,
+                    offset: const Offset(0, 5), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //Event numbers
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        DateFormat.EEEE().format(state.dateTime),
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
+                      // const Text(
+                      //   'Events: 01',
+                      //   style: TextStyle(
+                      //       color: Colors.black,
+                      //       fontSize: 18,
+                      //       fontWeight: FontWeight.bold),
+                      // ),
+                    ],
+                  ),
+                  //Date display
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          // border: Border.all(
+                          //   width: 4,
+                          //   color: Colors.white,
+                          // ),
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: Colors.white,
+                        ),
+                        child: Text(
+                          day.length < 2 ? '0$day' : day,
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 32,
                             fontWeight: FontWeight.w900,
                             color: AppColors().primaryColor,
                           ),
                         ),
-                        IconButton(
-                          onPressed: state.day == 'Tomorrow'
-                              ? null
-                              : () {
-                                  context.read<DateCubit>().nextDay();
-                                },
-                          icon: Icon(
-                            Iconsax.arrow_circle_right5,
-                            color: state.day == 'Tomorrow'
-                                ? Colors.transparent
-                                : AppColors().primaryColor,
-                          ),
-                          splashRadius: 20,
-                          iconSize: 40,
+                      ),
+                      Text(
+                        DateFormat.yMMMM().format(state.dateTime),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          //day in full format
-          Container(
-            width: screen.width * .94,
-            height: screen.height * .2,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors().primaryColor,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 6,
-                  blurRadius: 8,
-                  offset: const Offset(0, 5), // changes position of shadow
-                ),
-              ],
             ),
-            child: BlocBuilder<DateCubit, DateState>(
-              builder: (context, state) {
-                final day = DateFormat.d().format(state.dateTime);
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //Event numbers
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          DateFormat.EEEE().format(state.dateTime),
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                          ),
-                        ),
-                        // const Text(
-                        //   'Events: 01',
-                        //   style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontSize: 18,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                      ],
-                    ),
-                    //Date display
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            // border: Border.all(
-                            //   width: 4,
-                            //   color: Colors.white,
-                            // ),
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.white,
-                          ),
-                          child: Text(
-                            day.length < 2 ? '0$day' : day,
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors().primaryColor,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          DateFormat.yMMMM().format(state.dateTime),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+            const SizedBox(height: 20),
+            //event listview
+            Expanded(
+              child: EventList(
+                  currentDateTime:
+                      DateFormat('yyyy-MM-dd').format(state.dateTime)),
             ),
-          ),
-          const SizedBox(height: 20),
-          //event listview
-          Expanded(
-            child: BlocBuilder<DateCubit, DateState>(
-              builder: (context, state) {
-                return EventList(
-                    currentDateTime:
-                        DateFormat('yyyy-MM-dd').format(state.dateTime));
-              },
-            ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -285,13 +275,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const AddEventScreen(),
             ),
           );
-
-          // NotificationService().showNotification(
-          //     id: 23,
-          //     title: 'title',
-          //     body: 'body',
-          //     eventType: 'birthday',
-          //     dateTime: DateTime.now());
         },
         backgroundColor: AppColors().primaryColor,
         foregroundColor: Colors.white,

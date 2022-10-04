@@ -23,6 +23,7 @@ class EventList extends StatelessWidget {
   //MAIN
   @override
   Widget build(BuildContext context) {
+    // log('current date from prev page is $currentDateTime');
     dynamic userEvents = [];
     final eventsProvider = Provider.of<EventDataServices>(context);
 
@@ -35,8 +36,10 @@ class EventList extends StatelessWidget {
 
         //Checking whether current day has any events, if not displaying no events widget
         if (!userEvents.toString().contains(currentDateTime)) {
+          // log('No user events in this day');
           return noEvents();
         }
+        // log(userEvents.toString());
 
         //Returing listview
         return NotificationListener<OverscrollIndicatorNotification>(
@@ -52,10 +55,12 @@ class EventList extends StatelessWidget {
                 final id = eventItem['id'].toString();
                 final title = eventItem['title'].toString();
                 final notes = eventItem['notes'].toString();
+                int notiID = eventItem['notificationId'];
                 final time =
                     DateTime.fromMillisecondsSinceEpoch(eventItem['dateTime']);
                 final eventType = eventItem['eventType'].toString();
-                if (id.contains(currentDateTime)) {
+                // log('time is $time');
+                if (time.toString().contains(currentDateTime)) {
                   return Column(
                     children: [
                       InkWell(
@@ -71,6 +76,7 @@ class EventList extends StatelessWidget {
                               type: PageTransitionType.rightToLeft,
                               child: UserEventListDetails(
                                   id: id,
+                                  notificationId: notiID,
                                   title: title,
                                   notes: notes,
                                   dateTime: time,

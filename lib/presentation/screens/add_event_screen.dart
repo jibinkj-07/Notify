@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -106,23 +109,33 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             if (state.isFileExists) {
                               return TextButton(
                                 onPressed: () {
-                                  //calling notification
+                                  String notiBody;
+                                  if (_eventType == 'Others') {
+                                    notiBody =
+                                        'You have one event which is going to happen in 5 minutes';
+                                  } else {
+                                    notiBody =
+                                        'You have one $_eventType which is going to happen in 5 minutes';
+                                  }
+                                  Random random = Random();
+                                  final currentTime = DateTime.now();
+                                  int notificationId =
+                                      random.nextInt(999999999) + 1000000000;
+                                  //notification part
                                   NotificationService().showNotification(
-                                    id: int.parse(_dateTime
-                                        .millisecondsSinceEpoch
-                                        .toString()
-                                        .substring(0, 10)),
+                                    id: notificationId,
                                     title: _title,
-                                    body:
-                                        '$_eventType event is going to happen in 5 minutes',
+                                    body: notiBody,
                                     dateTime: _dateTime,
                                     eventType: _eventType,
                                   );
+
                                   //main part
                                   Provider.of<EventDataServices>(context,
                                           listen: false)
                                       .addNewEvent(
-                                    id: _dateTime.toString(),
+                                    id: currentTime.toString(),
+                                    notificationId: notificationId,
                                     title: _title,
                                     notes: _notes,
                                     dateTime: _dateTime,
@@ -151,22 +164,32 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             } else {
                               return TextButton(
                                 onPressed: () {
-                                  //calling notification
+                                  String notiBody;
+                                  if (_eventType == 'Others') {
+                                    notiBody =
+                                        'You have one event which is going to happen in 5 minutes';
+                                  } else {
+                                    notiBody =
+                                        'You have one $_eventType which is going to happen in 5 minutes';
+                                  }
+                                  Random random = Random();
+                                  final currentTime = DateTime.now();
+                                  int notificationId =
+                                      random.nextInt(999999999) + 1000000000;
+
                                   NotificationService().showNotification(
-                                    id: int.parse(_dateTime
-                                        .millisecondsSinceEpoch
-                                        .toString()
-                                        .substring(0, 10)),
+                                    id: notificationId,
                                     title: _title,
-                                    body:
-                                        '$_eventType event is going to happen in 5 minutes',
+                                    body: notiBody,
                                     dateTime: _dateTime,
                                     eventType: _eventType,
                                   );
+
                                   Provider.of<EventDataServices>(context,
                                           listen: false)
                                       .addNewEvent(
-                                    id: _dateTime.toString(),
+                                    id: currentTime.toString(),
+                                    notificationId: notificationId,
                                     title: _title,
                                     notes: _notes,
                                     dateTime: _dateTime,
@@ -326,7 +349,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         ),
                         builder: (ctx) {
                           return SizedBox(
-                            height: screen.height * .35,
+                            // height: screen.height * .35,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -399,11 +422,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     setState(() {
-                                      _eventType = 'Alert';
+                                      _eventType = 'Reminder';
                                     });
                                   },
                                   child: Text(
-                                    'Alert',
+                                    'Reminder',
                                     style: TextStyle(
                                         fontSize: 17,
                                         color: AppColors().primaryColor,

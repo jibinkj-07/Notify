@@ -58,6 +58,12 @@ class NotificationService {
       required DateTime dateTime}) async {
     final detail = await _notificationDetails(eventType: eventType);
 
+    final time = DateTime.now().add(const Duration(minutes: 5));
+    if (dateTime.isBefore(time)) {
+      log('time is lower that 5 mins');
+      return;
+    }
+
     await _notifications.zonedSchedule(
       id,
       title,
@@ -77,5 +83,9 @@ class NotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
+  }
+
+  Future<void> cancelNotification({required int id}) async {
+    await _notifications.cancel(id);
   }
 }

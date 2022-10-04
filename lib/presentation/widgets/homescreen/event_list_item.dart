@@ -70,9 +70,9 @@ class EventListItem extends StatelessWidget {
                   color: AppColors().primaryColor,
                   size: 35.0,
                 ),
-              if (eventType == 'Alert')
+              if (eventType == 'Reminder')
                 Icon(
-                  Iconsax.alarm5,
+                  Iconsax.notification5,
                   color: AppColors().primaryColor,
                   size: 35.0,
                 ),
