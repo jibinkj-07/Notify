@@ -1,10 +1,6 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -33,7 +29,7 @@ class NotificationService {
         AndroidNotificationDetails(
       'userEvent001',
       'User Events',
-      groupKey: 'com.example.mynotify',
+      groupKey: 'com.notify.mynotify',
       channelDescription: 'Notifications for user created events',
       importance: Importance.high,
       priority: Priority.high,

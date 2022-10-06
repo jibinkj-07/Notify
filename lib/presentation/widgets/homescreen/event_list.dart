@@ -7,6 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:mynotify/logic/services/firebase_services.dart';
 import 'package:mynotify/models/event_list_model.dart';
 import 'package:mynotify/presentation/screens/user_events_list_details.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';

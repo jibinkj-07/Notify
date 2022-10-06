@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
+import 'package:mynotify/logic/services/firebase_services.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/event_list_model.dart';
 
 class EventDataServices with ChangeNotifier {
+  FirebaseServices firebaseServices = FirebaseServices();
   List<dynamic> _allEvents = [];
 
   //Reading data from file
@@ -26,6 +28,7 @@ class EventDataServices with ChangeNotifier {
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(newData));
+      firebaseServices.uploadFileToCloud(userEventsFile: newData);
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
     });
@@ -38,6 +41,7 @@ class EventDataServices with ChangeNotifier {
     List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
     oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(oldData));
+    firebaseServices.uploadFileToCloud(userEventsFile: oldData);
   }
 
   //For adding items to event list
@@ -87,6 +91,7 @@ class EventDataServices with ChangeNotifier {
     //writing the data to file
     File fileName = File(filePath);
     fileName.writeAsStringSync(jsonEncode(_allEvents));
+    firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
     notifyListeners();
   }
 }

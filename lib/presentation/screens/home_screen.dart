@@ -10,6 +10,7 @@ import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 
 import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:mynotify/logic/services/firebase_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
