@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
@@ -63,6 +64,9 @@ class MyApp extends StatelessWidget {
         //  //bloc for eventlist connectivity feature
         BlocProvider(
           create: (_) => EventFileHandlerCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CloudSyncCubit(),
         ),
       ],
       child: MultiProvider(

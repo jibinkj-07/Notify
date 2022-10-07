@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,10 @@ class EventDataServices with ChangeNotifier {
   //Reading data from file
   dynamic readDataFromFile({required String filePath}) {
     File fileName = File(filePath);
-    _allEvents = jsonDecode(fileName.readAsStringSync());
+    List<dynamic> data = jsonDecode(fileName.readAsStringSync());
+    _allEvents = data.toSet().toList();
     _allEvents.sort();
+
     return _allEvents;
   }
 
@@ -28,7 +31,7 @@ class EventDataServices with ChangeNotifier {
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(newData));
-      firebaseServices.uploadFileToCloud(userEventsFile: newData);
+      firebaseServices.uploadFileToCloud(userEventsFile: newData, merge: true);
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
     });
@@ -39,9 +42,11 @@ class EventDataServices with ChangeNotifier {
     List<EventListModel> newData = [event];
     File fileName = File(filePath);
     List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
+    //to removing duplicates
+    oldData.toSet().toList();
     oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(oldData));
-    firebaseServices.uploadFileToCloud(userEventsFile: oldData);
+    firebaseServices.uploadFileToCloud(userEventsFile: oldData, merge: false);
   }
 
   //For adding items to event list
@@ -91,7 +96,65 @@ class EventDataServices with ChangeNotifier {
     //writing the data to file
     File fileName = File(filePath);
     fileName.writeAsStringSync(jsonEncode(_allEvents));
-    firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
+    firebaseServices.uploadFileToCloud(
+        userEventsFile: _allEvents, merge: false);
+    notifyListeners();
+  }
+
+  //cloud uploading function
+  //For adding items to event list
+  void addNewEventFromCloud(
+      {required String id,
+      required int notificationId,
+      required String title,
+      required String notes,
+      required DateTime dateTime,
+      required String eventType,
+      required bool fileExists,
+      required BuildContext parentContext,
+      String? filePath}) {
+    //body part
+
+    // _allEvents.add(eventData);
+    int flag = 0;
+    for (var i in _allEvents) {
+      final data = jsonDecode(i);
+      if (data['id'] == id) {
+        flag += 1;
+      }
+    }
+    if (flag == 0) {
+      //storing into file
+      EventListModel newData = EventListModel(
+        id: id,
+        notificationId: notificationId,
+        title: title,
+        notes: notes,
+        dateTime: dateTime,
+        eventDate: dateTime.toString(),
+        eventType: eventType,
+      );
+      _allEvents.add(newData);
+      if (fileExists) {
+        List<EventListModel> data = [newData];
+        File fileName = File(filePath!);
+        List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
+        oldData.addAll(data);
+        fileName.writeAsStringSync(jsonEncode(oldData));
+      } else {
+        List<EventListModel> data = [newData];
+        getApplicationDocumentsDirectory().then((dir) {
+          final name = '${dir.path}/userEvents';
+          File fileName = File(name);
+          fileName.createSync();
+          fileName.writeAsStringSync(jsonEncode(data));
+          //updating the cubit
+          parentContext
+              .read<EventFileHandlerCubit>()
+              .fileExists(filePath: name);
+        });
+      }
+    }
     notifyListeners();
   }
 }

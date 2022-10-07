@@ -12,7 +12,6 @@ import 'package:mynotify/models/event_list_model.dart';
 import 'package:mynotify/presentation/screens/user_events_list_details.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/app_colors.dart';
@@ -36,11 +35,17 @@ class EventList extends StatelessWidget {
         userEvents = eventsProvider.readDataFromFile(filePath: state.filePath);
 
         //Checking whether current day has any events, if not displaying no events widget
-        if (!userEvents.toString().contains(currentDateTime)) {
-          // log('No user events in this day');
+        int flag = 0;
+        for (var i in userEvents) {
+          final data = jsonDecode(i);
+          final eventDate = data['eventDate'];
+          if (eventDate.toString().contains(currentDateTime)) {
+            flag += 1;
+          }
+        }
+        if (flag == 0) {
           return noEvents();
         }
-        // log(userEvents.toString());
 
         //Returing listview
         return NotificationListener<OverscrollIndicatorNotification>(
