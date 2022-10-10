@@ -31,7 +31,7 @@ class EventDataServices with ChangeNotifier {
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(newData));
-      firebaseServices.uploadFileToCloud(userEventsFile: newData, merge: true);
+      firebaseServices.uploadFileToCloud(userEventsFile: newData);
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
     });
@@ -46,7 +46,7 @@ class EventDataServices with ChangeNotifier {
     oldData.toSet().toList();
     oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(oldData));
-    firebaseServices.uploadFileToCloud(userEventsFile: oldData, merge: false);
+    firebaseServices.uploadFileToCloud(userEventsFile: oldData);
   }
 
   //For adding items to event list
@@ -96,8 +96,7 @@ class EventDataServices with ChangeNotifier {
     //writing the data to file
     File fileName = File(filePath);
     fileName.writeAsStringSync(jsonEncode(_allEvents));
-    firebaseServices.uploadFileToCloud(
-        userEventsFile: _allEvents, merge: false);
+    firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
     notifyListeners();
   }
 
