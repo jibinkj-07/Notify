@@ -25,6 +25,7 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   //variables declaration
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   bool _isLogin = false;
   bool _isObscure = true;
   String _email = '';
@@ -35,6 +36,9 @@ class _AuthFormState extends State<AuthForm> {
     FocusScope.of(context).unfocus();
     final valid = _formKey.currentState!.validate();
     if (valid) {
+      setState(() {
+        _isLoading = true;
+      });
       _formKey.currentState!.save();
 
       if (signUp) {
@@ -190,48 +194,62 @@ class _AuthFormState extends State<AuthForm> {
                   return Column(
                     children: [
                       _isLogin
-                          ? ElevatedButton(
-                              onPressed: () {
-                                _submitForm(signUp: false);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors().primaryColor,
-                                onPrimary: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 90, vertical: 10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                          ? _isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors().primaryColor,
+                                    strokeWidth: 1.5,
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    _submitForm(signUp: false);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: AppColors().primaryColor,
+                                    onPrimary: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 90, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                )
+                          : _isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors().primaryColor,
+                                    strokeWidth: 1.5,
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    _submitForm(signUp: true);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: AppColors().primaryColor,
+                                    onPrimary: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 90, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: () {
-                                _submitForm(signUp: true);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors().primaryColor,
-                                onPrimary: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 90, vertical: 10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
                       _isLogin
                           ? TextButton(
                               onPressed: () {

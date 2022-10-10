@@ -11,6 +11,7 @@ import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/authentication_screen.dart';
 import 'package:mynotify/presentation/screens/home_screen.dart';
+import 'package:mynotify/presentation/screens/user_cloud_event_sync.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/screens/welcome_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -96,6 +97,7 @@ class MyApp extends StatelessWidget {
             '/home': (_) => const HomeScreen(),
             '/add-event': (_) => const AddEventScreen(),
             '/user': (_) => const UserProfileScreen(),
+            '/user-sync': (_) => const UserCloudEventSync(),
           },
           debugShowCheckedModeBanner: false,
         ),

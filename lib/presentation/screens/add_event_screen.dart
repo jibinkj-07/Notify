@@ -134,16 +134,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   Provider.of<EventDataServices>(context,
                                           listen: false)
                                       .addNewEvent(
-                                    id: currentTime.toString(),
-                                    notificationId: notificationId,
-                                    title: _title,
-                                    notes: _notes,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                    fileExists: true,
-                                    parentContext: context,
-                                    filePath: state.filePath,
-                                  );
+                                          id: currentTime.toString(),
+                                          notificationId: notificationId,
+                                          title: _title,
+                                          notes: _notes,
+                                          dateTime: _dateTime,
+                                          eventType: _eventType,
+                                          fileExists: true,
+                                          parentContext: context,
+                                          filePath: state.filePath,
+                                          isSyncing: false);
                                   _titleController.clear();
                                   _notesController.clear();
                                   Navigator.of(context).pop();
@@ -196,6 +196,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                     eventType: _eventType,
                                     parentContext: context,
                                     fileExists: false,
+                                    isSyncing: false,
                                   );
                                   _titleController.clear();
                                   _notesController.clear();

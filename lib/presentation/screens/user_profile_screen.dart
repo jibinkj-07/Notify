@@ -1,20 +1,59 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import '../../constants/app_colors.dart';
 
-
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  bool isSyncTime = false;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  DateTime? time;
+  void checkSyncTime() {
+    FirebaseFirestore.instance
+        .collection("AllUserEvents")
+        .doc(userId)
+        .get()
+        .then((snapshot) {
+      try {
+        log('Data from db is ${snapshot.get('syncTime').toDate()}');
+        setState(() {
+          isSyncTime = true;
+          time = snapshot.get('syncTime').toDate();
+        });
+      } catch (e) {
+        log('error while get sync time');
+        setState(() {
+          isSyncTime = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    checkSyncTime();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     //current user
     final userEmail = FirebaseAuth.instance.currentUser!.email;
+
+    //checking for sync time
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -73,6 +112,33 @@ class UserProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              if (isSyncTime)
+                //last sync part
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(.2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Last Synced',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        DateFormat.yMMMd().add_jm().format(time!),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
               ElevatedButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut();

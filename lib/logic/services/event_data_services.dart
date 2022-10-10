@@ -23,22 +23,33 @@ class EventDataServices with ChangeNotifier {
   }
 
 //CREATING FILE
-  void createFile(
-      {required EventListModel content, required BuildContext parentContext}) {
+  void createFile({
+    required EventListModel content,
+    required BuildContext parentContext,
+    required bool isSyncing,
+  }) {
     List<EventListModel> newData = [content];
     getApplicationDocumentsDirectory().then((dir) {
       final name = '${dir.path}/userEvents';
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(newData));
-      firebaseServices.uploadFileToCloud(userEventsFile: newData);
+      if (!isSyncing) {
+        firebaseServices.uploadFileToCloud(userEventsFile: newData);
+      } else {
+        firebaseServices.updateSyncTime();
+      }
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
     });
   }
 
 //WRITING DATA INTO FILE
-  void writeToFile({required EventListModel event, required String filePath}) {
+  void writeToFile({
+    required EventListModel event,
+    required String filePath,
+    required bool isSyncing,
+  }) {
     List<EventListModel> newData = [event];
     File fileName = File(filePath);
     List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
@@ -46,20 +57,26 @@ class EventDataServices with ChangeNotifier {
     oldData.toSet().toList();
     oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(oldData));
-    firebaseServices.uploadFileToCloud(userEventsFile: oldData);
+    if (!isSyncing) {
+      firebaseServices.uploadFileToCloud(userEventsFile: oldData);
+    } else {
+      firebaseServices.updateSyncTime();
+    }
   }
 
   //For adding items to event list
-  void addNewEvent(
-      {required String id,
-      required int notificationId,
-      required String title,
-      required String notes,
-      required DateTime dateTime,
-      required String eventType,
-      required bool fileExists,
-      required BuildContext parentContext,
-      String? filePath}) {
+  void addNewEvent({
+    required String id,
+    required int notificationId,
+    required String title,
+    required String notes,
+    required DateTime dateTime,
+    required String eventType,
+    required bool fileExists,
+    required BuildContext parentContext,
+    required bool isSyncing,
+    String? filePath,
+  }) {
     //body part
 
     _allEvents.add(EventListModel(
@@ -71,6 +88,7 @@ class EventDataServices with ChangeNotifier {
       eventDate: dateTime.toString(),
       eventType: eventType,
     ));
+    log("Adding event $title and _allEvents data are ${_allEvents.toString()}");
 
     //storing into file
     EventListModel newData = EventListModel(
@@ -83,9 +101,10 @@ class EventDataServices with ChangeNotifier {
       eventType: eventType,
     );
     if (fileExists) {
-      writeToFile(event: newData, filePath: filePath!);
+      writeToFile(event: newData, filePath: filePath!, isSyncing: isSyncing);
     } else {
-      createFile(content: newData, parentContext: parentContext);
+      createFile(
+          content: newData, parentContext: parentContext, isSyncing: isSyncing);
     }
     notifyListeners();
   }

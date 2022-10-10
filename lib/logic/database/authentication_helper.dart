@@ -49,21 +49,21 @@ class AuthenticationHelper {
         parentContext.read<AuthenticationCubit>().loggingWithCloud();
         //navigating to homescreen
         Navigator.of(parentContext)
-            .pushNamedAndRemoveUntil('/home', (Route route) => false);
+            .pushNamedAndRemoveUntil('/user-sync', (Route route) => false);
       });
     } on FirebaseAuthException catch (e) {
       if (e.toString().contains('user-not-found')) {
         showTopSnackBar(
           parentContext,
           const CustomSnackBar.error(
-            message: "No user with this email address",
+            message: "No user with this email address found",
           ),
         );
       } else if (e.toString().contains('wrong-password')) {
         showTopSnackBar(
           parentContext,
           const CustomSnackBar.error(
-            message: "Password is invalid",
+            message: "Invalid passowrd",
           ),
         );
       }

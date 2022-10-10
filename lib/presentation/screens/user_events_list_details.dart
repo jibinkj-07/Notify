@@ -694,6 +694,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         eventType: newEventType,
         fileExists: true,
         filePath: filePath,
+        isSyncing: false,
         parentContext: context);
     if (newEventType == 'Others') {
       notiBody = 'You have one event which is going to happen in 5 minutes';
