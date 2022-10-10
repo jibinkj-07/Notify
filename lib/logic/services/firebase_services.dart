@@ -76,7 +76,6 @@ class FirebaseServices {
         allEvents = jsonDecode(datas!['allEvents']);
         //looping between all cloud events
         for (var event in allEvents) {
-          dlog.log('is file already exist or not : $fileExist');
           final data = jsonDecode(event);
           final id = data['id'];
           final notiID = data['notificationId'];
@@ -101,7 +100,6 @@ class FirebaseServices {
               dateTime: time);
           //file is already exist
           if (fileExist) {
-            dlog.log('File Already exist in device');
             //adding events to device
             Provider.of<EventDataServices>(parentContext, listen: false)
                 .addNewEvent(
@@ -119,7 +117,6 @@ class FirebaseServices {
           } else {
             //creating file if it was first event
             if (flag == 0) {
-              dlog.log('First event and creating file');
               EventListModel content = EventListModel(
                 id: id.toString(),
                 title: title,
@@ -132,7 +129,6 @@ class FirebaseServices {
               List<EventListModel> newData = [content];
               getApplicationDocumentsDirectory().then((dir) {
                 fPath = '${dir.path}/userEvents';
-                dlog.log('file path from creatig section $fPath');
                 File fileName = File(fPath);
                 fileName.createSync();
                 fileName.writeAsStringSync(jsonEncode(newData));
@@ -145,8 +141,6 @@ class FirebaseServices {
             } else {
               getApplicationDocumentsDirectory().then((dir) {
                 final fiPath = '${dir.path}/userEvents';
-                dlog.log(
-                    'file already created and path is $fPath and value of flag is $flag');
                 //adding events to device
                 Provider.of<EventDataServices>(parentContext, listen: false)
                     .addNewEvent(
@@ -166,7 +160,7 @@ class FirebaseServices {
           } //end of for
           flag++;
         }
-        Future.delayed(const Duration(seconds: 3), () {
+        Future.delayed(const Duration(seconds: 2), () {
           parentContext.read<CloudSyncCubit>().cloudDataSynced();
           Navigator.of(parentContext)
               .pushNamedAndRemoveUntil('/home', (route) => false);

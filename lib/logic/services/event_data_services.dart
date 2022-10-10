@@ -88,8 +88,6 @@ class EventDataServices with ChangeNotifier {
       eventDate: dateTime.toString(),
       eventType: eventType,
     ));
-    log("Adding event $title and _allEvents data are ${_allEvents.toString()}");
-
     //storing into file
     EventListModel newData = EventListModel(
       id: id,
