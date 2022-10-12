@@ -51,7 +51,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
 
     Future<TimeOfDay?> pickTime() => showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: TimeOfDay(
+              hour: widget.dateTime.hour, minute: widget.dateTime.minute),
         );
 
     Future pickDateAndTime() async {
@@ -698,7 +699,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
     if (_dateTime != null) {
       Random random = Random();
       notiID = random.nextInt(999999999) + 1000000000;
-      newId = _dateTime.toString();
+      newId = DateTime.now().toString();
       newDateTime = _dateTime!;
     }
     if (_title != '') {

@@ -16,24 +16,36 @@ class EventDataServices with ChangeNotifier {
   dynamic readDataFromFile({required String filePath}) {
     File fileName = File(filePath);
     _allEvents = jsonDecode(fileName.readAsStringSync());
-    _allEvents.sort();
-    return _allEvents;
+    List<Map<String, dynamic>> list = sortUserEvents(eventList: _allEvents);
+    // _allEvents.sort();
+    return list;
+  }
+
+  //sorting userEvents
+  List<Map<String, dynamic>> sortUserEvents(
+      {required List<dynamic> eventList}) {
+    List<Map<String, dynamic>> myList = [];
+    for (var i in eventList) {
+      final data = jsonDecode(i);
+      myList.add(data);
+    }
+    myList.sort((a, b) => a['dateTime'].compareTo(b['dateTime']));
+    return myList;
   }
 
 //CREATING FILE
   void createFile({
-    required EventListModel content,
+    // required EventListModel content,
     required BuildContext parentContext,
     required bool isSyncing,
   }) {
-    List<EventListModel> newData = [content];
     getApplicationDocumentsDirectory().then((dir) {
       final name = '${dir.path}/userEvents';
       File fileName = File(name);
       fileName.createSync();
-      fileName.writeAsStringSync(jsonEncode(newData));
+      fileName.writeAsStringSync(jsonEncode(_allEvents));
       if (!isSyncing) {
-        firebaseServices.uploadFileToCloud(userEventsFile: newData);
+        firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
       } else {
         firebaseServices.updateSyncTime();
       }
@@ -44,17 +56,17 @@ class EventDataServices with ChangeNotifier {
 
 //WRITING DATA INTO FILE
   void writeToFile({
-    required EventListModel event,
+    // required EventListModel event,
     required String filePath,
     required bool isSyncing,
   }) {
-    List<EventListModel> newData = [event];
+    // List<EventListModel> newData = [event];
     File fileName = File(filePath);
-    List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
-    oldData.addAll(newData);
-    fileName.writeAsStringSync(jsonEncode(oldData));
+    // List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
+    // oldData.addAll(newData);
+    fileName.writeAsStringSync(jsonEncode(_allEvents));
     if (!isSyncing) {
-      firebaseServices.uploadFileToCloud(userEventsFile: oldData);
+      firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
     } else {
       firebaseServices.updateSyncTime();
     }
@@ -90,20 +102,19 @@ class EventDataServices with ChangeNotifier {
       return;
     }
     //storing into file
-    EventListModel newData = EventListModel(
-      id: id,
-      notificationId: notificationId,
-      title: title,
-      notes: notes,
-      dateTime: dateTime,
-      eventDate: dateTime.toString(),
-      eventType: eventType,
-    );
+    // EventListModel newData = EventListModel(
+    //   id: id,
+    //   notificationId: notificationId,
+    //   title: title,
+    //   notes: notes,
+    //   dateTime: dateTime,
+    //   eventDate: dateTime.toString(),
+    //   eventType: eventType,
+    // );
     if (fileExists) {
-      writeToFile(event: newData, filePath: filePath!, isSyncing: isSyncing);
+      writeToFile(filePath: filePath!, isSyncing: isSyncing);
     } else {
-      createFile(
-          content: newData, parentContext: parentContext, isSyncing: isSyncing);
+      createFile(parentContext: parentContext, isSyncing: isSyncing);
     }
     notifyListeners();
   }

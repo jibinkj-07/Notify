@@ -121,14 +121,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   final currentTime = DateTime.now();
                                   int notificationId =
                                       random.nextInt(999999999) + 1000000000;
-                                  //notification part
-                                  NotificationService().showNotification(
-                                    id: notificationId,
-                                    title: _title,
-                                    body: notiBody,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                  );
 
                                   //main part
                                   Provider.of<EventDataServices>(context,
@@ -144,6 +136,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                           parentContext: context,
                                           filePath: state.filePath,
                                           isSyncing: false);
+
+                                  //notification part
+                                  NotificationService().showNotification(
+                                    id: notificationId,
+                                    title: _title,
+                                    body: notiBody,
+                                    dateTime: _dateTime,
+                                    eventType: _eventType,
+                                  );
                                   _titleController.clear();
                                   _notesController.clear();
                                   Navigator.of(context).pop();

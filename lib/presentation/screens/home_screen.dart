@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              const SizedBox(width: 10),
+              // const SizedBox(width: 10),
               //bloc listener for rendering connect now button
               BlocBuilder<AuthenticationCubit, AuthenticationState>(
                 builder: (context, state) {

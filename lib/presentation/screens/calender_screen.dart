@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_neat_and_clean_calendar/calendar_tile.dart';
 import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,7 @@ class CalenderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> userEvents = [];
+    List<Map<String, dynamic>> userEvents = [];
     List<NeatCleanCalendarEvent> calenderEventList = [];
     AppColors appColors = AppColors();
     final eventProvider = Provider.of<EventDataServices>(context);
@@ -28,19 +27,20 @@ class CalenderScreen extends StatelessWidget {
       Color eventColor = appColors.greenColor;
       String about = 'Completed event';
       for (var i in userEvents) {
-        final event = jsonDecode(i);
+        // final event = jsonDecode(i);
         final DateTime time =
-            DateTime.fromMillisecondsSinceEpoch(event['dateTime']);
-
+            DateTime.fromMillisecondsSinceEpoch(i['dateTime']);
+        log('event time is $time and current time is ${DateTime.now()} and status is $about title is ${i['title']}');
         //checking if the event is over or not
-        if (time.isAfter(DateTime.now())) {
+        if (!time.isBefore(DateTime.now().toUtc())) {
           eventColor = appColors.primaryColor;
+          log('${i['title']}');
           about = 'Upcoming event';
         }
 
         final calEvent = NeatCleanCalendarEvent(
-          event['title'],
-          description: '${event['eventType']}, $about',
+          i['title'],
+          description: '${i['eventType']}, $about',
           color: eventColor,
           startTime: time,
           endTime: DateTime(

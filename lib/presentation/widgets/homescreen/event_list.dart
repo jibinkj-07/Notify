@@ -24,7 +24,7 @@ class EventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // log('current date from prev page is $currentDateTime');
-    dynamic userEvents = [];
+    List<Map<String, dynamic>> userEvents = [];
     final eventsProvider = Provider.of<EventDataServices>(context);
 
     //checking for is file created already
@@ -39,8 +39,8 @@ class EventList extends StatelessWidget {
         //Checking whether current day has any events, if not displaying no events widget
         int flag = 0;
         for (var i in userEvents) {
-          final data = jsonDecode(i);
-          final eventDate = data['eventDate'];
+          // final data = jsonDecode(i);
+          final eventDate = i['eventDate'];
           if (eventDate.toString().contains(currentDateTime)) {
             flag += 1;
           }
@@ -59,14 +59,14 @@ class EventList extends StatelessWidget {
             width: double.infinity,
             child: ListView.builder(
               itemBuilder: (ctx, index) {
-                Map eventItem = jsonDecode(userEvents[index]);
-                final id = eventItem['id'].toString();
-                final title = eventItem['title'].toString();
-                final notes = eventItem['notes'].toString();
-                int notiID = eventItem['notificationId'];
-                final time =
-                    DateTime.fromMillisecondsSinceEpoch(eventItem['dateTime']);
-                final eventType = eventItem['eventType'].toString();
+                // Map eventItem = jsonDecode(userEvents[index]);
+                final id = userEvents[index]['id'];
+                final title = userEvents[index]['title'].toString();
+                final notes = userEvents[index]['notes'].toString();
+                int notiID = userEvents[index]['notificationId'];
+                final time = DateTime.fromMillisecondsSinceEpoch(
+                    userEvents[index]['dateTime']);
+                final eventType = userEvents[index]['eventType'].toString();
                 // log('time is $time');
                 if (time.toString().contains(currentDateTime)) {
                   return Column(
