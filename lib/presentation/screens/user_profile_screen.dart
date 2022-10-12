@@ -34,6 +34,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         });
       } catch (e) {
         log('error while get sync time');
+        if (!mounted) return;
         setState(() {
           isSyncTime = false;
         });

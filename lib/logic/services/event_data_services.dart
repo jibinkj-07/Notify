@@ -88,6 +88,11 @@ class EventDataServices with ChangeNotifier {
       eventDate: dateTime.toString(),
       eventType: eventType,
     ));
+    //checking if already device list contain the adding event
+    if (_allEvents.toString().contains(id)) {
+      log('device list contain already $title');
+      return;
+    }
     //storing into file
     EventListModel newData = EventListModel(
       id: id,
