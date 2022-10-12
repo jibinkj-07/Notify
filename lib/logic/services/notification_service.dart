@@ -27,7 +27,7 @@ class NotificationService {
     final largeIcon = eventType.toLowerCase();
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'userEvent001',
+      'userEvent',
       'User Events',
       groupKey: 'com.notify.mynotify',
       channelDescription: 'Notifications for user created events',

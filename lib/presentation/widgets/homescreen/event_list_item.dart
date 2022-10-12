@@ -20,7 +20,6 @@ class EventListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageName = eventType.toLowerCase();
     String newNotes = notes.replaceAll("\n", " ");
     if (newNotes.length > 30) {
       newNotes = newNotes.substring(0, 25);
@@ -61,6 +60,12 @@ class EventListItem extends StatelessWidget {
               if (eventType == 'Meeting')
                 Icon(
                   Iconsax.brifecase_timer5,
+                  color: AppColors().primaryColor,
+                  size: 35.0,
+                ),
+              if (eventType == 'Work')
+                Icon(
+                  Iconsax.buildings5,
                   color: AppColors().primaryColor,
                   size: 35.0,
                 ),

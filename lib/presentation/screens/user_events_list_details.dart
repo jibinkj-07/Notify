@@ -93,6 +93,12 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               color: Colors.white,
               size: 100.0,
             );
+          case 'Work':
+            return const Icon(
+              Iconsax.buildings5,
+              color: Colors.white,
+              size: 100.0,
+            );
           case 'Exam':
             return const Icon(
               Iconsax.menu_board5,
@@ -112,7 +118,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               size: 100.0,
             );
         }
-      } else {}
+      }
       //Icon choosing depends on eventtype
       switch (widget.eventType) {
         case 'Birthday':
@@ -130,6 +136,12 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         case 'Meeting':
           return const Icon(
             Iconsax.brifecase_timer5,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Work':
+          return const Icon(
+            Iconsax.buildings5,
             color: Colors.white,
             size: 100.0,
           );
@@ -157,7 +169,6 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
             color: Colors.white,
             size: 100.0,
           );
-          ;
       }
     }
 
@@ -380,6 +391,22 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                   },
                                   child: Text(
                                     'Meeting',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: AppColors().primaryColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Work';
+                                    });
+                                  },
+                                  child: Text(
+                                    'Work',
                                     style: TextStyle(
                                         fontSize: 17,
                                         color: AppColors().primaryColor,

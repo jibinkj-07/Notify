@@ -404,6 +404,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   ),
                                 ),
 
+                                 TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _eventType = 'Work';
+                                    });
+                                  },
+                                  child: Text(
+                                    'Work',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: AppColors().primaryColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+
+
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
