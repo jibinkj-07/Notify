@@ -34,6 +34,8 @@ class EventList extends StatelessWidget {
         //CALLING READ FUNC FROM PROVIDER
         userEvents = eventsProvider.readDataFromFile(filePath: state.filePath);
 
+        // log('all events are   ${userEvents.toString()}');
+
         //Checking whether current day has any events, if not displaying no events widget
         int flag = 0;
         for (var i in userEvents) {

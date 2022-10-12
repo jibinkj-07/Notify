@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/logic/cubit/date_cubit.dart';
+import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/calender_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:page_transition/page_transition.dart';
@@ -57,6 +59,31 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Row(
             children: [
+              //cubit to read file path
+              BlocBuilder<EventFileHandlerCubit, EventFileHandlerState>(
+                builder: (context, state) {
+                  return IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          reverseDuration: const Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 700),
+                          type: PageTransitionType.fade,
+                          child: CalenderScreen(filePath: state.filePath),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Iconsax.calendar_1,
+                    ),
+                    color: AppColors().primaryColor,
+                    splashRadius: 25.0,
+                    iconSize: 30.0,
+                  );
+                },
+              ),
+              const SizedBox(width: 10),
               //bloc listener for rendering connect now button
               BlocBuilder<AuthenticationCubit, AuthenticationState>(
                 builder: (context, state) {
@@ -200,13 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      // const Text(
-                      //   'Events: 01',
-                      //   style: TextStyle(
-                      //       color: Colors.black,
-                      //       fontSize: 18,
-                      //       fontWeight: FontWeight.bold),
-                      // ),
                     ],
                   ),
                   //Date display

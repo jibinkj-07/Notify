@@ -15,10 +15,8 @@ class EventDataServices with ChangeNotifier {
   //Reading data from file
   dynamic readDataFromFile({required String filePath}) {
     File fileName = File(filePath);
-    List<dynamic> data = jsonDecode(fileName.readAsStringSync());
-    _allEvents = data.toSet().toList();
+    _allEvents = jsonDecode(fileName.readAsStringSync());
     _allEvents.sort();
-
     return _allEvents;
   }
 
@@ -53,8 +51,6 @@ class EventDataServices with ChangeNotifier {
     List<EventListModel> newData = [event];
     File fileName = File(filePath);
     List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
-    //to removing duplicates
-    oldData.toSet().toList();
     oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(oldData));
     if (!isSyncing) {

@@ -404,7 +404,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   ),
                                 ),
 
-                                 TextButton(
+                                TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     setState(() {
@@ -419,7 +419,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-
 
                                 TextButton(
                                   onPressed: () {
