@@ -4,11 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
-import 'package:mynotify/logic/services/firebase_services.dart';
-import 'package:mynotify/models/event_list_model.dart';
 import 'package:mynotify/presentation/screens/user_events_list_details.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
@@ -92,18 +89,20 @@ class EventList extends StatelessWidget {
                             ),
                           );
                         },
-                        child: EventListItem(
-                            id: id,
-                            title: title,
-                            notes: notes,
-                            eventType: eventType,
-                            dateTime: time),
+                        child: BlocBuilder<EventFileHandlerCubit,
+                            EventFileHandlerState>(
+                          builder: (context, state) {
+                            return EventListItem(
+                                id: id,
+                                filePath: state.filePath,
+                                notificationId: notiID,
+                                title: title,
+                                notes: notes,
+                                eventType: eventType,
+                                dateTime: time);
+                          },
+                        ),
                       ),
-                      // const Divider(
-                      //   height: 1,
-                      //   // thickness: 1,
-                      //   indent: 20.0,
-                      // ),
                     ],
                   );
                 } else {

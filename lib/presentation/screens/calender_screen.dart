@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
@@ -20,6 +19,7 @@ class CalenderScreen extends StatelessWidget {
     List<NeatCleanCalendarEvent> calenderEventList = [];
     AppColors appColors = AppColors();
     final eventProvider = Provider.of<EventDataServices>(context);
+    DateTime selectedDateTime = DateTime.now();
 
     //calling readData only if filepath is exist
     if (filePath != '') {
@@ -29,17 +29,15 @@ class CalenderScreen extends StatelessWidget {
     //adding events from device into calender
     if (userEvents.isNotEmpty) {
       Color eventColor = appColors.redColor;
-      String about = 'Completed event';
+      String about = 'Completed';
       for (var i in userEvents) {
-        // final event = jsonDecode(i);
         final DateTime time =
             DateTime.fromMillisecondsSinceEpoch(i['dateTime']);
-        // log('event time is $time and current time is ${DateTime.now()} and status is $about title is ${i['title']}');
+
         //checking if the event is over or not
         if (!time.isBefore(DateTime.now().toUtc())) {
           eventColor = appColors.greenColor;
-          log('${i['title']}');
-          about = 'Upcoming event';
+          about = 'Upcoming';
         }
 
         final calEvent = NeatCleanCalendarEvent(
@@ -129,12 +127,16 @@ class CalenderScreen extends StatelessWidget {
                     ),
                   );
                 },
+                onDateSelected: (value) {
+                  selectedDateTime = value;
+                },
                 isExpandable: true,
                 eventDoneColor: Colors.green,
                 selectedColor: appColors.primaryColor,
                 selectedTodayColor: appColors.redColor,
-                todayColor: appColors.primaryColor,
-                eventColor: Colors.blue,
+                todayColor: appColors.redColor,
+                eventColor: appColors.primaryColor,
+                hideTodayIcon: true,
                 locale: 'en_US',
                 todayButtonText: '',
                 allDayEventText: '',
@@ -171,7 +173,7 @@ class CalenderScreen extends StatelessWidget {
               reverseDuration: const Duration(milliseconds: 300),
               duration: const Duration(milliseconds: 300),
               type: PageTransitionType.bottomToTop,
-              child: const AddEventScreen(),
+              child: AddEventScreen(selectedDateTime: selectedDateTime),
             ),
           );
         },

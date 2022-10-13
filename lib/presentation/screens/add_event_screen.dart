@@ -13,7 +13,13 @@ import 'package:mynotify/constants/app_colors.dart';
 import '../../logic/services/notification_service.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({Key? key}) : super(key: key);
+  final DateTime? selectedDateTime;
+  const AddEventScreen({
+    Key? key,
+    this.selectedDateTime,
+  }) : super(
+          key: key,
+        );
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -38,10 +44,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     //variables
     final screen = MediaQuery.of(context).size;
+
+    if (widget.selectedDateTime != null) {
+      _dateTime = widget.selectedDateTime!;
+    }
 //pick date and time function
     Future<DateTime?> pickDate() => showDatePicker(
           context: context,
-          initialDate: DateTime.now(),
+          initialDate: _dateTime,
           firstDate: DateTime(1900),
           lastDate: DateTime(2100),
         );

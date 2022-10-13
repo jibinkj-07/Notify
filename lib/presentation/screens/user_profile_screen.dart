@@ -53,19 +53,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     //current user
     final userEmail = FirebaseAuth.instance.currentUser!.email;
 
-    //checking for sync time
+    AppColors appColors = AppColors();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: appColors.primaryColor,
+        foregroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: AppColors().primaryColor,
           ),
         ),
         elevation: 0,
@@ -77,13 +77,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           margin: const EdgeInsets.only(top: 20),
           child: Column(
             children: [
+              //profile avatar
               CircleAvatar(
-                radius: 50,
-                backgroundColor: AppColors().primaryColor,
-                foregroundColor: Colors.white,
-                child: const Icon(
-                  Iconsax.user,
-                  size: 50,
+                radius: 85,
+                backgroundColor: Colors.white.withOpacity(.2),
+                child: CircleAvatar(
+                  radius: 75,
+                  backgroundColor: Colors.white.withOpacity(.5),
+                  child: CircleAvatar(
+                    radius: 65,
+                    backgroundColor: Colors.white,
+                    foregroundColor: appColors.primaryColor,
+                    child: const Icon(
+                      Iconsax.user,
+                      size: 50,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
@@ -94,7 +103,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
@@ -121,7 +130,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(.2),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Column(
@@ -147,7 +156,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: AppColors().redColor,
+                  primary: appColors.redColor,
                   onPrimary: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
