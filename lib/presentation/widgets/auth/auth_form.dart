@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/logic/database/authentication_helper.dart';
 import 'package:mynotify/logic/services/firebase_services.dart';
+import 'package:mynotify/presentation/screens/forget_password_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../logic/cubit/internet_cubit.dart';
@@ -32,7 +36,7 @@ class _AuthFormState extends State<AuthForm> {
   String _password = '';
 
   //submit function
-  void _submitForm({required bool signUp}) {
+  Future<void> _submitForm({required bool signUp}) async {
     FocusScope.of(context).unfocus();
     final valid = _formKey.currentState!.validate();
     if (valid) {
@@ -40,13 +44,19 @@ class _AuthFormState extends State<AuthForm> {
         _isLoading = true;
       });
       _formKey.currentState!.save();
-
+      String error = '';
       if (signUp) {
-        AuthenticationHelper(parentContext: context)
+        error = await AuthenticationHelper(parentContext: context)
             .signUp(email: _email, password: _password);
       } else {
-        AuthenticationHelper(parentContext: context)
+        error = await AuthenticationHelper(parentContext: context)
             .signIn(email: _email, password: _password);
+      }
+      log('value of error is $error');
+      if (error.isNotEmpty) {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -54,26 +64,39 @@ class _AuthFormState extends State<AuthForm> {
   //main part
   @override
   Widget build(BuildContext context) {
+    AppColors appColors = AppColors();
     return Form(
       key: _formKey,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(30),
+        margin: const EdgeInsets.only(top: 30),
         // decoration: BoxDecoration(color: Colors.black.withOpacity(.2)),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            //profile avatar
             CircleAvatar(
-              radius: 45,
-              backgroundColor: AppColors().primaryColor,
-              foregroundColor: Colors.white,
-              child: const Icon(
-                Iconsax.user,
-                size: 50,
+              radius: 80,
+              backgroundColor: Colors.white.withOpacity(.2),
+              child: CircleAvatar(
+                radius: 65,
+                backgroundColor: Colors.white.withOpacity(.5),
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.white,
+                  foregroundColor: appColors.primaryColor,
+                  child: const Icon(
+                    Iconsax.user,
+                    size: 50,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
+            //user input section
             TextFormField(
+              cursorColor: Colors.white,
               key: const ValueKey('email'),
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.emailAddress,
@@ -85,45 +108,52 @@ class _AuthFormState extends State<AuthForm> {
                 } else if (!EmailValidator.validate(data)) {
                   return 'Enter a valid email address';
                 }
+                return null;
               },
               onSaved: (value) {
                 _email = value.toString().trim();
               },
               style: const TextStyle(
                   fontSize: 18.0,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500),
               //decoration
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                hintText: 'Enter email',
-                labelText: 'Email',
+                hintText: 'Enter email address',
+                hintStyle: TextStyle(
+                  color: Colors.white.withOpacity(.7),
+                ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(width: 1, color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.white.withOpacity(.6),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
                     width: 2,
-                    color: AppColors().primaryColor,
+                    color: Colors.white,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(width: 1, color: Colors.red),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
                     width: 2,
-                    color: AppColors().primaryColor,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             TextFormField(
+              cursorColor: Colors.white,
               key: const ValueKey('password'),
               obscureText: _isObscure,
 
@@ -140,7 +170,7 @@ class _AuthFormState extends State<AuthForm> {
               },
               style: const TextStyle(
                   fontSize: 18.0,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500),
 
               //decoration
@@ -148,39 +178,42 @@ class _AuthFormState extends State<AuthForm> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     _isObscure ? Iconsax.eye4 : Iconsax.eye_slash5,
-                    color: AppColors().primaryColor,
+                    color: Colors.white,
                   ),
                   onPressed: () {
                     setState(() {
                       _isObscure = !_isObscure;
                     });
                   },
-                  splashColor: AppColors().primaryColor.withOpacity(.7),
+                  splashColor: Colors.white.withOpacity(.7),
                   splashRadius: 20,
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                 hintText: 'Enter password',
-                labelText: 'Password',
+                hintStyle: TextStyle(
+                  color: Colors.white.withOpacity(.7),
+                ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(width: 1, color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide:
+                      BorderSide(width: 1, color: Colors.white.withOpacity(.6)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
                     width: 2,
-                    color: AppColors().primaryColor,
+                    color: Colors.white,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(width: 1, color: Colors.red),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
                     width: 2,
-                    color: AppColors().primaryColor,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -195,9 +228,9 @@ class _AuthFormState extends State<AuthForm> {
                     children: [
                       _isLogin
                           ? _isLoading
-                              ? Center(
+                              ? const Center(
                                   child: CircularProgressIndicator(
-                                    color: AppColors().primaryColor,
+                                    color: Colors.white,
                                     strokeWidth: 1.5,
                                   ),
                                 )
@@ -206,12 +239,12 @@ class _AuthFormState extends State<AuthForm> {
                                     _submitForm(signUp: false);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: AppColors().primaryColor,
-                                    onPrimary: Colors.white,
+                                    primary: Colors.white,
+                                    onPrimary: appColors.primaryColor,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 90, vertical: 10),
+                                        horizontal: 59, vertical: 10),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
                                   ),
                                   child: const Text(
@@ -223,9 +256,9 @@ class _AuthFormState extends State<AuthForm> {
                                   ),
                                 )
                           : _isLoading
-                              ? Center(
+                              ? const Center(
                                   child: CircularProgressIndicator(
-                                    color: AppColors().primaryColor,
+                                    color: Colors.white,
                                     strokeWidth: 1.5,
                                   ),
                                 )
@@ -234,12 +267,12 @@ class _AuthFormState extends State<AuthForm> {
                                     _submitForm(signUp: true);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: AppColors().primaryColor,
-                                    onPrimary: Colors.white,
+                                    primary: Colors.white,
+                                    onPrimary: appColors.primaryColor,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 90, vertical: 10),
+                                        horizontal: 50, vertical: 10),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
                                   ),
                                   child: const Text(
@@ -250,19 +283,61 @@ class _AuthFormState extends State<AuthForm> {
                                     ),
                                   ),
                                 ),
+                      const SizedBox(height: 15),
                       _isLogin
-                          ? TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              },
-                              child: Text(
-                                "Create a new account?",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors().primaryColor),
-                              ),
+                          ? Column(
+                              children: [
+                                //reset button
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        reverseDuration:
+                                            const Duration(milliseconds: 300),
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        type: PageTransitionType.fade,
+                                        child: const ForgetPasswordScreen(),
+                                      ),
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Forget Password?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                //new account button
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isLogin = !_isLogin;
+                                    });
+                                  },
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Create a new account?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             )
                           : TextButton(
                               onPressed: () {
@@ -270,19 +345,26 @@ class _AuthFormState extends State<AuthForm> {
                                   _isLogin = !_isLogin;
                                 });
                               },
-                              child: Text(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: const Text(
                                 "Already have an account?",
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors().primaryColor),
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                     ],
                   );
                 } else {
-                  return const Text(
-                    "Enable mobile data or WiFi for connecting",
-                    style: TextStyle(color: Colors.black),
+                  return Text(
+                    "Enable mobile data or WiFi",
+                    style: TextStyle(color: appColors.redColor),
                   );
                 }
               },

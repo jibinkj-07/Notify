@@ -1,11 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
-import '../services/firebase_services.dart';
 
 class AuthenticationHelper {
   final BuildContext parentContext;
@@ -36,6 +36,7 @@ class AuthenticationHelper {
             message: "The email address is already in use.",
           ),
         );
+        return 'error';
       }
     }
   }
@@ -59,6 +60,7 @@ class AuthenticationHelper {
             message: "No user with this email address found",
           ),
         );
+        return 'error';
       } else if (e.toString().contains('wrong-password')) {
         showTopSnackBar(
           parentContext,
@@ -66,8 +68,22 @@ class AuthenticationHelper {
             message: "Invalid passowrd",
           ),
         );
+        return 'error';
       }
     }
+  }
+
+  //PASSWORD RESET
+  //resetting password
+  Future<String> resetPassword({required String email}) async {
+    String status = 'success';
+    await _auth.sendPasswordResetEmail(email: email).then((_) {
+      log('auth helper pw reset done ');
+    }).catchError((e) {
+      log('error in pw reset ${e.toString()}');
+      status = e.toString();
+    });
+    return status;
   }
 
   //SIGN OUT METHOD

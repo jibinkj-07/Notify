@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:mynotify/presentation/widgets/auth/auth_form.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../models/event_list_model.dart';

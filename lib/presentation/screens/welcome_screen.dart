@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:mynotify/presentation/screens/authentication_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                     width: 150,
                   ),
                   const Text(
-                    'Keep update all your favourite moments with My Notify',
+                    'Keep your favourite moments with My Notify',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -47,7 +49,7 @@ class WelcomeScreen extends StatelessWidget {
               Column(
                 children: [
                   const Text(
-                    'Sync your data with cloud so you can access anywhere anytime..',
+                    'Sync your data with cloud so you can access anywhere anytime.',
                     style: TextStyle(
                       fontSize: 16,
                       // fontWeight: FontWeight.w500,
@@ -57,7 +59,15 @@ class WelcomeScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/auth');
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          reverseDuration: const Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
+                          type: PageTransitionType.fade,
+                          child: const AuthenticationScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: AppColors().primaryColor,

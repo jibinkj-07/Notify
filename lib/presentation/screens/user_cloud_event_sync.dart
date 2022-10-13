@@ -198,11 +198,9 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                               .center,
                                                       children: [
                                                         const Text(
-                                                          "Ignoring sync may cause deletion of all your backed up cloud eventes from cloud",
+                                                          "Ignoring sync may cause deletion of all your backed up cloud eventes",
                                                           style: TextStyle(
                                                             fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
                                                           ),
                                                           textAlign:
                                                               TextAlign.center,
