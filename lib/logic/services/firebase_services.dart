@@ -85,12 +85,27 @@ class FirebaseServices {
           final eventType = data['eventType'];
           DateTime time = DateTime.fromMillisecondsSinceEpoch(data['dateTime']);
           String notiBody;
+
           if (eventType == 'Others') {
             notiBody =
-                'You have one event which is going to happen in 5 minutes';
+                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
+          } else if (eventType == 'Birthday') {
+            notiBody =
+                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
+          } else if (eventType == 'Travel') {
+            notiBody =
+                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
+          } else if (eventType == 'Meeting') {
+            notiBody = 'Dont miss your meeting, only 5mins left.Be prepared😍';
+          } else if (eventType == 'Work') {
+            notiBody =
+                'It always seems impossible until it\'s done😏Get ready for your work.';
+          } else if (eventType == 'Exam') {
+            notiBody =
+                'Learn while they party😃Fresh up your mind, you have an exam.';
           } else {
             notiBody =
-                'You have one $eventType which is going to happen in 5 minutes';
+                'Hey dude😉,Just a reminder,you have some important task waiting to do';
           }
           //setting notification
           NotificationService().showNotification(

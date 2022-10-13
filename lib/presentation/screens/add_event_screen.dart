@@ -122,10 +122,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   String notiBody;
                                   if (_eventType == 'Others') {
                                     notiBody =
-                                        'You have one event which is going to happen in 5 minutes';
+                                        'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
+                                  } else if (_eventType == 'Birthday') {
+                                    notiBody =
+                                        'Finally it came🎉.Its party time.Get ready,we have a birthday.';
+                                  } else if (_eventType == 'Travel') {
+                                    notiBody =
+                                        'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
+                                  } else if (_eventType == 'Meeting') {
+                                    notiBody =
+                                        'Dont miss your meeting, only 5mins left.Be prepared😍';
+                                  } else if (_eventType == 'Work') {
+                                    notiBody =
+                                        'It always seems impossible until it\'s done😏Get ready for your work.';
+                                  } else if (_eventType == 'Exam') {
+                                    notiBody =
+                                        'Learn while they party😃Fresh up your mind, you have an exam.';
                                   } else {
                                     notiBody =
-                                        'You have one $_eventType which is going to happen in 5 minutes';
+                                        'Hey dude😉,Just a reminder,you have some important task waiting to do';
                                   }
                                   Random random = Random();
                                   final currentTime = DateTime.now();
@@ -178,10 +193,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   String notiBody;
                                   if (_eventType == 'Others') {
                                     notiBody =
-                                        'You have one event which is going to happen in 5 minutes';
+                                        'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
+                                  } else if (_eventType == 'Birthday') {
+                                    notiBody =
+                                        'Finally it came🎉.Its party time.Get ready,we have a birthday.';
+                                  } else if (_eventType == 'Travel') {
+                                    notiBody =
+                                        'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
+                                  } else if (_eventType == 'Meeting') {
+                                    notiBody =
+                                        'Dont miss your meeting, only 5mins left.Be prepared😍';
+                                  } else if (_eventType == 'Work') {
+                                    notiBody =
+                                        'It always seems impossible until it\'s done😏Get ready for your work.';
+                                  } else if (_eventType == 'Exam') {
+                                    notiBody =
+                                        'Learn while they party😃Fresh up your mind, you have an exam.';
                                   } else {
                                     notiBody =
-                                        'You have one $_eventType which is going to happen in 5 minutes';
+                                        'Hey dude😉,Just a reminder,you have some important task waiting to do';
                                   }
                                   Random random = Random();
                                   final currentTime = DateTime.now();
