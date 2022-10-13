@@ -2,7 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/constants/app_colors.dart';
+import 'package:mynotify/presentation/screens/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/user_events_list_details.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../logic/services/event_data_services.dart';
 
@@ -24,16 +28,16 @@ class CalenderScreen extends StatelessWidget {
 
     //adding events from device into calender
     if (userEvents.isNotEmpty) {
-      Color eventColor = appColors.greenColor;
+      Color eventColor = appColors.redColor;
       String about = 'Completed event';
       for (var i in userEvents) {
         // final event = jsonDecode(i);
         final DateTime time =
             DateTime.fromMillisecondsSinceEpoch(i['dateTime']);
-        log('event time is $time and current time is ${DateTime.now()} and status is $about title is ${i['title']}');
+        // log('event time is $time and current time is ${DateTime.now()} and status is $about title is ${i['title']}');
         //checking if the event is over or not
         if (!time.isBefore(DateTime.now().toUtc())) {
-          eventColor = appColors.primaryColor;
+          eventColor = appColors.greenColor;
           log('${i['title']}');
           about = 'Upcoming event';
         }
@@ -41,6 +45,8 @@ class CalenderScreen extends StatelessWidget {
         final calEvent = NeatCleanCalendarEvent(
           i['title'],
           description: '${i['eventType']}, $about',
+          location:
+              '${i['id']},${i['notificationId']},${i['notes']},${i['dateTime']},${i['eventType']},',
           color: eventColor,
           startTime: time,
           endTime: DateTime(
@@ -97,14 +103,38 @@ class CalenderScreen extends StatelessWidget {
                 ],
                 eventsList: calenderEventList,
                 onEventSelected: (value) {
-                  print(value.description);
+                  final data = value.location.split(',');
+                  log(data[0].toString());
+                  final id = data[0].toString();
+                  final notificationId = int.parse(data[1]);
+                  final title = value.summary;
+                  final notes = data[2];
+                  final dateTime =
+                      DateTime.fromMillisecondsSinceEpoch(int.parse(data[3]));
+                  final eventType = data[4];
+
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      reverseDuration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
+                      type: PageTransitionType.rightToLeft,
+                      child: UserEventListDetails(
+                          id: id,
+                          notificationId: notificationId,
+                          title: title,
+                          notes: notes,
+                          dateTime: dateTime,
+                          eventType: eventType),
+                    ),
+                  );
                 },
                 isExpandable: true,
                 eventDoneColor: Colors.green,
                 selectedColor: appColors.primaryColor,
-                selectedTodayColor: Colors.deepOrange,
+                selectedTodayColor: appColors.redColor,
                 todayColor: appColors.primaryColor,
-                eventColor: appColors.primaryColor,
+                eventColor: Colors.blue,
                 locale: 'en_US',
                 todayButtonText: '',
                 allDayEventText: '',
@@ -131,6 +161,25 @@ class CalenderScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              reverseDuration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
+              type: PageTransitionType.bottomToTop,
+              child: const AddEventScreen(),
+            ),
+          );
+        },
+        backgroundColor: AppColors().primaryColor,
+        foregroundColor: Colors.white,
+        child: const Icon(
+          Iconsax.note_add5,
+          size: 30,
         ),
       ),
     );
