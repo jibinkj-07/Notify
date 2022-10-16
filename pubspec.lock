@@ -272,13 +272,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.0"
-  flutter_neat_and_clean_calendar:
-    dependency: "direct main"
-    description:
-      name: flutter_neat_and_clean_calendar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.9+23"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -359,13 +352,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  macos_ui:
-    dependency: transitive
-    description:
-      name: macos_ui
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.7.5"
   matcher:
     dependency: transitive
     description:
@@ -513,6 +499,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.3"
+  simple_gesture_detector:
+    dependency: transitive
+    description:
+      name: simple_gesture_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -553,6 +546,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0+3"
+  table_calendar:
+    dependency: "direct main"
+    description:
+      name: table_calendar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.7"
   term_glyph:
     dependency: transitive
     description:
