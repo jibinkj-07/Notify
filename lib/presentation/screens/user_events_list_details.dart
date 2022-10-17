@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as dlog;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -564,92 +564,134 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                     onTap: () async {
                       FocusScope.of(context).unfocus();
                       showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
                           context: context,
                           //elevates modal bottom screen
-                          elevation: 20,
+                          elevation: 0,
                           // gives rounded corner to modal bottom screen
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                          ),
+                          // shape: const RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.only(
+                          //     topLeft: Radius.circular(30),
+                          //     topRight: Radius.circular(30),
+                          //   ),
+                          // ),
                           builder: (ctx) {
-                            return SizedBox(
-                              height: screen.width * .35,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 30),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(
-                                      'Delete the event ${widget.title}',
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                            return Container(
+                              width: screen.width,
+                              height: screen.height * .20,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  //DELETE BUTTON
+                                  Container(
+                                    height: screen.height * .12,
+                                    padding: const EdgeInsets.only(top: 15),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.white,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(ctx).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                          ),
+                                        const Expanded(
                                           child: Text(
-                                            'Cancel',
+                                            'Are you sure you want to delete this event?',
                                             style: TextStyle(
-                                                fontSize: 16,
-                                                color:
-                                                    AppColors().primaryColor),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black87),
                                           ),
                                         ),
-                                        BlocBuilder<EventFileHandlerCubit,
-                                                EventFileHandlerState>(
+                                        const Divider(height: 0, thickness: 1),
+                                        SizedBox(
+                                          height: screen.height * .065,
+                                          width: screen.width,
+                                          child: BlocBuilder<
+                                              EventFileHandlerCubit,
+                                              EventFileHandlerState>(
                                             builder: (ctx1, state) {
-                                          return TextButton(
-                                            onPressed: () {
-                                              NotificationService()
-                                                  .cancelNotification(
-                                                      id: widget
-                                                          .notificationId);
-                                              //main
-                                              Navigator.of(ctx).pop();
-                                              Navigator.of(context).pop();
-                                              Provider.of<EventDataServices>(
-                                                      context,
-                                                      listen: false)
-                                                  .deleteEvent(
-                                                      id: widget.id,
-                                                      filePath: state.filePath);
+                                              return ElevatedButton(
+                                                onPressed: () {
+                                                  NotificationService()
+                                                      .cancelNotification(
+                                                          id: widget
+                                                              .notificationId);
+                                                  //main
+                                                  Navigator.of(ctx).pop();
+                                                  Navigator.of(context).pop();
+                                                  Provider.of<EventDataServices>(
+                                                          context,
+                                                          listen: false)
+                                                      .deleteEvent(
+                                                          id: widget.id,
+                                                          filePath:
+                                                              state.filePath);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.white,
+                                                  onPrimary:
+                                                      AppColors().redColor,
+                                                  elevation: 0,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(15),
+                                                      bottomRight:
+                                                          Radius.circular(15),
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  "Delete",
+                                                  style: TextStyle(
+                                                    color: AppColors().redColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              );
                                             },
-                                            style: TextButton.styleFrom(
-                                              primary: AppColors().redColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Delete',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: AppColors().redColor),
-                                            ),
-                                          );
-                                        }),
+                                          ),
+                                        ),
                                       ],
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  ),
+
+                                  //CANCEL BUTTON
+                                  SizedBox(
+                                    height: screen.height * .065,
+                                    width: screen.width,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.white.withOpacity(.8),
+                                        onPrimary: AppColors()
+                                            .primaryColor
+                                            .withOpacity(.3),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          color: AppColors().primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             );
                           });
