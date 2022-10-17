@@ -576,7 +576,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                         notes = '*${widget.notes}*';
                       }
                       String messageBody =
-                          '*FIND MY EVENT DETAILS*\n\nv💠Date: *$time*\n\n💠Title: *${widget.title}*\n\n💠Event Type: *${widget.eventType}*\n\n💠Notes: $notes\n🤗🤗🤗🤗🤗🤗🤗🤗🤗🤗';
+                          '*FIND MY EVENT DETAILS*\n\n💠Date: *$time*\n\n💠Title: *${widget.title}*\n\n💠Event Type: *${widget.eventType}*\n\n💠Notes: $notes\n🤗🤗🤗🤗🤗🤗🤗🤗🤗🤗';
 
                       // subject is optional but it will be used
                       // only when sharing content over email
