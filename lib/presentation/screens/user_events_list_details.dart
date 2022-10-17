@@ -182,6 +182,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
+            FocusScope.of(context).unfocus();
             Navigator.of(context).pop();
           },
           icon: const Icon(
@@ -198,7 +199,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          margin: const EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -671,7 +672,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                         Navigator.of(ctx).pop();
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: Colors.white.withOpacity(.8),
+                                        primary: Colors.white.withOpacity(.9),
                                         onPrimary: AppColors()
                                             .primaryColor
                                             .withOpacity(.3),

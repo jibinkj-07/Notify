@@ -460,7 +460,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                                 primary: Colors
                                                                     .white
                                                                     .withOpacity(
-                                                                        .8),
+                                                                        .9),
                                                                 onPrimary: AppColors()
                                                                     .primaryColor
                                                                     .withOpacity(

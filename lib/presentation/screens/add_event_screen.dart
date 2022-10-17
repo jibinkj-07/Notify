@@ -91,478 +91,482 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     //main
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              //head part
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //left portion
-                  Row(
-                    children: [
-                      IconButton(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors().primaryColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          splashRadius: 20.0,
+        ),
+        titleSpacing: 0,
+        title: Text(
+          "Create Event",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors().primaryColor,
+          ),
+        ),
+        actions: [
+          //right portion
+          _title.trim() != ''
+              ? BlocBuilder<EventFileHandlerCubit, EventFileHandlerState>(
+                  builder: (ctx, state) {
+                    if (state.isFileExists) {
+                      return TextButton(
                         onPressed: () {
+                          String notiBody;
+                          if (_eventType == 'Others') {
+                            notiBody =
+                                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
+                          } else if (_eventType == 'Birthday') {
+                            notiBody =
+                                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
+                          } else if (_eventType == 'Travel') {
+                            notiBody =
+                                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
+                          } else if (_eventType == 'Meeting') {
+                            notiBody =
+                                'Dont miss your meeting, only 5mins left.Be prepared😍';
+                          } else if (_eventType == 'Work') {
+                            notiBody =
+                                'It always seems impossible until it\'s done😏Get ready for your work.';
+                          } else if (_eventType == 'Exam') {
+                            notiBody =
+                                'Learn while they party😃Fresh up your mind, you have an exam.';
+                          } else {
+                            notiBody =
+                                'Hey dude😉,Just a reminder,you have some important task waiting to do';
+                          }
+                          Random random = Random();
+                          final currentTime = DateTime.now();
+                          int notificationId =
+                              random.nextInt(999999999) + 1000000000;
+
+                          //main part
+                          Provider.of<EventDataServices>(context, listen: false)
+                              .addNewEvent(
+                                  id: currentTime.toString(),
+                                  notificationId: notificationId,
+                                  title: _title,
+                                  notes: _notes,
+                                  dateTime: _dateTime,
+                                  eventType: _eventType,
+                                  fileExists: true,
+                                  parentContext: context,
+                                  filePath: state.filePath,
+                                  isSyncing: false);
+
+                          //notification part
+                          NotificationService().showNotification(
+                            id: notificationId,
+                            title: _title,
+                            body: notiBody,
+                            dateTime: _dateTime,
+                            eventType: _eventType,
+                          );
+                          _titleController.clear();
+                          _notesController.clear();
                           Navigator.of(context).pop();
                         },
-                        icon: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: AppColors().primaryColor,
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        splashRadius: 20,
+                        child: Text(
+                          "Done",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors().primaryColor,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    } else {
+                      return TextButton(
+                        onPressed: () {
+                          String notiBody;
+                          if (_eventType == 'Others') {
+                            notiBody =
+                                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
+                          } else if (_eventType == 'Birthday') {
+                            notiBody =
+                                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
+                          } else if (_eventType == 'Travel') {
+                            notiBody =
+                                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
+                          } else if (_eventType == 'Meeting') {
+                            notiBody =
+                                'Dont miss your meeting, only 5mins left.Be prepared😍';
+                          } else if (_eventType == 'Work') {
+                            notiBody =
+                                'It always seems impossible until it\'s done😏Get ready for your work.';
+                          } else if (_eventType == 'Exam') {
+                            notiBody =
+                                'Learn while they party😃Fresh up your mind, you have an exam.';
+                          } else {
+                            notiBody =
+                                'Hey dude😉,Just a reminder,you have some important task waiting to do';
+                          }
+                          Random random = Random();
+                          final currentTime = DateTime.now();
+                          int notificationId =
+                              random.nextInt(999999999) + 1000000000;
+
+                          NotificationService().showNotification(
+                            id: notificationId,
+                            title: _title,
+                            body: notiBody,
+                            dateTime: _dateTime,
+                            eventType: _eventType,
+                          );
+
+                          Provider.of<EventDataServices>(context, listen: false)
+                              .addNewEvent(
+                            id: currentTime.toString(),
+                            notificationId: notificationId,
+                            title: _title,
+                            notes: _notes,
+                            dateTime: _dateTime,
+                            eventType: _eventType,
+                            parentContext: context,
+                            fileExists: false,
+                            isSyncing: false,
+                          );
+                          _titleController.clear();
+                          _notesController.clear();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "Done",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors().primaryColor,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    }
+                  },
+                )
+              : const SizedBox(),
+        ],
+      ),
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return true;
+        },
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: screen.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //form
+                Container(
+                  width: screen.width * .9,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(.2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    children: [
+                      TextField(
+                        key: const ValueKey('title'),
+                        controller: _titleController,
+                        onChanged: (value) {
+                          setState(() {
+                            _title = value.trim();
+                          });
+                        },
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                        maxLength: 25,
+                        textCapitalization: TextCapitalization.sentences,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          hintText: 'Title',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          counterText: '',
+                        ),
                       ),
-                      Text(
-                        "Create Event",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors().primaryColor,
+                      const Divider(
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      TextField(
+                        key: const ValueKey('note'),
+                        controller: _notesController,
+                        minLines: 1,
+                        maxLines: 10,
+                        onChanged: (value) {
+                          _notes = value.trim();
+                        },
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          hintText: 'Note',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  //right portion
-                  _title.trim() != ''
-                      ? BlocBuilder<EventFileHandlerCubit,
-                          EventFileHandlerState>(
-                          builder: (ctx, state) {
-                            if (state.isFileExists) {
-                              return TextButton(
-                                onPressed: () {
-                                  String notiBody;
-                                  if (_eventType == 'Others') {
-                                    notiBody =
-                                        'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-                                  } else if (_eventType == 'Birthday') {
-                                    notiBody =
-                                        'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-                                  } else if (_eventType == 'Travel') {
-                                    notiBody =
-                                        'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-                                  } else if (_eventType == 'Meeting') {
-                                    notiBody =
-                                        'Dont miss your meeting, only 5mins left.Be prepared😍';
-                                  } else if (_eventType == 'Work') {
-                                    notiBody =
-                                        'It always seems impossible until it\'s done😏Get ready for your work.';
-                                  } else if (_eventType == 'Exam') {
-                                    notiBody =
-                                        'Learn while they party😃Fresh up your mind, you have an exam.';
-                                  } else {
-                                    notiBody =
-                                        'Hey dude😉,Just a reminder,you have some important task waiting to do';
-                                  }
-                                  Random random = Random();
-                                  final currentTime = DateTime.now();
-                                  int notificationId =
-                                      random.nextInt(999999999) + 1000000000;
-
-                                  //main part
-                                  Provider.of<EventDataServices>(context,
-                                          listen: false)
-                                      .addNewEvent(
-                                          id: currentTime.toString(),
-                                          notificationId: notificationId,
-                                          title: _title,
-                                          notes: _notes,
-                                          dateTime: _dateTime,
-                                          eventType: _eventType,
-                                          fileExists: true,
-                                          parentContext: context,
-                                          filePath: state.filePath,
-                                          isSyncing: false);
-
-                                  //notification part
-                                  NotificationService().showNotification(
-                                    id: notificationId,
-                                    title: _title,
-                                    body: notiBody,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                  );
-                                  _titleController.clear();
-                                  _notesController.clear();
-                                  Navigator.of(context).pop();
-                                },
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Done",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors().primaryColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              );
-                            } else {
-                              return TextButton(
-                                onPressed: () {
-                                  String notiBody;
-                                  if (_eventType == 'Others') {
-                                    notiBody =
-                                        'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-                                  } else if (_eventType == 'Birthday') {
-                                    notiBody =
-                                        'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-                                  } else if (_eventType == 'Travel') {
-                                    notiBody =
-                                        'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-                                  } else if (_eventType == 'Meeting') {
-                                    notiBody =
-                                        'Dont miss your meeting, only 5mins left.Be prepared😍';
-                                  } else if (_eventType == 'Work') {
-                                    notiBody =
-                                        'It always seems impossible until it\'s done😏Get ready for your work.';
-                                  } else if (_eventType == 'Exam') {
-                                    notiBody =
-                                        'Learn while they party😃Fresh up your mind, you have an exam.';
-                                  } else {
-                                    notiBody =
-                                        'Hey dude😉,Just a reminder,you have some important task waiting to do';
-                                  }
-                                  Random random = Random();
-                                  final currentTime = DateTime.now();
-                                  int notificationId =
-                                      random.nextInt(999999999) + 1000000000;
-
-                                  NotificationService().showNotification(
-                                    id: notificationId,
-                                    title: _title,
-                                    body: notiBody,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                  );
-
-                                  Provider.of<EventDataServices>(context,
-                                          listen: false)
-                                      .addNewEvent(
-                                    id: currentTime.toString(),
-                                    notificationId: notificationId,
-                                    title: _title,
-                                    notes: _notes,
-                                    dateTime: _dateTime,
-                                    eventType: _eventType,
-                                    parentContext: context,
-                                    fileExists: false,
-                                    isSyncing: false,
-                                  );
-                                  _titleController.clear();
-                                  _notesController.clear();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "Done",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors().primaryColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              );
-                            }
-                          },
-                        )
-                      : const SizedBox(),
-                ],
-              ),
-
-              //form
-              Container(
-                width: screen.width * .9,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                margin: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(.2),
-                  borderRadius: BorderRadius.circular(15),
                 ),
-                child: Column(
-                  children: [
-                    TextField(
-                      key: const ValueKey('title'),
-                      controller: _titleController,
-                      onChanged: (value) {
-                        setState(() {
-                          _title = value.trim();
-                        });
+
+                //calender picker
+
+                Container(
+                  width: screen.width * .9,
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Material(
+                    color: Colors.grey.withOpacity(.2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () async {
+                        pickDateAndTime();
                       },
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                      maxLength: 25,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                        hintText: 'Title',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        counterText: '',
-                      ),
-                    ),
-                    const Divider(
-                      thickness: 1,
-                      height: 1,
-                    ),
-                    TextField(
-                      key: const ValueKey('note'),
-                      controller: _notesController,
-                      minLines: 1,
-                      maxLines: 10,
-                      onChanged: (value) {
-                        _notes = value.trim();
-                      },
-                      keyboardType: TextInputType.multiline,
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                        hintText: 'Note',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              //calender picker
-
-              Container(
-                width: screen.width * .9,
-                margin: const EdgeInsets.only(top: 20),
-                child: Material(
-                  color: Colors.grey.withOpacity(.2),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: InkWell(
-                    onTap: () async {
-                      pickDateAndTime();
-                    },
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Date",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                DateFormat('dd MMM').add_jm().format(_dateTime),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors().primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: AppColors().primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              //event type
-              Container(
-                width: screen.width * .9,
-                margin: const EdgeInsets.only(top: 20),
-                child: Material(
-                  color: Colors.grey.withOpacity(.2),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: InkWell(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      showModalBottomSheet(
-                        context: context,
-                        //elevates modal bottom screen
-                        elevation: 20,
-                        // gives rounded corner to modal bottom screen
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
-                        ),
-                        builder: (ctx) {
-                          return SizedBox(
-                            // height: screen.height * .35,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                //buttons
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Birthday';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Birthday',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                const Text(
+                                  "Date",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Travel';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Travel',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Meeting';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Meeting',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Work';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Work',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Exam';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Exam',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Reminder';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Reminder',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Others';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Others',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
+                                Text(
+                                  DateFormat('dd MMM')
+                                      .add_jm()
+                                      .format(_dateTime),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors().primaryColor,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Event Type",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                _eventType,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors().primaryColor),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: AppColors().primaryColor,
-                          ),
-                        ],
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors().primaryColor,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              //end of main column
-            ],
+                //event type
+                Container(
+                  width: screen.width * .9,
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Material(
+                    color: Colors.grey.withOpacity(.2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        showModalBottomSheet(
+                          context: context,
+                          //elevates modal bottom screen
+                          elevation: 20,
+                          // gives rounded corner to modal bottom screen
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                          builder: (ctx) {
+                            return SizedBox(
+                              // height: screen.height * .35,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  //buttons
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Birthday';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Birthday',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Travel';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Travel',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Meeting';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Meeting',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Work';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Work',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Exam';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Exam',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Reminder';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Reminder',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _eventType = 'Others';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Others',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: AppColors().primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Event Type",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _eventType,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors().primaryColor),
+                                ),
+                              ],
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors().primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                //end of main column
+              ],
+            ),
           ),
         ),
       ),
