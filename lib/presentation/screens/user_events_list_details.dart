@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_escapes
+
 import 'dart:developer' as dlog;
 import 'dart:math';
 
@@ -9,6 +11,7 @@ import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/logic/services/notification_service.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../logic/cubit/event_file_handler_cubit.dart';
 
@@ -552,8 +555,58 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             color: Colors.transparent),
                       ),
                     ),
-              //delete button
+
               const SizedBox(height: 30),
+              //share button
+              Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: Material(
+                  color: Colors.white.withOpacity(.8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: InkWell(
+                    splashColor: AppColors().primaryColor,
+                    onTap: () async {
+                      FocusScope.of(context).unfocus();
+                      final box = context.findRenderObject() as RenderBox?;
+                      final time =
+                          DateFormat.yMMMEd().add_jm().format(widget.dateTime);
+                      String notes = '';
+                      if (widget.notes != '') {
+                        notes = '*${widget.notes}*';
+                      }
+                      String messageBody =
+                          '*FIND MY EVENT DETAILS*\n\nv💠Date: *$time*\n\n💠Title: *${widget.title}*\n\n💠Event Type: *${widget.eventType}*\n\n💠Notes: $notes\n🤗🤗🤗🤗🤗🤗🤗🤗🤗🤗';
+
+                      // subject is optional but it will be used
+                      // only when sharing content over email
+                      await Share.share(messageBody,
+                          subject: "My Event",
+                          sharePositionOrigin:
+                              box!.localToGlobal(Offset.zero) & box.size);
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            'Share',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          Icon(Icons.share_rounded, color: Colors.black),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              //delete button
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 child: Material(

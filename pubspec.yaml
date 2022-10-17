@@ -55,6 +55,7 @@ dependencies:
   cloud_firestore: ^3.5.0
   flutter_countdown_timer:
   table_calendar: ^3.0.7
+  share_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:
