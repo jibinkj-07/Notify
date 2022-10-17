@@ -4,10 +4,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
-import 'package:mynotify/presentation/widgets/auth/auth_form.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../models/event_list_model.dart';
@@ -84,36 +82,12 @@ class FirebaseServices {
           final notes = data['notes'];
           final eventType = data['eventType'];
           DateTime time = DateTime.fromMillisecondsSinceEpoch(data['dateTime']);
-          String notiBody;
+          String notiBody =
+              '🙋‍♂️Notify Alert: Event of type $eventType in 5 minutes.Check it out';
 
-          if (eventType == 'Others') {
-            notiBody =
-                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-          } else if (eventType == 'Birthday') {
-            notiBody =
-                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-          } else if (eventType == 'Travel') {
-            notiBody =
-                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-          } else if (eventType == 'Meeting') {
-            notiBody = 'Dont miss your meeting, only 5mins left.Be prepared😍';
-          } else if (eventType == 'Work') {
-            notiBody =
-                'It always seems impossible until it\'s done😏Get ready for your work.';
-          } else if (eventType == 'Exam') {
-            notiBody =
-                'Learn while they party😃Fresh up your mind, you have an exam.';
-          } else {
-            notiBody =
-                'Hey dude😉,Just a reminder,you have some important task waiting to do';
-          }
           //setting notification
           NotificationService().showNotification(
-              id: notiID,
-              title: title,
-              body: notiBody,
-              eventType: eventType,
-              dateTime: time);
+              id: notiID, title: title, body: notiBody, dateTime: time);
           //file is already exist
           if (fileExist) {
             //adding events to device

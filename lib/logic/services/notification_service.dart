@@ -11,7 +11,7 @@ class NotificationService {
   Future<void> initializePlatformNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@drawable/noti_icon');
+        AndroidInitializationSettings('@drawable/ic_stat_onesignal_default');
 
     const InitializationSettings settings = InitializationSettings(
       android: initializationSettingsAndroid,
@@ -23,8 +23,7 @@ class NotificationService {
   }
 
   Future<NotificationDetails> _notificationDetails(
-      {required String eventType}) async {
-    final largeIcon = eventType.toLowerCase();
+      ) async {
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'userEvent',
@@ -35,7 +34,6 @@ class NotificationService {
       priority: Priority.high,
       sound: const RawResourceAndroidNotificationSound('notification'),
       color: AppColors().primaryColor,
-      largeIcon: DrawableResourceAndroidBitmap(largeIcon),
       // styleInformation: BigPictureStyleInformation(
       //   FilePathAndroidBitmap(bigPicture),
       //   hideExpandedLargeIcon: false,
@@ -50,9 +48,8 @@ class NotificationService {
       {required int id,
       required String title,
       required String body,
-      required String eventType,
       required DateTime dateTime}) async {
-    final detail = await _notificationDetails(eventType: eventType);
+    final detail = await _notificationDetails();
 
     final time = DateTime.now().add(const Duration(minutes: 5));
     if (dateTime.isBefore(time)) {

@@ -122,29 +122,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     if (state.isFileExists) {
                       return TextButton(
                         onPressed: () {
-                          String notiBody;
-                          if (_eventType == 'Others') {
-                            notiBody =
-                                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-                          } else if (_eventType == 'Birthday') {
-                            notiBody =
-                                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-                          } else if (_eventType == 'Travel') {
-                            notiBody =
-                                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-                          } else if (_eventType == 'Meeting') {
-                            notiBody =
-                                'Dont miss your meeting, only 5mins left.Be prepared😍';
-                          } else if (_eventType == 'Work') {
-                            notiBody =
-                                'It always seems impossible until it\'s done😏Get ready for your work.';
-                          } else if (_eventType == 'Exam') {
-                            notiBody =
-                                'Learn while they party😃Fresh up your mind, you have an exam.';
-                          } else {
-                            notiBody =
-                                'Hey dude😉,Just a reminder,you have some important task waiting to do';
-                          }
+                          String notiBody =
+                              '🙋‍♂️Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =
@@ -170,7 +149,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             title: _title,
                             body: notiBody,
                             dateTime: _dateTime,
-                            eventType: _eventType,
                           );
                           _titleController.clear();
                           _notesController.clear();
@@ -192,29 +170,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     } else {
                       return TextButton(
                         onPressed: () {
-                          String notiBody;
-                          if (_eventType == 'Others') {
-                            notiBody =
-                                'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-                          } else if (_eventType == 'Birthday') {
-                            notiBody =
-                                'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-                          } else if (_eventType == 'Travel') {
-                            notiBody =
-                                'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-                          } else if (_eventType == 'Meeting') {
-                            notiBody =
-                                'Dont miss your meeting, only 5mins left.Be prepared😍';
-                          } else if (_eventType == 'Work') {
-                            notiBody =
-                                'It always seems impossible until it\'s done😏Get ready for your work.';
-                          } else if (_eventType == 'Exam') {
-                            notiBody =
-                                'Learn while they party😃Fresh up your mind, you have an exam.';
-                          } else {
-                            notiBody =
-                                'Hey dude😉,Just a reminder,you have some important task waiting to do';
-                          }
+                          String notiBody =
+                              '🙋‍♂️Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =
@@ -225,7 +182,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             title: _title,
                             body: notiBody,
                             dateTime: _dateTime,
-                            eventType: _eventType,
                           );
 
                           Provider.of<EventDataServices>(context, listen: false)

@@ -7,6 +7,10 @@
         android:label="Notify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_stat_onesignal_default" />
         
         <activity
             android:name=".MainActivity"

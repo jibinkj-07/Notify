@@ -783,7 +783,6 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
   }
 
   void updateEventList(String filePath) {
-    String notiBody;
     int notiID = widget.notificationId;
     //cancelling existing notification
     NotificationService().cancelNotification(id: notiID);
@@ -821,33 +820,13 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         isSyncing: false,
         parentContext: context);
 
-    if (newEventType == 'Others') {
-      notiBody = 'Dude whatsup! 🙋‍♂️.You have an event in 5mins.Dont forget.';
-    } else if (newEventType == 'Birthday') {
-      notiBody =
-          'Finally it came🎉.Its party time.Get ready,we have a birthday.';
-    } else if (newEventType == 'Travel') {
-      notiBody =
-          'Adventures are the best way to learn🥳.Only 5mins left get ready soon.#Stay safe';
-    } else if (newEventType == 'Meeting') {
-      notiBody = 'Dont miss your meeting, only 5mins left.Be prepared😍';
-    } else if (newEventType == 'Work') {
-      notiBody =
-          'It always seems impossible until it\'s done😏Get ready for your work.';
-    } else if (newEventType == 'Exam') {
-      notiBody =
-          'Learn while they party😃Fresh up your mind, you have an exam.';
-    } else {
-      notiBody =
-          'Hey dude😉,Just a reminder,you have some important task waiting to do';
-    }
-
+    String notiBody =
+        '🙋‍♂️Notify Alert: Event of type $newEventType in 5 minutes.Check it out.';
     //adding new notification
     NotificationService().showNotification(
       id: notiID,
       title: newTitle,
       body: notiBody,
-      eventType: newEventType,
       dateTime: newDateTime,
     );
   }
