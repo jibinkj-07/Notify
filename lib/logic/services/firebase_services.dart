@@ -83,7 +83,7 @@ class FirebaseServices {
           final eventType = data['eventType'];
           DateTime time = DateTime.fromMillisecondsSinceEpoch(data['dateTime']);
           String notiBody =
-              '🙋‍♂️Notify Alert: Event of type $eventType in 5 minutes.Check it out';
+              'Notify Alert: Event of type $eventType in 5 minutes.Check it out';
 
           //setting notification
           NotificationService().showNotification(

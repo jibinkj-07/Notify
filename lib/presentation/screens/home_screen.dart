@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   PageTransition(
                                     reverseDuration:
                                         const Duration(milliseconds: 300),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 400),
                                     type: PageTransitionType.fade,
                                     child: CalenderScreen(
                                         filePath: state.filePath),

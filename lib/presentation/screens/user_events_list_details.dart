@@ -821,7 +821,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         parentContext: context);
 
     String notiBody =
-        '🙋‍♂️Notify Alert: Event of type $newEventType in 5 minutes.Check it out.';
+        'Notify Alert: Event of type $newEventType in 5 minutes.Check it out.';
     //adding new notification
     NotificationService().showNotification(
       id: notiID,

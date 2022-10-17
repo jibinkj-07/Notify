@@ -123,7 +123,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       return TextButton(
                         onPressed: () {
                           String notiBody =
-                              '🙋‍♂️Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
+                              'Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =
@@ -171,7 +171,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       return TextButton(
                         onPressed: () {
                           String notiBody =
-                              '🙋‍♂️Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
+                              'Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =

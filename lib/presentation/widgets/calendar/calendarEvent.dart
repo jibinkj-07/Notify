@@ -43,8 +43,8 @@ class CalendarEvent extends StatelessWidget {
         Navigator.push(
           context,
           PageTransition(
-            reverseDuration: const Duration(milliseconds: 500),
-            duration: const Duration(milliseconds: 500),
+            reverseDuration: const Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 400),
             type: PageTransitionType.fade,
             child: UserEventListDetails(
                 id: id,
