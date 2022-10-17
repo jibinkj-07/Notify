@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -28,10 +28,25 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
-  String _notes = '';
-  String _title = '';
-  DateTime _dateTime = DateTime.now();
-  String _eventType = 'Birthday';
+  late String _notes;
+  late String _title;
+  late DateTime _dateTime;
+  late String _eventType;
+
+  @override
+  void initState() {
+    if (widget.selectedDateTime != null) {
+      final time = widget.selectedDateTime!;
+      _dateTime = DateTime(time.year, time.month, time.day, DateTime.now().hour,
+          DateTime.now().minute);
+    } else {
+      _dateTime = DateTime.now();
+    }
+    _eventType = 'Birthday';
+    _notes = '';
+    _title = '';
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -45,10 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     //variables
     final screen = MediaQuery.of(context).size;
 
-    if (widget.selectedDateTime != null) {
-      _dateTime = widget.selectedDateTime!;
-    }
-//pick date and time function
+    //pick date and time function
     Future<DateTime?> pickDate() => showDatePicker(
           context: context,
           initialDate: _dateTime,

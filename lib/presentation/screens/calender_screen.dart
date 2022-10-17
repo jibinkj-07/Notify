@@ -230,7 +230,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
               reverseDuration: const Duration(milliseconds: 300),
               duration: const Duration(milliseconds: 300),
               type: PageTransitionType.bottomToTop,
-              child: AddEventScreen(selectedDateTime: selectedDateTime),
+              child: AddEventScreen(selectedDateTime: _selectedDay),
             ),
           );
         },

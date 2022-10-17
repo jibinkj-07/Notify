@@ -37,7 +37,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           status = data;
         });
         if (data.toString().contains('success')) {
-          Future.delayed(const Duration(seconds: 5), () {
+          Future.delayed(const Duration(seconds: 10), () {
             Navigator.of(context).pop();
           });
         }
@@ -206,7 +206,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               const SizedBox(height: 40),
               status.trim() == 'success'
                   ? const Text(
-                      "Redirecting to login screen within in 5 seconds",
+                      "Redirecting to login screen within in 10 seconds",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black,
