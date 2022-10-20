@@ -81,13 +81,16 @@ class FirebaseServices {
           final title = data['title'];
           final notes = data['notes'];
           final eventType = data['eventType'];
-          DateTime time = DateTime.fromMillisecondsSinceEpoch(data['dateTime']);
+          DateTime startTime =
+              DateTime.fromMillisecondsSinceEpoch(data['startTime']);
+          DateTime endTime =
+              DateTime.fromMillisecondsSinceEpoch(data['endTime']);
           String notiBody =
-              'Notify Alert: Event of type $eventType in 5 minutes.Check it out';
+              'There is an event of type $eventType in 5 minutes.Check it out';
 
           //setting notification
           NotificationService().showNotification(
-              id: notiID, title: title, body: notiBody, dateTime: time);
+              id: notiID, title: title, body: notiBody, dateTime: startTime);
           //file is already exist
           if (fileExist) {
             //adding events to device
@@ -97,7 +100,8 @@ class FirebaseServices {
               notificationId: notiID,
               title: title,
               notes: notes,
-              dateTime: time,
+              startTime: startTime,
+              endTime: endTime,
               eventType: eventType,
               fileExists: true,
               filePath: filePath,
@@ -111,10 +115,11 @@ class FirebaseServices {
                 id: id.toString(),
                 title: title,
                 notes: notes,
-                dateTime: time,
+                startTime: startTime,
+                endTime: endTime,
                 eventType: eventType,
                 notificationId: notiID,
-                eventDate: time.toString(),
+                eventDate: startTime.toString(),
               );
               List<EventListModel> newData = [content];
               getApplicationDocumentsDirectory().then((dir) {
@@ -138,7 +143,8 @@ class FirebaseServices {
                   notificationId: notiID,
                   title: title,
                   notes: notes,
-                  dateTime: time,
+                  startTime: startTime,
+                  endTime: endTime,
                   eventType: eventType,
                   fileExists: true,
                   filePath: fiPath,

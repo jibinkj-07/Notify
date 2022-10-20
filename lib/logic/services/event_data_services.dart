@@ -29,7 +29,7 @@ class EventDataServices with ChangeNotifier {
       final data = jsonDecode(i);
       myList.add(data);
     }
-    myList.sort((a, b) => a['dateTime'].compareTo(b['dateTime']));
+    myList.sort((a, b) => a['startTime'].compareTo(b['startTime']));
     return myList;
   }
 
@@ -78,7 +78,8 @@ class EventDataServices with ChangeNotifier {
     required int notificationId,
     required String title,
     required String notes,
-    required DateTime dateTime,
+    required DateTime startTime,
+    required DateTime endTime,
     required String eventType,
     required bool fileExists,
     required BuildContext parentContext,
@@ -92,8 +93,9 @@ class EventDataServices with ChangeNotifier {
       notificationId: notificationId,
       title: title,
       notes: notes,
-      dateTime: dateTime,
-      eventDate: dateTime.toString(),
+      startTime: startTime,
+      endTime: endTime,
+      eventDate: startTime.toString(),
       eventType: eventType,
     ));
     //checking if already device list contain the adding event

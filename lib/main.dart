@@ -11,16 +11,14 @@ import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/authentication_screen.dart';
 import 'package:mynotify/presentation/screens/home_screen.dart';
+import 'package:mynotify/presentation/screens/sample.dart';
 import 'package:mynotify/presentation/screens/user_cloud_event_sync.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/screens/welcome_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-
 import 'logic/cubit/internet_cubit.dart';
-import 'models/event_list_model.dart';
-import 'routes/app_routes.dart';
 
 void main() async {
   // Step 2
@@ -92,6 +90,7 @@ class MyApp extends StatelessWidget {
               }
             },
           ),
+          // home: const SampleScreen(),
           routes: {
             '/auth': (_) => const AuthenticationScreen(),
             '/home': (_) => const HomeScreen(),
@@ -99,7 +98,7 @@ class MyApp extends StatelessWidget {
             '/user': (_) => const UserProfileScreen(),
             '/user-sync': (_) => const UserCloudEventSync(),
           },
-          debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: true,
         ),
       ),
     );

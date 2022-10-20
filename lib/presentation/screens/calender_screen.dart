@@ -44,7 +44,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
     List<Map<String, dynamic>> userEvents = [];
     AppColors appColors = AppColors();
     final eventProvider = Provider.of<EventDataServices>(context);
-    DateTime selectedDateTime = DateTime.now();
     _eventsFromCalendar = {};
 
     //calling readData only if filepath is exist
@@ -55,7 +54,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
     if (userEvents.isNotEmpty) {
       for (var i in userEvents) {
         final DateTime time =
-            DateTime.fromMillisecondsSinceEpoch(i['dateTime']);
+            DateTime.fromMillisecondsSinceEpoch(i['startTime']);
         final eventDateString =
             DateTime(time.year, time.month, time.day).toString();
         if (_eventsFromCalendar[eventDateString] != null) {
@@ -183,7 +182,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
               NotificationListener<OverscrollIndicatorNotification>(
                 onNotification: (overscroll) {
                   overscroll.disallowIndicator();
-                  return true;
+                  return false;
                 },
                 child: Expanded(
                   child: ListView.builder(
@@ -196,8 +195,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       //checking in userevents
                       final resultEvent = userEvents.firstWhere(
                           (element) => element.toString().contains(id));
-                      final eventTime = DateTime.fromMillisecondsSinceEpoch(
-                          resultEvent['dateTime']);
+                      final startTime = DateTime.fromMillisecondsSinceEpoch(
+                          resultEvent['startTime']);
+                      final endTime = DateTime.fromMillisecondsSinceEpoch(
+                          resultEvent['endTime']);
 
                       return Container(
                         margin: const EdgeInsets.all(8),
@@ -207,7 +208,8 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           title: resultEvent['title'],
                           notes: resultEvent['notes'],
                           eventType: resultEvent['eventType'],
-                          dateTime: eventTime,
+                          startTime: startTime,
+                          endTime: endTime,
                         ),
                       );
                     },

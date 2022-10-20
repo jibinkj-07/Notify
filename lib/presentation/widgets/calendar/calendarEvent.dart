@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:page_transition/page_transition.dart';
@@ -10,7 +11,8 @@ class CalendarEvent extends StatelessWidget {
   final int notificationId;
   final String title;
   final String notes;
-  final DateTime dateTime;
+  final DateTime startTime;
+  final DateTime endTime;
   final String eventType;
   const CalendarEvent({
     Key? key,
@@ -19,7 +21,8 @@ class CalendarEvent extends StatelessWidget {
     required this.title,
     required this.notes,
     required this.eventType,
-    required this.dateTime,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -27,104 +30,107 @@ class CalendarEvent extends StatelessWidget {
     AppColors appColors = AppColors();
     String status = 'Upcoming';
     Color statusColor = appColors.greenColor;
-
     //checking if the event is over or not
-    if (dateTime.isBefore(DateTime.now().toUtc())) {
+    if (endTime.isBefore(DateTime.now().toUtc())) {
       status = 'Completed';
       statusColor = appColors.redColor;
     }
+    if (startTime.isBefore(DateTime.now().toUtc()) &&
+        endTime.isAfter(DateTime.now().toUtc())) {
+      status = 'In Progress';
+      statusColor = appColors.orangeColor;
+    }
 
     //main
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      splashColor: appColors.primaryColor.withOpacity(.8),
+
+    return GestureDetector(
       onTap: () {
         //MOVING INTO DETAIL SCREEN
         Navigator.push(
           context,
           PageTransition(
-            reverseDuration: const Duration(milliseconds: 400),
-            duration: const Duration(milliseconds: 400),
+            reverseDuration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             type: PageTransitionType.fade,
             child: UserEventListDetails(
                 id: id,
                 notificationId: notificationId,
                 title: title,
                 notes: notes,
-                dateTime: dateTime,
+                startTime: startTime,
+                endTime: endTime,
                 eventType: eventType),
           ),
         );
       },
       child: Container(
-        height: 60,
-        padding: const EdgeInsets.only(right: 10),
+        // height: 50,
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: appColors.primaryColor.withOpacity(.2),
+          color: statusColor,
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //event status bar
-            Container(
-              width: 15,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 ),
-                // borderRadius: BorderRadius.circular(20),
-                color: statusColor,
-              ),
-            ),
-            //event details
-            Expanded(
-              child: SizedBox(
-                height: 45,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                          fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      eventType,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 8),
+                Text(
+                  eventType,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 2),
+                Text(
+                  status,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             //event time
-            SizedBox(
-              height: 45,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    status,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Iconsax.calendar_15,
+                  color: Colors.white,
+                  // size: 25,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  DateFormat.MMMd().add_jm().format(startTime),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    DateFormat.jm().format(dateTime),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  DateFormat.MMMd().add_jm().format(endTime),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

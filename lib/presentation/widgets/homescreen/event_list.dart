@@ -30,9 +30,6 @@ class EventList extends StatelessWidget {
       if (state.isFileExists) {
         //CALLING READ FUNC FROM PROVIDER
         userEvents = eventsProvider.readDataFromFile(filePath: state.filePath);
-
-        // log('all events are   ${userEvents.toString()}');
-
         //Checking whether current day has any events, if not displaying no events widget
         int flag = 0;
         for (var i in userEvents) {
@@ -61,49 +58,56 @@ class EventList extends StatelessWidget {
                 final title = userEvents[index]['title'].toString();
                 final notes = userEvents[index]['notes'].toString();
                 int notiID = userEvents[index]['notificationId'];
-                final time = DateTime.fromMillisecondsSinceEpoch(
-                    userEvents[index]['dateTime']);
+                final startTime = DateTime.fromMillisecondsSinceEpoch(
+                    userEvents[index]['startTime']);
+                final endTime = DateTime.fromMillisecondsSinceEpoch(
+                    userEvents[index]['endTime']);
                 final eventType = userEvents[index]['eventType'].toString();
                 // log('time is $time');
-                if (time.toString().contains(currentDateTime)) {
-                  return Column(
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () {
-                          //MOVING INTO DETAIL SCREEN
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              reverseDuration:
-                                  const Duration(milliseconds: 300),
-                              duration: const Duration(milliseconds: 300),
-                              type: PageTransitionType.rightToLeft,
-                              child: UserEventListDetails(
+                if (startTime.toString().contains(currentDateTime)) {
+                  return Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            //MOVING INTO DETAIL SCREEN
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                reverseDuration:
+                                    const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
+                                type: PageTransitionType.rightToLeft,
+                                child: UserEventListDetails(
+                                    id: id,
+                                    notificationId: notiID,
+                                    title: title,
+                                    notes: notes,
+                                    startTime: startTime,
+                                    endTime: endTime,
+                                    eventType: eventType),
+                              ),
+                            );
+                          },
+                          child: BlocBuilder<EventFileHandlerCubit,
+                              EventFileHandlerState>(
+                            builder: (context, state) {
+                              return EventListItem(
                                   id: id,
+                                  filePath: state.filePath,
                                   notificationId: notiID,
                                   title: title,
                                   notes: notes,
-                                  dateTime: time,
-                                  eventType: eventType),
-                            ),
-                          );
-                        },
-                        child: BlocBuilder<EventFileHandlerCubit,
-                            EventFileHandlerState>(
-                          builder: (context, state) {
-                            return EventListItem(
-                                id: id,
-                                filePath: state.filePath,
-                                notificationId: notiID,
-                                title: title,
-                                notes: notes,
-                                eventType: eventType,
-                                dateTime: time);
-                          },
+                                  eventType: eventType,
+                                  dateTime: startTime);
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 } else {
                   return const SizedBox();

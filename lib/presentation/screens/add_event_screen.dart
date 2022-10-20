@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -30,19 +31,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _notesController = TextEditingController();
   late String _notes;
   late String _title;
-  late DateTime _dateTime;
-  late String _eventType;
+  late DateTime _startTime;
+  late DateTime _endTime;
+  int _selectedEvent = 0;
 
   @override
   void initState() {
     if (widget.selectedDateTime != null) {
       final time = widget.selectedDateTime!;
-      _dateTime = DateTime(time.year, time.month, time.day, DateTime.now().hour,
-          DateTime.now().minute);
+      _startTime = DateTime(time.year, time.month, time.day,
+          DateTime.now().hour, DateTime.now().minute);
     } else {
-      _dateTime = DateTime.now();
+      _startTime = DateTime.now();
     }
-    _eventType = 'Birthday';
+    _endTime = _startTime.add(const Duration(days: 1));
     _notes = '';
     _title = '';
     super.initState();
@@ -60,33 +62,45 @@ class _AddEventScreenState extends State<AddEventScreen> {
     //variables
     final screen = MediaQuery.of(context).size;
 
-    //pick date and time function
-    Future<DateTime?> pickDate() => showDatePicker(
+    const List<String> _eventNames = <String>[
+      'Birthday',
+      'Anniversary',
+      'Work',
+      'Marriage',
+      'Engagement',
+      'Meeting',
+      'Travel',
+      'Party',
+      'Exam',
+      'Reminder',
+      'Other',
+    ];
+
+    // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoDatePicker.
+    void _showDialog(Widget child) {
+      showCupertinoModalPopup<void>(
           context: context,
-          initialDate: _dateTime,
-          firstDate: DateTime(1900),
-          lastDate: DateTime(2100),
-        );
-
-    Future<TimeOfDay?> pickTime() => showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.now(),
-        );
-
-    Future pickDateAndTime() async {
-      FocusScope.of(context).unfocus();
-      DateTime? dateTime = await pickDate();
-      if (dateTime == null) return;
-
-      TimeOfDay? time = await pickTime();
-      if (time == null) return;
-
-      final selectedDateTime = DateTime(
-          dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute);
-
-      setState(() {
-        _dateTime = selectedDateTime;
-      });
+          builder: (BuildContext context) => Container(
+                height: screen.height * .25,
+                // padding: const EdgeInsets.only(top: 6.0),
+                // The Bottom margin is provided to align the popup above the system navigation bar.
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                // Provide a background color for the popup.
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  color: Colors.white,
+                ),
+                // Use a SafeArea widget to avoid system overlaps.
+                child: SafeArea(
+                  top: false,
+                  child: child,
+                ),
+              ));
     }
 
     //main
@@ -107,7 +121,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         ),
         titleSpacing: 0,
         title: Text(
-          "Create Event",
+          "New Event",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -123,7 +137,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       return TextButton(
                         onPressed: () {
                           String notiBody =
-                              'Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
+                              'There is an event of type ${_eventNames[_selectedEvent]} in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =
@@ -136,8 +150,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   notificationId: notificationId,
                                   title: _title,
                                   notes: _notes,
-                                  dateTime: _dateTime,
-                                  eventType: _eventType,
+                                  startTime: _startTime,
+                                  endTime: _endTime,
+                                  eventType: _eventNames[_selectedEvent],
                                   fileExists: true,
                                   parentContext: context,
                                   filePath: state.filePath,
@@ -148,7 +163,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             id: notificationId,
                             title: _title,
                             body: notiBody,
-                            dateTime: _dateTime,
+                            dateTime: _startTime,
                           );
                           _titleController.clear();
                           _notesController.clear();
@@ -171,7 +186,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       return TextButton(
                         onPressed: () {
                           String notiBody =
-                              'Notify Alert: Event of type $_eventType in 5 minutes.Check it out';
+                              'There is an event of type ${_eventNames[_selectedEvent]} in 5 minutes.Check it out';
                           Random random = Random();
                           final currentTime = DateTime.now();
                           int notificationId =
@@ -181,7 +196,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             id: notificationId,
                             title: _title,
                             body: notiBody,
-                            dateTime: _dateTime,
+                            dateTime: _startTime,
                           );
 
                           Provider.of<EventDataServices>(context, listen: false)
@@ -190,8 +205,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             notificationId: notificationId,
                             title: _title,
                             notes: _notes,
-                            dateTime: _dateTime,
-                            eventType: _eventType,
+                            startTime: _startTime,
+                            endTime: _endTime,
+                            eventType: _eventNames[_selectedEvent],
                             parentContext: context,
                             fileExists: false,
                             isSyncing: false,
@@ -226,11 +242,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //form
+
                 Container(
                   width: screen.width * .9,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  margin: const EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(.2),
                     borderRadius: BorderRadius.circular(15),
@@ -284,9 +301,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     ],
                   ),
                 ),
-
-                //calender picker
-
+                const SizedBox(height: 20),
+                //Start time
                 Container(
                   width: screen.width * .9,
                   margin: const EdgeInsets.only(top: 20),
@@ -295,8 +311,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
-                      onTap: () async {
-                        pickDateAndTime();
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        _showDialog(
+                          CupertinoDatePicker(
+                            minimumYear: 1800,
+                            maximumYear: 2300,
+                            initialDateTime: DateTime.now(),
+                            onDateTimeChanged: (value) {
+                              setState(() {
+                                _startTime = value;
+                              });
+                            },
+                          ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(10),
                       child: Container(
@@ -309,7 +337,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Date",
+                                  "Start Time",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -317,7 +345,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                 Text(
                                   DateFormat('dd MMM')
                                       .add_jm()
-                                      .format(_dateTime),
+                                      .format(_startTime),
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: AppColors().primaryColor,
@@ -337,6 +365,70 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
 
+                //End time
+                Container(
+                  width: screen.width * .9,
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Material(
+                    color: Colors.grey.withOpacity(.2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        _showDialog(
+                          CupertinoDatePicker(
+                            minimumYear: 1800,
+                            maximumYear: 2300,
+                            initialDateTime: DateTime.now(),
+                            onDateTimeChanged: (value) {
+                              setState(() {
+                                _endTime = value;
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "End Time",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  DateFormat('dd MMM')
+                                      .add_jm()
+                                      .format(_endTime),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors().primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors().primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
                 //event type
                 Container(
                   width: screen.width * .9,
@@ -348,139 +440,29 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     child: InkWell(
                       onTap: () {
                         FocusScope.of(context).unfocus();
-                        showModalBottomSheet(
-                          context: context,
-                          //elevates modal bottom screen
-                          elevation: 20,
-                          // gives rounded corner to modal bottom screen
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
+                        _showDialog(
+                          CupertinoPicker(
+                            scrollController: FixedExtentScrollController(
+                                initialItem: _selectedEvent),
+                            magnification: 1.2,
+                            squeeze: 1.4,
+                            useMagnifier: true,
+                            itemExtent: 30,
+                            // This is called when selected item is changed.
+                            onSelectedItemChanged: (int selectedItem) {
+                              setState(() {
+                                _selectedEvent = selectedItem;
+                              });
+                            },
+                            children: List<Widget>.generate(_eventNames.length,
+                                (int index) {
+                              return Center(
+                                child: Text(
+                                  _eventNames[index],
+                                ),
+                              );
+                            }),
                           ),
-                          builder: (ctx) {
-                            return SizedBox(
-                              // height: screen.height * .35,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  //buttons
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Birthday';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Birthday',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Travel';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Travel',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Meeting';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Meeting',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Work';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Work',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Exam';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Exam',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Reminder';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Reminder',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _eventType = 'Others';
-                                      });
-                                    },
-                                    child: Text(
-                                      'Others',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppColors().primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
                         );
                       },
                       borderRadius: BorderRadius.circular(10),
@@ -501,7 +483,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   ),
                                 ),
                                 Text(
-                                  _eventType,
+                                  _eventNames[_selectedEvent],
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,

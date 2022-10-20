@@ -41,7 +41,7 @@ class EventListItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: AppColors().redColor,
+          color: AppColors().redColor.withOpacity(.9),
         ),
         child: const Icon(
           Icons.delete,
@@ -50,29 +50,6 @@ class EventListItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
-      // confirmDismiss: (direction) {
-      //   return showDialog(
-      //     context: context,
-      //     builder: (ctx) => AlertDialog(
-      //       title: Text("Are you sure?"),
-      //       content: Text("Do you want to delete this item from cart?"),
-      //       actions: [
-      //         FlatButton(
-      //           onPressed: () {
-      //             Navigator.of(ctx).pop(false);
-      //           },
-      //           child: Text("No"),
-      //         ),
-      //         FlatButton(
-      //           onPressed: () {
-      //             Navigator.of(ctx).pop(true);
-      //           },
-      //           child: Text("Yes"),
-      //         ),
-      //       ],
-      //     ),
-      //   );
-      // },
       onDismissed: (direction) {
         NotificationService().cancelNotification(id: notificationId);
 
@@ -83,7 +60,7 @@ class EventListItem extends StatelessWidget {
       //child
       child: Container(
         padding: const EdgeInsets.all(15),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        // margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Colors.grey.withOpacity(.15),
@@ -103,7 +80,37 @@ class EventListItem extends StatelessWidget {
                 ),
                 if (eventType == 'Birthday')
                   Icon(
-                    Iconsax.cake5,
+                    Iconsax.cake,
+                    color: AppColors().primaryColor,
+                    size: 35.0,
+                  ),
+                if (eventType == 'Anniversary')
+                  Icon(
+                    Iconsax.star,
+                    color: AppColors().primaryColor,
+                    size: 35.0,
+                  ),
+                if (eventType == 'Work')
+                  Icon(
+                    Iconsax.building_3,
+                    color: AppColors().primaryColor,
+                    size: 35.0,
+                  ),
+                if (eventType == 'Marriage')
+                  Icon(
+                    Iconsax.lovely,
+                    color: AppColors().primaryColor,
+                    size: 35.0,
+                  ),
+                if (eventType == 'Engagement')
+                  Icon(
+                    Iconsax.medal_star,
+                    color: AppColors().primaryColor,
+                    size: 35.0,
+                  ),
+                if (eventType == 'Meeting')
+                  Icon(
+                    Iconsax.brifecase_timer,
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),
@@ -113,33 +120,27 @@ class EventListItem extends StatelessWidget {
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),
-                if (eventType == 'Meeting')
+                if (eventType == 'Party')
                   Icon(
-                    Iconsax.brifecase_timer5,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Work')
-                  Icon(
-                    Iconsax.buildings5,
+                    Icons.celebration_rounded,
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),
                 if (eventType == 'Exam')
                   Icon(
-                    Iconsax.menu_board5,
+                    Iconsax.teacher,
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),
                 if (eventType == 'Reminder')
                   Icon(
-                    Iconsax.notification5,
+                    Iconsax.notification_status,
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),
-                if (eventType == 'Others')
+                if (eventType == 'Other')
                   Icon(
-                    Iconsax.calendar_25,
+                    Iconsax.calendar_1,
                     color: AppColors().primaryColor,
                     size: 35.0,
                   ),

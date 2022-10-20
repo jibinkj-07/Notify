@@ -3,6 +3,7 @@
 import 'dart:developer' as dlog;
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,14 +19,16 @@ import '../../logic/cubit/event_file_handler_cubit.dart';
 class UserEventListDetails extends StatefulWidget {
   final String id, title, notes, eventType;
   final int notificationId;
-  final DateTime dateTime;
+  final DateTime startTime;
+  final DateTime endTime;
   const UserEventListDetails(
       {Key? key,
       required this.id,
       required this.notificationId,
       required this.title,
       required this.notes,
-      required this.dateTime,
+      required this.startTime,
+      required this.endTime,
       required this.eventType})
       : super(key: key);
 
@@ -34,100 +37,104 @@ class UserEventListDetails extends StatefulWidget {
 }
 
 class _UserEventListDetailsState extends State<UserEventListDetails> {
-  String _notes = '';
-  String _title = '';
-  DateTime? _dateTime;
-  String _eventType = '';
+  late String _notes;
+  late String _title;
+  DateTime? _startTime;
+  DateTime? _endTime;
+  late int _oldSelectedEvent;
+  late int _selectedEvent;
+
+  final List<String> _eventNames = <String>[
+    'Birthday',
+    'Anniversary',
+    'Work',
+    'Marriage',
+    'Engagement',
+    'Meeting',
+    'Travel',
+    'Party',
+    'Exam',
+    'Reminder',
+    'Other',
+  ];
+  @override
+  void initState() {
+    _notes = '';
+    _title = '';
+    _oldSelectedEvent = _eventNames.indexOf(widget.eventType);
+    _selectedEvent = _eventNames.indexOf(widget.eventType);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     //variables
     final screen = MediaQuery.of(context).size;
+    AppColors appColors = AppColors();
 
-//pick date and time function
-    Future<DateTime?> pickDate() => showDatePicker(
+    // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoDatePicker.
+    void _showDialog(Widget child) {
+      showCupertinoModalPopup<void>(
           context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(1900),
-          lastDate: DateTime(2100),
-        );
-
-    Future<TimeOfDay?> pickTime() => showTimePicker(
-          context: context,
-          initialTime: TimeOfDay(
-              hour: widget.dateTime.hour, minute: widget.dateTime.minute),
-        );
-
-    Future pickDateAndTime() async {
-      FocusScope.of(context).unfocus();
-      DateTime? dateTime = await pickDate();
-      if (dateTime == null) return;
-
-      TimeOfDay? time = await pickTime();
-      if (time == null) return;
-
-      final selectedDateTime = DateTime(
-          dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute);
-
-      setState(() {
-        _dateTime = selectedDateTime;
-      });
+          builder: (BuildContext context) => Container(
+                height: screen.height * .25,
+                // padding: const EdgeInsets.only(top: 6.0),
+                // The Bottom margin is provided to align the popup above the system navigation bar.
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                // Provide a background color for the popup.
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  color: Colors.white,
+                ),
+                // Use a SafeArea widget to avoid system overlaps.
+                child: SafeArea(
+                  top: false,
+                  child: child,
+                ),
+              ));
     }
 
-    //event icon widget
+//event icon widget
     Widget eventIcon() {
-      //Checking if user updated the eventtype or not
-      if (_eventType != '') {
-        switch (_eventType) {
-          case 'Birthday':
-            return const Icon(
-              Iconsax.cake5,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Travel':
-            return const Icon(
-              Iconsax.routing,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Meeting':
-            return const Icon(
-              Iconsax.brifecase_timer5,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Work':
-            return const Icon(
-              Iconsax.buildings5,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Exam':
-            return const Icon(
-              Iconsax.menu_board5,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Reminder':
-            return const Icon(
-              Iconsax.notification5,
-              color: Colors.white,
-              size: 100.0,
-            );
-          case 'Others':
-            return const Icon(
-              Iconsax.calendar_25,
-              color: Colors.white,
-              size: 100.0,
-            );
-        }
-      }
-      //Icon choosing depends on eventtype
-      switch (widget.eventType) {
+      switch (_eventNames[_selectedEvent]) {
         case 'Birthday':
           return const Icon(
-            Iconsax.cake5,
+            Iconsax.cake,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Anniversary':
+          return const Icon(
+            Iconsax.star,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Work':
+          return const Icon(
+            Iconsax.building_3,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Marriage':
+          return const Icon(
+            Iconsax.lovely,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Engagement':
+          return const Icon(
+            Iconsax.medal_star,
+            color: Colors.white,
+            size: 100.0,
+          );
+        case 'Meeting':
+          return const Icon(
+            Iconsax.brifecase_timer,
             color: Colors.white,
             size: 100.0,
           );
@@ -137,39 +144,27 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
             color: Colors.white,
             size: 100.0,
           );
-        case 'Meeting':
+        case 'Party':
           return const Icon(
-            Iconsax.brifecase_timer5,
-            color: Colors.white,
-            size: 100.0,
-          );
-        case 'Work':
-          return const Icon(
-            Iconsax.buildings5,
+            Icons.celebration_rounded,
             color: Colors.white,
             size: 100.0,
           );
         case 'Exam':
           return const Icon(
-            Iconsax.menu_board5,
+            Iconsax.teacher,
             color: Colors.white,
             size: 100.0,
           );
         case 'Reminder':
           return const Icon(
-            Iconsax.notification5,
-            color: Colors.white,
-            size: 100.0,
-          );
-        case 'Others':
-          return const Icon(
-            Iconsax.calendar_25,
+            Iconsax.notification_status,
             color: Colors.white,
             size: 100.0,
           );
         default:
           return const Icon(
-            Iconsax.calendar5,
+            Iconsax.calendar_1,
             color: Colors.white,
             size: 100.0,
           );
@@ -178,9 +173,9 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
 
     //main
     return Scaffold(
-      backgroundColor: AppColors().primaryColor,
+      backgroundColor: appColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: AppColors().primaryColor,
+        backgroundColor: appColors.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -197,14 +192,15 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
           _title == '' ? '${widget.title} Event' : '$_title Event',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        titleSpacing: 1.0,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          margin: const EdgeInsets.symmetric(vertical: 20),
+          width: screen.width,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 5),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               //icon displaying
               eventIcon(),
@@ -271,8 +267,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                 ),
               ),
 
-              //calender picker
-
+              //Start picker
               Container(
                 margin: const EdgeInsets.only(top: 20),
                 child: Material(
@@ -280,8 +275,20 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
-                    onTap: () async {
-                      pickDateAndTime();
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      _showDialog(
+                        CupertinoDatePicker(
+                          minimumYear: 1800,
+                          maximumYear: 2300,
+                          initialDateTime: widget.startTime,
+                          onDateTimeChanged: (value) {
+                            setState(() {
+                              _startTime = value;
+                            });
+                          },
+                        ),
+                      );
                     },
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
@@ -294,20 +301,20 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Date",
+                                "Start Time",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors().primaryColor),
+                                    color: appColors.primaryColor),
                               ),
                               Text(
-                                _dateTime == null
+                                _startTime == null
                                     ? DateFormat('dd MMM')
                                         .add_jm()
-                                        .format(widget.dateTime)
+                                        .format(widget.startTime)
                                     : DateFormat('dd MMM')
                                         .add_jm()
-                                        .format(_dateTime!),
+                                        .format(_startTime!),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -317,7 +324,73 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                           ),
                           Icon(
                             Icons.arrow_forward_ios_rounded,
-                            color: AppColors().primaryColor,
+                            color: appColors.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              //Start picker
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Material(
+                  color: Colors.white.withOpacity(.9),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: InkWell(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      _showDialog(
+                        CupertinoDatePicker(
+                          minimumYear: 1800,
+                          maximumYear: 2300,
+                          initialDateTime: widget.endTime,
+                          onDateTimeChanged: (value) {
+                            setState(() {
+                              _endTime = value;
+                            });
+                          },
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "End Time",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: appColors.primaryColor),
+                              ),
+                              Text(
+                                _endTime == null
+                                    ? DateFormat('dd MMM')
+                                        .add_jm()
+                                        .format(widget.endTime)
+                                    : DateFormat('dd MMM')
+                                        .add_jm()
+                                        .format(_endTime!),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: appColors.primaryColor,
                           ),
                         ],
                       ),
@@ -336,138 +409,30 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                   child: InkWell(
                     onTap: () {
                       FocusScope.of(context).unfocus();
-                      showModalBottomSheet(
-                        context: context,
-                        //elevates modal bottom screen
-                        elevation: 20,
-                        // gives rounded corner to modal bottom screen
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
+                      FocusScope.of(context).unfocus();
+                      _showDialog(
+                        CupertinoPicker(
+                          scrollController: FixedExtentScrollController(
+                              initialItem: _selectedEvent),
+                          magnification: 1.2,
+                          squeeze: 1.4,
+                          useMagnifier: true,
+                          itemExtent: 30,
+                          // This is called when selected item is changed.
+                          onSelectedItemChanged: (int selectedItem) {
+                            setState(() {
+                              _selectedEvent = selectedItem;
+                            });
+                          },
+                          children: List<Widget>.generate(_eventNames.length,
+                              (int index) {
+                            return Center(
+                              child: Text(
+                                _eventNames[index],
+                              ),
+                            );
+                          }),
                         ),
-                        builder: (ctx) {
-                          return SizedBox(
-                            // height: screen.height * .35,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                //buttons
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Birthday';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Birthday',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Travel';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Travel',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Meeting';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Meeting',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Work';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Work',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Exam';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Exam',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Reminder';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Reminder',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _eventType = 'Others';
-                                    });
-                                  },
-                                  child: Text(
-                                    'Others',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
                       );
                     },
                     borderRadius: BorderRadius.circular(10),
@@ -485,12 +450,10 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors().primaryColor),
+                                    color: appColors.primaryColor),
                               ),
                               Text(
-                                _eventType == ''
-                                    ? widget.eventType
-                                    : _eventType,
+                                _eventNames[_selectedEvent],
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -500,7 +463,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                           ),
                           Icon(
                             Icons.arrow_forward_ios_rounded,
-                            color: AppColors().primaryColor,
+                            color: appColors.primaryColor,
                           ),
                         ],
                       ),
@@ -512,8 +475,9 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               const SizedBox(height: 10),
               ((_title != '' && _title != widget.title) ||
                       (_notes != '' && _notes != widget.notes) ||
-                      (_dateTime != null && _dateTime != widget.dateTime) ||
-                      (_eventType != '' && _eventType != widget.eventType))
+                      (_startTime != null && _startTime != widget.startTime) ||
+                      (_endTime != null && _endTime != widget.endTime) ||
+                      (_oldSelectedEvent != _selectedEvent))
                   ? BlocBuilder<EventFileHandlerCubit, EventFileHandlerState>(
                       builder: (ctx1, state) {
                       return ElevatedButton(
@@ -528,8 +492,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                           Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: AppColors().primaryColor,
+                          foregroundColor: appColors.primaryColor,
+                          backgroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30, vertical: 5),
                           shape: RoundedRectangleBorder(
@@ -565,12 +529,12 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
-                    splashColor: AppColors().primaryColor,
+                    splashColor: appColors.primaryColor,
                     onTap: () async {
                       FocusScope.of(context).unfocus();
                       final box = context.findRenderObject() as RenderBox?;
                       final time =
-                          DateFormat.yMMMEd().add_jm().format(widget.dateTime);
+                          DateFormat.yMMMEd().add_jm().format(widget.startTime);
                       String notes = '';
                       if (widget.notes != '') {
                         notes = '*${widget.notes}*';
@@ -610,142 +574,64 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 child: Material(
-                  color: AppColors().redColor,
+                  color: appColors.redColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
-                    splashColor: AppColors().redColor.withOpacity(.3),
+                    splashColor: appColors.redColor.withOpacity(.3),
                     onTap: () async {
                       FocusScope.of(context).unfocus();
-                      showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
+                      showCupertinoModalPopup(
                           context: context,
-                          //elevates modal bottom screen
-                          elevation: 0,
-                          // gives rounded corner to modal bottom screen
-                          // shape: const RoundedRectangleBorder(
-                          //   borderRadius: BorderRadius.only(
-                          //     topLeft: Radius.circular(30),
-                          //     topRight: Radius.circular(30),
-                          //   ),
-                          // ),
                           builder: (ctx) {
-                            return Container(
-                              width: screen.width,
-                              height: screen.height * .20,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //DELETE BUTTON
-                                  Container(
-                                    height: screen.height * .12,
-                                    padding: const EdgeInsets.only(top: 15),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Colors.white,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Expanded(
-                                          child: Text(
-                                            'Are you sure you want to delete this event?',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black87),
-                                          ),
-                                        ),
-                                        const Divider(height: 0, thickness: 1),
-                                        SizedBox(
-                                          height: screen.height * .065,
-                                          width: screen.width,
-                                          child: BlocBuilder<
-                                              EventFileHandlerCubit,
-                                              EventFileHandlerState>(
-                                            builder: (ctx1, state) {
-                                              return ElevatedButton(
-                                                onPressed: () {
-                                                  NotificationService()
-                                                      .cancelNotification(
-                                                          id: widget
-                                                              .notificationId);
-                                                  //main
-                                                  Navigator.of(ctx).pop();
-                                                  Navigator.of(context).pop();
-                                                  Provider.of<EventDataServices>(
-                                                          context,
-                                                          listen: false)
-                                                      .deleteEvent(
-                                                          id: widget.id,
-                                                          filePath:
-                                                              state.filePath);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  primary: Colors.white,
-                                                  onPrimary:
-                                                      AppColors().redColor,
-                                                  elevation: 0,
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(15),
-                                                      bottomRight:
-                                                          Radius.circular(15),
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  "Delete",
-                                                  style: TextStyle(
-                                                    color: AppColors().redColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  //CANCEL BUTTON
-                                  SizedBox(
-                                    height: screen.height * .065,
-                                    width: screen.width,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.white.withOpacity(.9),
-                                        onPrimary: AppColors()
-                                            .primaryColor
-                                            .withOpacity(.3),
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ),
+                            return CupertinoActionSheet(
+                              title: const Text(
+                                "Are you sure you want to delete this event?",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              actions: [
+                                BlocBuilder<EventFileHandlerCubit,
+                                    EventFileHandlerState>(
+                                  builder: (context, state) {
+                                    return CupertinoActionSheetAction(
                                       child: Text(
-                                        "Cancel",
+                                        'Delete',
                                         style: TextStyle(
-                                          color: AppColors().primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          color: appColors.redColor,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                      onPressed: () {
+                                        NotificationService()
+                                            .cancelNotification(
+                                                id: widget.notificationId);
+                                        //main
+                                        Navigator.of(ctx).pop();
+                                        Navigator.of(context).pop();
+                                        Provider.of<EventDataServices>(context,
+                                                listen: false)
+                                            .deleteEvent(
+                                                id: widget.id,
+                                                filePath: state.filePath);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                              cancelButton: CupertinoActionSheetAction(
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                },
                               ),
                             );
                           });
@@ -789,22 +675,23 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
     String newId = widget.id,
         newTitle = widget.title,
         newNotes = widget.notes,
-        newEventType = widget.eventType;
-    DateTime newDateTime = widget.dateTime;
-    if (_dateTime != null) {
+        newEventType = _eventNames[_selectedEvent];
+    DateTime newStartTime = widget.startTime;
+    DateTime newEndTime = widget.endTime;
+    if (_startTime != null) {
       Random random = Random();
       notiID = random.nextInt(999999999) + 1000000000;
       newId = DateTime.now().toString();
-      newDateTime = _dateTime!;
+      newStartTime = _startTime!;
+    }
+    if (_endTime != null) {
+      newEndTime = _endTime!;
     }
     if (_title != '') {
       newTitle = _title;
     }
     if (_notes != '') {
       newNotes = _notes;
-    }
-    if (_eventType != '') {
-      newEventType = _eventType;
     }
 
     //adding new event
@@ -813,7 +700,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         notificationId: notiID,
         title: newTitle,
         notes: newNotes,
-        dateTime: newDateTime,
+        startTime: newStartTime,
+        endTime: newEndTime,
         eventType: newEventType,
         fileExists: true,
         filePath: filePath,
@@ -827,7 +715,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
       id: notiID,
       title: newTitle,
       body: notiBody,
-      dateTime: newDateTime,
+      dateTime: newStartTime,
     );
   }
 }
