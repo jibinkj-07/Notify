@@ -52,7 +52,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     //current user
     final userEmail = FirebaseAuth.instance.currentUser!.email;
-
+    final username = FirebaseAuth.instance.currentUser!.displayName;
     AppColors appColors = AppColors();
 
     return Scaffold(
@@ -96,6 +96,33 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ),
               const SizedBox(height: 40),
+              //username part
+              Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Name',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      username.toString(),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+
               //email part
               Container(
                 width: double.infinity,

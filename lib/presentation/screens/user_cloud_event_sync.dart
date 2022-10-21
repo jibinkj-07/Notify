@@ -228,9 +228,6 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                             style: TextStyle(
                                                               color: appColors
                                                                   .redColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
                                                             ),
                                                           ),
                                                           onPressed: () {

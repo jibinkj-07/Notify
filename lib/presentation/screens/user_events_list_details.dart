@@ -533,14 +533,16 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                     onTap: () async {
                       FocusScope.of(context).unfocus();
                       final box = context.findRenderObject() as RenderBox?;
-                      final time =
+                      final startTime =
                           DateFormat.yMMMEd().add_jm().format(widget.startTime);
+                      final endTime =
+                          DateFormat.yMMMEd().add_jm().format(widget.endTime);
                       String notes = '';
                       if (widget.notes != '') {
                         notes = '*${widget.notes}*';
                       }
                       String messageBody =
-                          '*FIND MY EVENT DETAILS*\n\n💠Date: *$time*\n\n💠Title: *${widget.title}*\n\n💠Event Type: *${widget.eventType}*\n\n💠Notes: $notes\n🤗🤗🤗🤗🤗🤗🤗🤗🤗🤗';
+                          'FIND MY EVENT DETAILS\n\n💠Title: ${widget.title}\n\n💠Event Type: ${widget.eventType}\n\n💠From Time: $startTime\n\n💠End Time: $endTime\n\n💠Notes: $notes\n\n🤗🤗🤗🤗🤗🤗🤗🤗🤗🤗';
 
                       // subject is optional but it will be used
                       // only when sharing content over email
@@ -602,7 +604,6 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                         'Delete',
                                         style: TextStyle(
                                           color: appColors.redColor,
-                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       onPressed: () {

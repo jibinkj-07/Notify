@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/logic/database/authentication_helper.dart';
-import 'package:mynotify/logic/services/firebase_services.dart';
 import 'package:mynotify/presentation/screens/forget_password_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -34,6 +33,7 @@ class _AuthFormState extends State<AuthForm> {
   bool _isObscure = true;
   String _email = '';
   String _password = '';
+  String _username = '';
 
   //submit function
   Future<void> _submitForm({required bool signUp}) async {
@@ -47,7 +47,7 @@ class _AuthFormState extends State<AuthForm> {
       String error = '';
       if (signUp) {
         error = await AuthenticationHelper(parentContext: context)
-            .signUp(email: _email, password: _password);
+            .signUp(username: _username, email: _email, password: _password);
       } else {
         error = await AuthenticationHelper(parentContext: context)
             .signIn(email: _email, password: _password);
@@ -95,6 +95,62 @@ class _AuthFormState extends State<AuthForm> {
             ),
             const SizedBox(height: 20),
             //user input section
+            if (!_isLogin)
+              TextFormField(
+                cursorColor: Colors.white,
+                key: const ValueKey('username'),
+                textInputAction: TextInputAction.next,
+                textCapitalization: TextCapitalization.words,
+                keyboardType: TextInputType.name,
+                //validation
+                validator: (data) {
+                  if (data!.isEmpty) {
+                    return 'Enter an username';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _username = value.toString().trim();
+                },
+                style: const TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500),
+                //decoration
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  hintText: 'Enter name',
+                  hintStyle: TextStyle(
+                    color: Colors.white.withOpacity(.7),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: Colors.white.withOpacity(.6),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      width: 2,
+                      color: Colors.white,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(width: 1, color: Colors.red),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      width: 2,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 10),
             TextFormField(
               cursorColor: Colors.white,
               key: const ValueKey('email'),

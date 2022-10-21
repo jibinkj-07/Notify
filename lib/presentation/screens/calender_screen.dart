@@ -71,177 +71,185 @@ class _CalenderScreenState extends State<CalenderScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: appColors.primaryColor,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor: appColors.primaryColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+          ),
+          splashRadius: 20.0,
+        ),
+        actions: [
+          //chat button
+          IconButton(
+            onPressed: () {},
             icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
+              Iconsax.sms,
             ),
             splashRadius: 20.0,
-          )),
-      body: SafeArea(
-        child: Column(
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(1800, 01, 01),
-              lastDay: DateTime.utc(2300, 12, 30),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          ),
+          //add event button
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  reverseDuration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
+                  type: PageTransitionType.rightToLeft,
+                  child: AddEventScreen(selectedDateTime: _selectedDay),
+                ),
+              );
+            },
+            icon: const Icon(
+              Iconsax.calendar_add,
+            ),
+            splashRadius: 20.0,
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          TableCalendar(
+            firstDay: DateTime.utc(1800, 01, 01),
+            lastDay: DateTime.utc(2300, 12, 30),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
 
-              //calender style
-              calendarStyle: CalendarStyle(
-                todayTextStyle: TextStyle(
-                    color: appColors.primaryColor, fontWeight: FontWeight.bold),
-                todayDecoration: BoxDecoration(
-                  border: Border.all(width: 1.5, color: appColors.primaryColor),
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: BoxDecoration(
-                  color: appColors.primaryColor,
-                  shape: BoxShape.circle,
-                ),
-                markersMaxCount: 1,
-                markerSize: 6,
-                markersOffset: const PositionedOffset(bottom: 10),
-                markerDecoration: BoxDecoration(
-                    color: appColors.primaryColor, shape: BoxShape.circle),
-                markersAutoAligned: false,
-                weekendTextStyle: TextStyle(color: appColors.redColor),
+            //calender style
+            calendarStyle: CalendarStyle(
+              todayTextStyle: TextStyle(
+                  color: appColors.primaryColor, fontWeight: FontWeight.bold),
+              todayDecoration: BoxDecoration(
+                border: Border.all(width: 1.5, color: appColors.primaryColor),
+                shape: BoxShape.circle,
               ),
-              //header style
-              headerStyle: HeaderStyle(
-                decoration: BoxDecoration(color: appColors.primaryColor),
-                headerPadding: const EdgeInsets.symmetric(vertical: 5),
-                headerMargin: const EdgeInsets.only(bottom: 10),
-                titleCentered: true,
-                formatButtonVisible: false,
-                titleTextStyle: const TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                leftChevronIcon: const Icon(
-                  Iconsax.arrow_circle_left5,
-                  color: Colors.white,
-                ),
-                rightChevronIcon: const Icon(
-                  Iconsax.arrow_circle_right5,
-                  color: Colors.white,
-                ),
+              selectedDecoration: BoxDecoration(
+                color: appColors.primaryColor,
+                shape: BoxShape.circle,
               ),
+              markersMaxCount: 1,
+              markerSize: 6,
+              markersOffset: const PositionedOffset(bottom: 10),
+              markerDecoration: BoxDecoration(
+                  color: appColors.primaryColor, shape: BoxShape.circle),
+              markersAutoAligned: false,
+              weekendTextStyle: TextStyle(color: appColors.redColor),
+            ),
+            //header style
+            headerStyle: HeaderStyle(
+              decoration: BoxDecoration(color: appColors.primaryColor),
+              headerPadding: const EdgeInsets.symmetric(vertical: 5),
+              headerMargin: const EdgeInsets.only(bottom: 10),
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: const TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              leftChevronIcon: const Icon(
+                Iconsax.arrow_circle_left5,
+                color: Colors.white,
+              ),
+              rightChevronIcon: const Icon(
+                Iconsax.arrow_circle_right5,
+                color: Colors.white,
+              ),
+            ),
 
-              //others
-              weekendDays: const [DateTime.sunday],
-              daysOfWeekStyle: const DaysOfWeekStyle(
-                weekdayStyle: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-                // log(_selectedDay.toString());
-              },
-              calendarFormat: CalendarFormat.month,
-              onPageChanged: (focusedDay) {
+            //others
+            weekendDays: const [DateTime.sunday],
+            daysOfWeekStyle: const DaysOfWeekStyle(
+              weekdayStyle: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
-              },
+              });
+              // log(_selectedDay.toString());
+            },
+            calendarFormat: CalendarFormat.month,
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
 
-              calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) {
-                  if (day.weekday == DateTime.sunday) {
-                    final text = DateFormat.E().format(day);
-                    return Center(
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                            color: appColors.redColor,
-                            fontWeight: FontWeight.bold),
+            calendarBuilders: CalendarBuilders(
+              dowBuilder: (context, day) {
+                if (day.weekday == DateTime.sunday) {
+                  final text = DateFormat.E().format(day);
+                  return Center(
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                          color: appColors.redColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
+            eventLoader: _getEventsfromDay,
+          ),
+          const SizedBox(height: 10),
+          const Divider(
+            height: 0,
+            indent: 15,
+            endIndent: 15,
+          ),
+          //EVENT LIST
+
+          if (_eventsFromCalendar[DateTime(
+                      _selectedDay.year, _selectedDay.month, _selectedDay.day)
+                  .toString()] !=
+              null)
+            NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return false;
+              },
+              child: Expanded(
+                child: ListView.builder(
+                  itemBuilder: (ctx, index) {
+                    final time = DateTime(_selectedDay.year, _selectedDay.month,
+                            _selectedDay.day)
+                        .toString();
+                    String id = _eventsFromCalendar[time]![index].toString();
+
+                    //checking in userevents
+                    final resultEvent = userEvents.firstWhere(
+                        (element) => element.toString().contains(id));
+                    final startTime = DateTime.fromMillisecondsSinceEpoch(
+                        resultEvent['startTime']);
+                    final endTime = DateTime.fromMillisecondsSinceEpoch(
+                        resultEvent['endTime']);
+
+                    return Container(
+                      margin: const EdgeInsets.all(8),
+                      child: CalendarEvent(
+                        id: id,
+                        notificationId: resultEvent['notificationId'],
+                        title: resultEvent['title'],
+                        notes: resultEvent['notes'],
+                        eventType: resultEvent['eventType'],
+                        startTime: startTime,
+                        endTime: endTime,
                       ),
                     );
-                  }
-                  return null;
-                },
-              ),
-              eventLoader: _getEventsfromDay,
-            ),
-            const SizedBox(height: 10),
-            const Divider(
-              height: 0,
-              indent: 15,
-              endIndent: 15,
-            ), // //EVENT LIST
-
-            if (_eventsFromCalendar[DateTime(
-                        _selectedDay.year, _selectedDay.month, _selectedDay.day)
-                    .toString()] !=
-                null)
-              NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (overscroll) {
-                  overscroll.disallowIndicator();
-                  return false;
-                },
-                child: Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (ctx, index) {
-                      final time = DateTime(_selectedDay.year,
+                  },
+                  itemCount: _eventsFromCalendar[DateTime(_selectedDay.year,
                               _selectedDay.month, _selectedDay.day)
-                          .toString();
-                      String id = _eventsFromCalendar[time]![index].toString();
-
-                      //checking in userevents
-                      final resultEvent = userEvents.firstWhere(
-                          (element) => element.toString().contains(id));
-                      final startTime = DateTime.fromMillisecondsSinceEpoch(
-                          resultEvent['startTime']);
-                      final endTime = DateTime.fromMillisecondsSinceEpoch(
-                          resultEvent['endTime']);
-
-                      return Container(
-                        margin: const EdgeInsets.all(8),
-                        child: CalendarEvent(
-                          id: id,
-                          notificationId: resultEvent['notificationId'],
-                          title: resultEvent['title'],
-                          notes: resultEvent['notes'],
-                          eventType: resultEvent['eventType'],
-                          startTime: startTime,
-                          endTime: endTime,
-                        ),
-                      );
-                    },
-                    itemCount: _eventsFromCalendar[DateTime(_selectedDay.year,
-                                _selectedDay.month, _selectedDay.day)
-                            .toString()]!
-                        .length,
-                  ),
+                          .toString()]!
+                      .length,
                 ),
               ),
-          ],
-        ),
-      ),
-      //FLOATING BUTTON
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              reverseDuration: const Duration(milliseconds: 300),
-              duration: const Duration(milliseconds: 300),
-              type: PageTransitionType.bottomToTop,
-              child: AddEventScreen(selectedDateTime: _selectedDay),
             ),
-          );
-        },
-        backgroundColor: AppColors().primaryColor,
-        foregroundColor: Colors.white,
-        child: const Icon(
-          Iconsax.note_add5,
-          size: 30,
-        ),
+        ],
       ),
     );
   }

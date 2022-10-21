@@ -15,6 +15,14 @@ import 'notification_service.dart';
 class FirebaseServices {
   final database = FirebaseFirestore.instance.collection('AllUserEvents');
 
+//function to create db instance
+  Future<void> createProfile(
+      {required String username, required String userId}) async {
+    await database
+        .doc(userId)
+        .set({'username': username}, SetOptions(merge: true));
+  }
+
   //function to upload user event list into cloud
   Future<void> uploadFileToCloud(
       {required List<dynamic> userEventsFile}) async {
@@ -127,7 +135,7 @@ class FirebaseServices {
                 File fileName = File(fPath);
                 fileName.createSync();
                 fileName.writeAsStringSync(jsonEncode(newData));
-                FirebaseServices().updateSyncTime();
+
                 //updating the cubit
                 parentContext
                     .read<EventFileHandlerCubit>()
@@ -165,5 +173,6 @@ class FirebaseServices {
         dlog.log('Error in syncCloudEvents ${error.toString()}');
       }
     });
+    FirebaseServices().updateSyncTime();
   }
 }

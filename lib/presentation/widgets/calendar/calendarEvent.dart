@@ -65,7 +65,7 @@ class CalendarEvent extends StatelessWidget {
       },
       child: Container(
         // height: 50,
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: statusColor,
@@ -114,20 +114,22 @@ class CalendarEvent extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  DateFormat.MMMd().add_jm().format(startTime),
+                  DateFormat.jm().format(startTime),
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  DateFormat.MMMd().add_jm().format(endTime),
+                  endTime.day != startTime.day
+                      ? DateFormat.MMMd().add_jm().format(endTime)
+                      : DateFormat.jm().format(endTime),
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],

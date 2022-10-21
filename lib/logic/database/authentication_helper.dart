@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:mynotify/logic/services/firebase_services.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -12,9 +13,13 @@ class AuthenticationHelper {
   AuthenticationHelper({required this.parentContext});
   final FirebaseAuth _auth = FirebaseAuth.instance;
   get user => _auth.currentUser;
+  FirebaseServices firebaseServices = FirebaseServices();
 
   //SIGN UP METHOD
-  Future signUp({required String email, required String password}) async {
+  Future signUp(
+      {required String username,
+      required String email,
+      required String password}) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(
@@ -23,7 +28,10 @@ class AuthenticationHelper {
       )
           .then((result) {
         parentContext.read<AuthenticationCubit>().loggingWithCloud();
-
+        User? user = result.user;
+        user!.updateDisplayName(username);
+        firebaseServices.createProfile(
+            username: username, userId: result.user!.uid);
         //navigating to homescreen
         Navigator.of(parentContext)
             .pushNamedAndRemoveUntil('/home', (Route route) => false);
