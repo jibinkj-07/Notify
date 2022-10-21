@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
             '/user': (_) => const UserProfileScreen(),
             '/user-sync': (_) => const UserCloudEventSync(),
           },
-          debugShowCheckedModeBanner: true,
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );

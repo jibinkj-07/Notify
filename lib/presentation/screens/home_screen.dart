@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -13,7 +11,6 @@ import 'package:mynotify/presentation/screens/calender_screen.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:swipe_to/swipe_to.dart';
 import '../../logic/cubit/internet_cubit.dart';
 import '../../logic/services/notification_service.dart';
 
@@ -178,54 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                //Day selecting section
-                SizedBox(
-                  width: screen.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // IconButton(
-                      //   onPressed: state.day == 'Yesterday'
-                      //       ? null
-                      //       : () {
-                      //           context.read<DateCubit>().prevDay();
-                      //         },
-                      //   icon: Icon(
-                      //     Iconsax.arrow_circle_left5,
-                      //     color: state.day == 'Yesterday'
-                      //         ? Colors.transparent
-                      //         : AppColors().primaryColor,
-                      //   ),
-                      //   // iconSize: 40,
-                      //   // splashRadius: 20,
-                      // ),
-                      // Text(
-                      //   state.day,
-                      //   style: TextStyle(
-                      //     fontSize: 28,
-                      //     fontWeight: FontWeight.w900,
-                      //     color: AppColors().primaryColor,
-                      //   ),
-                      // ),
-                      // IconButton(
-                      //   onPressed: state.day == 'Tomorrow'
-                      //       ? null
-                      //       : () {
-                      //           context.read<DateCubit>().nextDay();
-                      //         },
-                      //   icon: Icon(
-                      //     Iconsax.arrow_circle_right5,
-                      //     color: state.day == 'Tomorrow'
-                      //         ? Colors.transparent
-                      //         : AppColors().primaryColor,
-                      //   ),
-                      //   splashRadius: 20,
-                      //   iconSize: 40,
-                      // ),
-                    ],
-                  ),
-                ),
-                // const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 //day in full format
                 Container(
                   width: screen.width * .95,
@@ -261,7 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Colors.white,
                         ),
                         iconSize: 30,
-                        splashRadius: 20,
                       ),
                       //Event numbers
                       Column(
@@ -329,7 +278,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? Colors.transparent
                               : Colors.white,
                         ),
-                        splashRadius: 20,
                         iconSize: 30,
                       ),
                     ],
