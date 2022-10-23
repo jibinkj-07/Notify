@@ -4,8 +4,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/calendar_message_screen.dart';
 import 'package:mynotify/presentation/screens/user_events_list_details.dart';
 import 'package:mynotify/presentation/widgets/calendar/calendarEvent.dart';
+import 'package:mynotify/presentation/widgets/calendar/calendar_message_send.dart';
 import 'package:mynotify/util/event.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +87,17 @@ class _CalenderScreenState extends State<CalenderScreen> {
         actions: [
           //chat button
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  reverseDuration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
+                  type: PageTransitionType.rightToLeft,
+                  child: const CalendarMessageScreen(),
+                ),
+              );
+            },
             icon: const Icon(
               Iconsax.sms,
             ),
@@ -99,13 +111,13 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 PageTransition(
                   reverseDuration: const Duration(milliseconds: 300),
                   duration: const Duration(milliseconds: 300),
-                  type: PageTransitionType.rightToLeft,
-                  child: AddEventScreen(selectedDateTime: _selectedDay),
+                  type: PageTransitionType.fade,
+                  child: CalendarMessageSend(sharingDateTime: _selectedDay),
                 ),
               );
             },
             icon: const Icon(
-              Iconsax.calendar_add,
+              Icons.share,
             ),
             splashRadius: 20.0,
           ),
@@ -142,23 +154,26 @@ class _CalenderScreenState extends State<CalenderScreen> {
             //header style
             headerStyle: HeaderStyle(
               decoration: BoxDecoration(color: appColors.primaryColor),
-              headerPadding: const EdgeInsets.symmetric(vertical: 5),
+              headerPadding:
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               headerMargin: const EdgeInsets.only(bottom: 10),
-              titleCentered: true,
+              titleCentered: false,
               formatButtonVisible: false,
               titleTextStyle: const TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
-              leftChevronIcon: const Icon(
-                Iconsax.arrow_circle_left5,
-                color: Colors.white,
-              ),
-              rightChevronIcon: const Icon(
-                Iconsax.arrow_circle_right5,
-                color: Colors.white,
-              ),
+              // leftChevronIcon: const Icon(
+              //   Iconsax.arrow_circle_left5,
+              //   color: Colors.white,
+              // ),
+              // rightChevronIcon: const Icon(
+              //   Iconsax.arrow_circle_right5,
+              //   color: Colors.white,
+              // ),
+              leftChevronVisible: false,
+              rightChevronVisible: false,
             ),
 
             //others
@@ -250,6 +265,24 @@ class _CalenderScreenState extends State<CalenderScreen> {
               ),
             ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: appColors.primaryColor,
+        onPressed: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              reverseDuration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
+              type: PageTransitionType.bottomToTop,
+              child: AddEventScreen(selectedDateTime: _selectedDay),
+            ),
+          );
+        },
+        child: const Icon(
+          Iconsax.note_add5,
+          size: 30,
+        ),
       ),
     );
   }

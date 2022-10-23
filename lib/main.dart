@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,19 +12,25 @@ import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/authentication_screen.dart';
+import 'package:mynotify/presentation/screens/calendar_message_screen.dart';
 import 'package:mynotify/presentation/screens/home_screen.dart';
+import 'package:mynotify/presentation/screens/onboarding/auth_screen.dart';
 import 'package:mynotify/presentation/screens/sample.dart';
 import 'package:mynotify/presentation/screens/user_cloud_event_sync.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
-import 'package:mynotify/presentation/screens/welcome_screen.dart';
+import 'package:mynotify/presentation/screens/onboarding/welcome_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'logic/cubit/internet_cubit.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
   // Step 2
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
@@ -33,9 +41,13 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]).then(
     (value) => HydratedBlocOverrides.runZoned(
-      () => runApp(MyApp(
-        connectivity: Connectivity(),
-      )),
+      () {
+        runApp(MyApp(
+          connectivity: Connectivity(),
+        ));
+        // whenever your initialization is completed, remove the splash screen:
+        FlutterNativeSplash.remove();
+      },
       storage: storage,
     ),
   );
@@ -83,6 +95,7 @@ class MyApp extends StatelessWidget {
           // onGenerateRoute: _appRoutes.onGenerateRoute,
           home: BlocBuilder<AuthenticationCubit, AuthenticationState>(
             builder: (context, state) {
+              log('state of auth cubit isnew is ${state.isNew}');
               if (state.isNew) {
                 return const WelcomeScreen();
               } else {
@@ -92,11 +105,13 @@ class MyApp extends StatelessWidget {
           ),
           // home: const SampleScreen(),
           routes: {
+            '/authentication': (_) => const AuthScreen(),
             '/auth': (_) => const AuthenticationScreen(),
             '/home': (_) => const HomeScreen(),
             '/add-event': (_) => const AddEventScreen(),
             '/user': (_) => const UserProfileScreen(),
             '/user-sync': (_) => const UserCloudEventSync(),
+            '/calendar-message': (_) => const CalendarMessageScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
