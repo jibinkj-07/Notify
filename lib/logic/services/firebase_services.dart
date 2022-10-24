@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -166,6 +167,7 @@ class FirebaseServices {
         }
         Future.delayed(const Duration(seconds: 2), () {
           parentContext.read<CloudSyncCubit>().cloudDataSynced();
+          parentContext.read<AuthenticationCubit>().loggingWithCloud();
           Navigator.of(parentContext)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         });

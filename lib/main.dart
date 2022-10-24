@@ -11,14 +11,16 @@ import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/presentation/screens/add_event_screen.dart';
-import 'package:mynotify/presentation/screens/authentication_screen.dart';
 import 'package:mynotify/presentation/screens/calendar_message_screen.dart';
 import 'package:mynotify/presentation/screens/home_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/auth_screen.dart';
-import 'package:mynotify/presentation/screens/sample.dart';
+import 'package:mynotify/presentation/screens/onboarding/forgot_password_screen.dart';
+import 'package:mynotify/presentation/screens/onboarding/login_screen.dart';
+import 'package:mynotify/presentation/screens/onboarding/signup_screen.dart';
 import 'package:mynotify/presentation/screens/user_cloud_event_sync.dart';
 import 'package:mynotify/presentation/screens/user_profile_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/welcome_screen.dart';
+import 'package:mynotify/util/custom_page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -91,11 +93,15 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             fontFamily: 'Raleway',
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomPageTransitionBuilder(),
+              TargetPlatform.iOS: CustomPageTransitionBuilder(),
+            }),
           ),
           // onGenerateRoute: _appRoutes.onGenerateRoute,
           home: BlocBuilder<AuthenticationCubit, AuthenticationState>(
             builder: (context, state) {
-              log('state of auth cubit isnew is ${state.isNew}');
+              // log('state of auth cubit isnew is ${state.isNew}');
               if (state.isNew) {
                 return const WelcomeScreen();
               } else {
@@ -103,10 +109,12 @@ class MyApp extends StatelessWidget {
               }
             },
           ),
-          // home: const SampleScreen(),
+          // home: const LoginScreen(),
           routes: {
             '/authentication': (_) => const AuthScreen(),
-            '/auth': (_) => const AuthenticationScreen(),
+            '/signup': (_) => const SignUpScreen(),
+            '/login': (_) => const LoginScreen(),
+            '/forgot-pw': (_) => const ForgotPasswordScreen(),
             '/home': (_) => const HomeScreen(),
             '/add-event': (_) => const AddEventScreen(),
             '/user': (_) => const UserProfileScreen(),

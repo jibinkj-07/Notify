@@ -55,7 +55,7 @@ class AuthenticationHelper {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((result) {
-        parentContext.read<AuthenticationCubit>().loggingWithCloud();
+        // parentContext.read<AuthenticationCubit>().loggingWithCloud();
         //navigating to homescreen
         Navigator.of(parentContext)
             .pushNamedAndRemoveUntil('/user-sync', (Route route) => false);
@@ -73,7 +73,7 @@ class AuthenticationHelper {
         showTopSnackBar(
           parentContext,
           const CustomSnackBar.error(
-            message: "Invalid passowrd",
+            message: "Invalid password",
           ),
         );
         return 'error';

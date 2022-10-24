@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mynotify/presentation/screens/authentication_screen.dart';
-import 'package:mynotify/presentation/screens/home_screen.dart';
-import 'package:page_transition/page_transition.dart';
 
+import 'package:page_transition/page_transition.dart';
 import '../../../constants/app_colors.dart';
 import '../../../logic/cubit/authentication_cubit.dart';
 
@@ -68,16 +64,8 @@ class AuthScreen extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             //Going to signup page
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                reverseDuration:
-                                    const Duration(milliseconds: 300),
-                                duration: const Duration(milliseconds: 300),
-                                type: PageTransitionType.fade,
-                                child: const AuthenticationScreen(),
-                              ),
-                            );
+
+                            Navigator.of(context).pushNamed('/signup');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: appColors.primaryColor,
@@ -85,7 +73,7 @@ class AuthScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 13, horizontal: 100),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
                           child: const Text(
@@ -124,23 +112,14 @@ class AuthScreen extends StatelessWidget {
                         OutlinedButton(
                           onPressed: () {
                             //Going to login page
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                reverseDuration:
-                                    const Duration(milliseconds: 300),
-                                duration: const Duration(milliseconds: 300),
-                                type: PageTransitionType.fade,
-                                child: const AuthenticationScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed('/login');
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: appColors.primaryColor,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 80),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                             side: BorderSide(
                                 color: appColors.primaryColor, width: 1),

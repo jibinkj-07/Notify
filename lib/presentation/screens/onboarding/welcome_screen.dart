@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/presentation/screens/onboarding/auth_screen.dart';
-import 'package:page_transition/page_transition.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -33,7 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                   Text(
                     "Welcome to Notify",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 28,
                       fontWeight: FontWeight.w900,
                       color: appColors.primaryColor,
                     ),
@@ -43,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                   const Text(
                     "Remember your favourite moments with Noftify",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
@@ -54,15 +52,8 @@ class WelcomeScreen extends StatelessWidget {
               //button
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      reverseDuration: const Duration(milliseconds: 300),
-                      duration: const Duration(milliseconds: 300),
-                      type: PageTransitionType.fade,
-                      child: const AuthScreen(),
-                    ),
-                  );
+                  //Going to loginpage
+                  Navigator.of(context).pushNamed('/authentication');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: appColors.primaryColor,
@@ -70,13 +61,13 @@ class WelcomeScreen extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 80),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: const Text(
                   "Get Started",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

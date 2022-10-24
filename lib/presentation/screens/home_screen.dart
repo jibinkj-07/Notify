@@ -124,10 +124,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (!state.isCloudConnected) {
                                 return TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pushNamed('/auth');
+                                    Navigator.of(context)
+                                        .pushNamed('/authentication');
                                   },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppColors()
+                                        .primaryColor
+                                        .withOpacity(.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
                                   child: Text(
-                                    'Connect Now',
+                                    'Connect',
                                     style: TextStyle(
                                       color: AppColors().primaryColor,
                                       fontWeight: FontWeight.bold,
