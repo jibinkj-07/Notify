@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
@@ -56,10 +57,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     AppColors appColors = AppColors();
 
     return Scaffold(
-      backgroundColor: appColors.primaryColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: appColors.primaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: appColors.primaryColor,
+        backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -70,125 +71,153 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          margin: const EdgeInsets.only(top: 20),
-          child: Column(
-            children: [
-              //profile avatar
-              CircleAvatar(
-                radius: 85,
-                backgroundColor: Colors.white.withOpacity(.2),
-                child: CircleAvatar(
-                  radius: 75,
-                  backgroundColor: Colors.white.withOpacity(.5),
-                  child: CircleAvatar(
-                    radius: 65,
-                    backgroundColor: Colors.white,
-                    foregroundColor: appColors.primaryColor,
-                    child: const Icon(
-                      Iconsax.user,
-                      size: 50,
-                    ),
-                  ),
+      body: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                //user avatar
+                SvgPicture.asset(
+                  'assets/images/illustrations/profile_avatar.svg',
+                  height: 200,
                 ),
-              ),
-              const SizedBox(height: 40),
-              //username part
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
+                const SizedBox(height: 20),
+                //user name
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Name',
-                      style: TextStyle(color: Colors.grey),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        "Name",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      username.toString(),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 5),
+                      child: Material(
+                        color: Colors.grey.withOpacity(.2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: Text(
+                            username.toString(),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
 
-              //email part
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
+                const SizedBox(height: 15),
+                //user email
+
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Email',
-                      style: TextStyle(color: Colors.grey),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        "Email",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      userEmail.toString(),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 5),
+                      child: Material(
+                        color: Colors.grey.withOpacity(.2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: Text(
+                            userEmail.toString(),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              if (isSyncTime)
-                //last sync part
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
+                const SizedBox(height: 15),
+                //user last sync time
+                if (isSyncTime)
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Last Synced',
-                        style: TextStyle(color: Colors.grey),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Text(
+                          "Last Sync Time",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        DateFormat.yMMMd().add_jm().format(time!),
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 5),
+                        child: Material(
+                          color: Colors.grey.withOpacity(.2),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: Text(
+                              DateFormat.yMMMd().add_jm().format(time!),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ElevatedButton(
+              ],
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
                   context.read<AuthenticationCubit>().loggingWithoutCloud();
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: appColors.redColor,
-                  onPrimary: Colors.white,
+                  backgroundColor: appColors.redColor,
+                  foregroundColor: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: const Text(
@@ -197,9 +226,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

@@ -151,17 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 backgroundColor: Colors.white,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        reverseDuration:
-                                            const Duration(milliseconds: 300),
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        type: PageTransitionType.rightToLeft,
-                                        child: const UserProfileScreen(),
-                                      ),
-                                    );
+                                    Navigator.of(context).pushNamed('/user');
                                   },
                                   borderRadius: BorderRadius.circular(50),
                                   child: SvgPicture.asset(

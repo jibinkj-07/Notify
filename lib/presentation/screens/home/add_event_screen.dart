@@ -141,7 +141,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       ),
                       child: const Text(
                         'Cancel',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
