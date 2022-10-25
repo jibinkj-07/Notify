@@ -42,17 +42,12 @@ class CalendarEvent extends StatelessWidget {
     }
 
     //main
-
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
       onTap: () {
-        //MOVING INTO DETAIL SCREEN
-        Navigator.push(
-          context,
-          PageTransition(
-            reverseDuration: const Duration(milliseconds: 300),
-            duration: const Duration(milliseconds: 300),
-            type: PageTransitionType.fade,
-            child: UserEventListDetails(
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => UserEventListDetails(
                 id: id,
                 notificationId: notificationId,
                 title: title,
@@ -64,76 +59,121 @@ class CalendarEvent extends StatelessWidget {
         );
       },
       child: Container(
-        // height: 50,
-        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: statusColor,
+          borderRadius: BorderRadius.circular(8),
+          color: statusColor.withOpacity(.25),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
+            Container(
+              width: 15,
+              height: 100,
+
+              // height: double.infinity,
+              decoration: BoxDecoration(
+                color: statusColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  eventType,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  status,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+              ),
             ),
-            //event time
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(
-                  Iconsax.calendar_15,
-                  color: Colors.white,
-                  // size: 25,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  DateFormat.jm().format(startTime),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  endTime.day != startTime.day
-                      ? DateFormat.MMMd().add_jm().format(endTime)
-                      : DateFormat.jm().format(endTime),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+            Expanded(
+              child: Container(
+                height: 85,
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //title row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                    color: statusColor),
+                              ),
+                              Text(
+                                eventType,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          ),
+                          //start time
+                          Text(
+                            DateFormat.jm().format(startTime),
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          )
+                        ],
+                      ),
+                      //status row
+                      IntrinsicHeight(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Status",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  status,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            //vertical line
+                            const VerticalDivider(
+                              thickness: 1.5,
+                              color: Colors.black38,
+                            ),
+                            //end time
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "End Time",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat.MMMd().add_jm().format(endTime),
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+              ),
+            )
           ],
         ),
       ),

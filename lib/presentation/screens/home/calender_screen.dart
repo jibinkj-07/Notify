@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
@@ -214,56 +215,69 @@ class _CalenderScreenState extends State<CalenderScreen> {
           const SizedBox(height: 10),
           const Divider(
             height: 0,
+            thickness: 1.5,
             indent: 15,
             endIndent: 15,
           ),
           //EVENT LIST
 
-          if (_eventsFromCalendar[DateTime(
-                      _selectedDay.year, _selectedDay.month, _selectedDay.day)
-                  .toString()] !=
-              null)
-            NotificationListener<OverscrollIndicatorNotification>(
-              onNotification: (overscroll) {
-                overscroll.disallowIndicator();
-                return false;
-              },
-              child: Expanded(
-                child: ListView.builder(
-                  itemBuilder: (ctx, index) {
-                    final time = DateTime(_selectedDay.year, _selectedDay.month,
-                            _selectedDay.day)
-                        .toString();
-                    String id = _eventsFromCalendar[time]![index].toString();
+          NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overscroll) {
+              overscroll.disallowIndicator();
+              return false;
+            },
+            child: (_eventsFromCalendar[DateTime(_selectedDay.year,
+                            _selectedDay.month, _selectedDay.day)
+                        .toString()] !=
+                    null)
+                ? Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (ctx, index) {
+                        final time = DateTime(_selectedDay.year,
+                                _selectedDay.month, _selectedDay.day)
+                            .toString();
+                        String id =
+                            _eventsFromCalendar[time]![index].toString();
 
-                    //checking in userevents
-                    final resultEvent = userEvents.firstWhere(
-                        (element) => element.toString().contains(id));
-                    final startTime = DateTime.fromMillisecondsSinceEpoch(
-                        resultEvent['startTime']);
-                    final endTime = DateTime.fromMillisecondsSinceEpoch(
-                        resultEvent['endTime']);
+                        //checking in userevents
+                        final resultEvent = userEvents.firstWhere(
+                            (element) => element.toString().contains(id));
+                        final startTime = DateTime.fromMillisecondsSinceEpoch(
+                            resultEvent['startTime']);
+                        final endTime = DateTime.fromMillisecondsSinceEpoch(
+                            resultEvent['endTime']);
 
-                    return Container(
-                      margin: const EdgeInsets.all(8),
-                      child: CalendarEvent(
-                        id: id,
-                        notificationId: resultEvent['notificationId'],
-                        title: resultEvent['title'],
-                        notes: resultEvent['notes'],
-                        eventType: resultEvent['eventType'],
-                        startTime: startTime,
-                        endTime: endTime,
+                        return Container(
+                          margin: const EdgeInsets.all(8),
+                          child: CalendarEvent(
+                            id: id,
+                            notificationId: resultEvent['notificationId'],
+                            title: resultEvent['title'],
+                            notes: resultEvent['notes'],
+                            eventType: resultEvent['eventType'],
+                            startTime: startTime,
+                            endTime: endTime,
+                          ),
+                        );
+                      },
+                      itemCount: _eventsFromCalendar[DateTime(_selectedDay.year,
+                                  _selectedDay.month, _selectedDay.day)
+                              .toString()]!
+                          .length,
+                    ),
+                  )
+                : Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 50),
+                        child: SvgPicture.asset(
+                          'assets/images/illustrations/no_events.svg',
+                          height: 100,
+                        ),
                       ),
-                    );
-                  },
-                  itemCount: _eventsFromCalendar[DateTime(_selectedDay.year,
-                              _selectedDay.month, _selectedDay.day)
-                          .toString()]!
-                      .length,
-                ),
-              ),
-            ),
+                    ),
+                  ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

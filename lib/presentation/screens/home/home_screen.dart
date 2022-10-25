@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
@@ -146,33 +147,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
 
                               return CircleAvatar(
-                                radius: 22,
-                                backgroundColor:
-                                    AppColors().primaryColor.withOpacity(.3),
-                                child: CircleAvatar(
-                                  radius: 18,
-                                  backgroundColor:
-                                      AppColors().primaryColor.withOpacity(.8),
-                                  foregroundColor: Colors.white,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          reverseDuration:
-                                              const Duration(milliseconds: 300),
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          type: PageTransitionType.rightToLeft,
-                                          child: const UserProfileScreen(),
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Iconsax.user,
-                                    ),
-                                    iconSize: 20,
-                                    splashRadius: 25,
+                                radius: 20,
+                                backgroundColor: Colors.white,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        reverseDuration:
+                                            const Duration(milliseconds: 300),
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        type: PageTransitionType.rightToLeft,
+                                        child: const UserProfileScreen(),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: SvgPicture.asset(
+                                    'assets/images/illustrations/profile_avatar.svg',
                                   ),
                                 ),
                               );

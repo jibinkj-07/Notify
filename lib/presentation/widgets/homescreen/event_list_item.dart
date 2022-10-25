@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
@@ -33,6 +34,7 @@ class EventListItem extends StatelessWidget {
       newNotes = newNotes.substring(0, 25);
       newNotes = '$newNotes...';
     }
+    String eventImageName = eventType.toLowerCase().trim();
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -78,72 +80,11 @@ class EventListItem extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (eventType == 'Birthday')
-                  Icon(
-                    Iconsax.cake,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Anniversary')
-                  Icon(
-                    Iconsax.star,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Work')
-                  Icon(
-                    Iconsax.building_3,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Marriage')
-                  Icon(
-                    Iconsax.lovely,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Engagement')
-                  Icon(
-                    Iconsax.medal_star,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Meeting')
-                  Icon(
-                    Iconsax.brifecase_timer,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Travel')
-                  Icon(
-                    Iconsax.routing,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Party')
-                  Icon(
-                    Icons.celebration_rounded,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Exam')
-                  Icon(
-                    Iconsax.teacher,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Reminder')
-                  Icon(
-                    Iconsax.notification_status,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
-                if (eventType == 'Other')
-                  Icon(
-                    Iconsax.calendar_1,
-                    color: AppColors().primaryColor,
-                    size: 35.0,
-                  ),
+                //illustrator image for choosen events
+                SvgPicture.asset(
+                  'assets/images/illustrations/events/$eventImageName.svg',
+                  height: 40,
+                ),
               ],
             ),
             const SizedBox(height: 10),

@@ -1,8 +1,4 @@
-// ignore_for_file: unnecessary_string_escapes
-
-import 'dart:developer' as dlog;
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +10,6 @@ import 'package:mynotify/logic/services/event_data_services.dart';
 import 'package:mynotify/logic/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../../../logic/cubit/event_file_handler_cubit.dart';
 
 class UserEventListDetails extends StatefulWidget {
@@ -49,7 +44,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
     'Birthday',
     'Anniversary',
     'Work',
-    'Marriage',
+    'Wedding',
     'Engagement',
     'Meeting',
     'Travel',
@@ -186,10 +181,10 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 2),
                             margin: const EdgeInsets.only(top: 10),
-                            decoration: BoxDecoration(
-                              color: appColors.primaryColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            // decoration: BoxDecoration(
+                            //   color: appColors.primaryColor.withOpacity(.3),
+                            //   borderRadius: BorderRadius.circular(8),
+                            // ),
                             child: TextFormField(
                               key: const ValueKey('title'),
                               initialValue: widget.title,
@@ -198,13 +193,13 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                   _title = value.trim();
                                 });
                               },
-                              style: const TextStyle(
-                                fontSize: 25,
+                              style: TextStyle(
+                                fontSize: 30,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: appColors.primaryColor,
                               ),
                               textAlign: TextAlign.center,
-                              cursorColor: Colors.white,
+                              cursorColor: appColors.primaryColor,
                               maxLength: 25,
                               textCapitalization: TextCapitalization.sentences,
                               textInputAction: TextInputAction.next,
@@ -213,10 +208,17 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 hintText: 'Title',
                                 hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(.35),
+                                  color:
+                                      appColors.primaryColor.withOpacity(.35),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: appColors.primaryColor,
+                                  ),
                                 ),
                                 enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
                                 counterText: '',
                               ),
                             ),
@@ -512,8 +514,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.withOpacity(.3),
-                            foregroundColor: Colors.black87,
+                            backgroundColor: appColors.primaryColor,
+                            foregroundColor: Colors.white,
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
@@ -661,8 +663,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
         isSyncing: false,
         parentContext: context);
 
-    String notiBody =
-        'Notify Alert: Event of type $newEventType in 5 minutes.Check it out.';
+    String notiBody = 'Event of type $newEventType in 5 minutes.Check it out.';
     //adding new notification
     NotificationService().showNotification(
       id: notiID,
