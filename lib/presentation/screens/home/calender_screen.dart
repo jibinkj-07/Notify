@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/calendar_message_screen.dart';
-import 'package:mynotify/presentation/screens/user_events_list_details.dart';
+import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
 import 'package:mynotify/presentation/widgets/calendar/calendarEvent.dart';
 import 'package:mynotify/presentation/widgets/calendar/calendar_message_send.dart';
 import 'package:mynotify/util/event.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../logic/services/event_data_services.dart';
+
+import '../../../logic/services/event_data_services.dart';
 
 class CalenderScreen extends StatefulWidget {
   final String filePath;

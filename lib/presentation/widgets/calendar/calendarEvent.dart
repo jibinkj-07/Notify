@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../screens/user_events_list_details.dart';
+import '../../screens/home/user_events_list_details.dart';
 
 class CalendarEvent extends StatelessWidget {
   final String id;

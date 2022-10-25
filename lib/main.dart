@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,15 +8,15 @@ import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/logic/services/event_data_services.dart';
-import 'package:mynotify/presentation/screens/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/calendar_message_screen.dart';
-import 'package:mynotify/presentation/screens/home_screen.dart';
+import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/home/home_screen.dart';
+import 'package:mynotify/presentation/screens/home/user_profile_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/auth_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/forgot_password_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/login_screen.dart';
 import 'package:mynotify/presentation/screens/onboarding/signup_screen.dart';
-import 'package:mynotify/presentation/screens/user_cloud_event_sync.dart';
-import 'package:mynotify/presentation/screens/user_profile_screen.dart';
+import 'package:mynotify/presentation/screens/onboarding/user_cloud_event_sync.dart';
 import 'package:mynotify/presentation/screens/onboarding/welcome_screen.dart';
 import 'package:mynotify/util/custom_page_transition.dart';
 import 'package:path_provider/path_provider.dart';

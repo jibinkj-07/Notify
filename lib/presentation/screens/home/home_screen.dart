@@ -6,13 +6,13 @@ import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/presentation/screens/add_event_screen.dart';
-import 'package:mynotify/presentation/screens/calender_screen.dart';
-import 'package:mynotify/presentation/screens/user_profile_screen.dart';
+import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
+import 'package:mynotify/presentation/screens/home/calender_screen.dart';
+import 'package:mynotify/presentation/screens/home/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../logic/cubit/internet_cubit.dart';
-import '../../logic/services/notification_service.dart';
+import '../../../logic/cubit/internet_cubit.dart';
+import '../../../logic/services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -309,8 +309,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             PageTransition(
-              reverseDuration: const Duration(milliseconds: 300),
-              duration: const Duration(milliseconds: 300),
+              reverseDuration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               type: PageTransitionType.bottomToTop,
               child: const AddEventScreen(),
             ),
