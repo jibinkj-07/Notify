@@ -1,26 +1,21 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/presentation/widgets/calendar/calendar_message_screen.dart';
-import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
 import 'package:mynotify/presentation/widgets/calendar/calendarEvent.dart';
-import 'package:mynotify/presentation/widgets/calendar/calendar_message_send.dart';
 import 'package:mynotify/util/event.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../../../logic/services/event_data_services.dart';
 
 class SharedCalendarView extends StatefulWidget {
   final List<dynamic> userSharedEvents;
   final DateTime initTime;
-  const SharedCalendarView(
-      {Key? key, required this.userSharedEvents, required this.initTime})
-      : super(key: key);
+  final String sharedUser;
+  const SharedCalendarView({
+    Key? key,
+    required this.userSharedEvents,
+    required this.initTime,
+    required this.sharedUser,
+  }) : super(key: key);
 
   @override
   State<SharedCalendarView> createState() => _SharedCalendarViewState();
@@ -82,14 +77,15 @@ class _SharedCalendarViewState extends State<SharedCalendarView> {
           ),
           splashRadius: 20.0,
         ),
-        title: const Text(
-          "Shared Calendar View",
-          style: TextStyle(
-            fontSize: 20,
+        title: Text(
+          'Calendar View of ${widget.sharedUser}',
+          style: const TextStyle(
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
+        // centerTitle: true,
+        titleSpacing: 0,
       ),
       body: Column(
         children: [
@@ -240,24 +236,6 @@ class _SharedCalendarViewState extends State<SharedCalendarView> {
           )
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: appColors.primaryColor,
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       PageTransition(
-      //         reverseDuration: const Duration(milliseconds: 300),
-      //         duration: const Duration(milliseconds: 300),
-      //         type: PageTransitionType.bottomToTop,
-      //         child: AddEventScreen(selectedDateTime: _selectedDay),
-      //       ),
-      //     );
-      //   },
-      //   child: const Icon(
-      //     Iconsax.note_add5,
-      //     size: 30,
-      //   ),
-      // ),
     );
   }
 }

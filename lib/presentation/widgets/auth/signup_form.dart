@@ -268,7 +268,7 @@ class _SignUpFormState extends State<SignUpForm> {
                         );
                       } else {
                         return Text(
-                          "Enable mobile data or Wifi to continue",
+                          "Please turn on Mobile data or Wifi",
                           style: TextStyle(
                             color: appColors.redColor,
                             fontWeight: FontWeight.bold,

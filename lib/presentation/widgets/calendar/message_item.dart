@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -12,11 +10,13 @@ class MessageItem extends StatelessWidget {
     required this.mode,
     required this.type,
     required this.dateTime,
+    required this.sharedUser,
     required this.calendarEvents,
   });
   final String mode;
   final String type;
   final DateTime dateTime;
+  final String sharedUser;
   final List<dynamic> calendarEvents;
 
   @override
@@ -40,7 +40,10 @@ class MessageItem extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => SharedCalendarView(
-                      userSharedEvents: calendarEvents, initTime: sDate),
+                    userSharedEvents: calendarEvents,
+                    initTime: sDate,
+                    sharedUser: sharedUser,
+                  ),
                 ),
               );
             },

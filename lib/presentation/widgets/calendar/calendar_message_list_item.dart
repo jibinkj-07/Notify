@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/presentation/widgets/calendar/messages.dart';
@@ -44,16 +42,28 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
     String sharedDate = formatter.format(widget.date);
     String todayDate = formatter.format(DateTime.now());
 
-    return userName == 'User'
-        ? const SizedBox()
-        : Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: userName == 'User'
+              ? ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey.withOpacity(.2),
+                  ),
+                  title: Container(
+                    height: 20,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey.withOpacity(.2),
+                    ),
+                  ),
+                )
+              : ListTile(
                   leading: SvgPicture.asset(
                     'assets/images/illustrations/male_avatar.svg',
-                    height: 45,
+                    height: 50,
                   ),
                   title: Text(
                     userName,
@@ -73,12 +83,12 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                     );
                   },
                 ),
-              ),
-              const Divider(
-                height: 0,
-                indent: 20,
-              ),
-            ],
-          );
+        ),
+        const Divider(
+          height: 0,
+          indent: 20,
+        ),
+      ],
+    );
   }
 }

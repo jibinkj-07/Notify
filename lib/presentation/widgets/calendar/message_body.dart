@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/presentation/widgets/calendar/message_item.dart';
 
@@ -64,23 +62,32 @@ class MessageBody extends StatelessWidget {
             }
 
             //list
-            return ListView.builder(
-                reverse: true,
-                itemCount: document!.length,
-                itemBuilder: (ctx, index) {
-                  final mode = snapshot.data!.docs[index].get('mode');
-                  final type = snapshot.data!.docs[index].get('sharingOption');
-                  final dateTime =
-                      snapshot.data!.docs[index].get('time').toDate();
-                  final events =
-                      jsonDecode(snapshot.data!.docs[index].get('allEvents'));
-                  return MessageItem(
-                    mode: mode,
-                    dateTime: dateTime,
-                    calendarEvents: events,
-                    type: type,
-                  );
-                });
+            return NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: ListView.builder(
+                  reverse: true,
+                  itemCount: document!.length,
+                  itemBuilder: (ctx, index) {
+                    final mode = snapshot.data!.docs[index].get('mode');
+                    final type =
+                        snapshot.data!.docs[index].get('sharingOption');
+                    final dateTime =
+                        snapshot.data!.docs[index].get('time').toDate();
+                    final name = snapshot.data!.docs[index].get('name');
+                    final events =
+                        jsonDecode(snapshot.data!.docs[index].get('allEvents'));
+                    return MessageItem(
+                      mode: mode,
+                      dateTime: dateTime,
+                      sharedUser: name,
+                      calendarEvents: events,
+                      type: type,
+                    );
+                  }),
+            );
           }
           return const SizedBox();
         },
