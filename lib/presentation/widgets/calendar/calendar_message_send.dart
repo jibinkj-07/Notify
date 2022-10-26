@@ -264,6 +264,11 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                                                   allUsers[
                                                                           index]
                                                                       ['email'];
+                                                              final gender =
+                                                                  allUsers[
+                                                                          index]
+                                                                      [
+                                                                      'gender'];
 
                                                               //skipping current logged user
                                                               // if (userId == currentUserId) {
@@ -273,7 +278,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                                                 leading:
                                                                     SvgPicture
                                                                         .asset(
-                                                                  'assets/images/illustrations/male_avatar.svg',
+                                                                  'assets/images/illustrations/${gender}_avatar.svg',
                                                                   height: 45,
                                                                 ),
                                                                 title: Text(

@@ -40,7 +40,8 @@ class FirebaseServices {
         .map((data) => {
               'userId': data.id,
               'username': data.get('username'),
-              'email': data.get('email')
+              'email': data.get('email'),
+              'gender': data.get('gender'),
             })
         .toList();
     return allData;
