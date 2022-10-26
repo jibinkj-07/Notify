@@ -14,6 +14,7 @@ class CalendarEvent extends StatelessWidget {
   final DateTime startTime;
   final DateTime endTime;
   final String eventType;
+  final bool isSharedView;
   const CalendarEvent({
     Key? key,
     required this.id,
@@ -23,6 +24,7 @@ class CalendarEvent extends StatelessWidget {
     required this.eventType,
     required this.startTime,
     required this.endTime,
+    required this.isSharedView,
   }) : super(key: key);
 
   @override
@@ -44,20 +46,22 @@ class CalendarEvent extends StatelessWidget {
     //main
     return InkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => UserEventListDetails(
-                id: id,
-                notificationId: notificationId,
-                title: title,
-                notes: notes,
-                startTime: startTime,
-                endTime: endTime,
-                eventType: eventType),
-          ),
-        );
-      },
+      onTap: isSharedView
+          ? null
+          : () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => UserEventListDetails(
+                      id: id,
+                      notificationId: notificationId,
+                      title: title,
+                      notes: notes,
+                      startTime: startTime,
+                      endTime: endTime,
+                      eventType: eventType),
+                ),
+              );
+            },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

@@ -490,6 +490,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       onPressed: _title.trim() == ''
                           ? null
                           : () {
+                              FocusScope.of(context).unfocus();
                               String notiBody =
                                   'Event of type ${eventNames[_selectedEvent]} in 5 minutes.Check it out';
                               Random random = Random();

@@ -81,7 +81,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 //user avatar
                 SvgPicture.asset(
-                  'assets/images/illustrations/profile_avatar.svg',
+                  'assets/images/illustrations/male_avatar.svg',
                   height: 200,
                 ),
                 const SizedBox(height: 20),

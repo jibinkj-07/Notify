@@ -15,23 +15,26 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../logic/services/event_data_services.dart';
 
-class CalenderScreen extends StatefulWidget {
-  final String filePath;
-  const CalenderScreen({Key? key, required this.filePath}) : super(key: key);
+class SharedCalendarView extends StatefulWidget {
+  final List<dynamic> userSharedEvents;
+  final DateTime initTime;
+  const SharedCalendarView(
+      {Key? key, required this.userSharedEvents, required this.initTime})
+      : super(key: key);
 
   @override
-  State<CalenderScreen> createState() => _CalenderScreenState();
+  State<SharedCalendarView> createState() => _SharedCalendarViewState();
 }
 
-class _CalenderScreenState extends State<CalenderScreen> {
+class _SharedCalendarViewState extends State<SharedCalendarView> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   late Map<String, List<Event>> _eventsFromCalendar;
 
   @override
   void initState() {
-    _selectedDay = DateTime.now();
-    _focusedDay = DateTime.now();
+    _selectedDay = widget.initTime;
+    _focusedDay = widget.initTime;
     _eventsFromCalendar = {};
     super.initState();
   }
@@ -44,18 +47,12 @@ class _CalenderScreenState extends State<CalenderScreen> {
   //main
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> userEvents = [];
     AppColors appColors = AppColors();
-    final eventProvider = Provider.of<EventDataServices>(context);
     _eventsFromCalendar = {};
 
-    //calling readData only if filepath is exist
-    if (widget.filePath != '') {
-      userEvents = eventProvider.readDataFromFile(filePath: widget.filePath);
-    }
 //adding events from device into calender
-    if (userEvents.isNotEmpty) {
-      for (var i in userEvents) {
+    if (widget.userSharedEvents.isNotEmpty) {
+      for (var i in widget.userSharedEvents) {
         final DateTime time =
             DateTime.fromMillisecondsSinceEpoch(i['startTime']);
         final eventDateString =
@@ -85,45 +82,14 @@ class _CalenderScreenState extends State<CalenderScreen> {
           ),
           splashRadius: 20.0,
         ),
-        actions: [
-          //chat button
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  reverseDuration: const Duration(milliseconds: 300),
-                  duration: const Duration(milliseconds: 300),
-                  type: PageTransitionType.rightToLeft,
-                  child: const CalendarMessageScreen(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Iconsax.sms,
-            ),
-            splashRadius: 20.0,
+        title: const Text(
+          "Shared Calendar View",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-          //add event button
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  reverseDuration: const Duration(milliseconds: 200),
-                  duration: const Duration(milliseconds: 200),
-                  type: PageTransitionType.fade,
-                  child: CalendarMessageSend(
-                      sharingDateTime: _selectedDay, userAllEvents: userEvents),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.share,
-            ),
-            splashRadius: 20.0,
-          ),
-        ],
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -166,14 +132,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
-              // leftChevronIcon: const Icon(
-              //   Iconsax.arrow_circle_left5,
-              //   color: Colors.white,
-              // ),
-              // rightChevronIcon: const Icon(
-              //   Iconsax.arrow_circle_right5,
-              //   color: Colors.white,
-              // ),
               leftChevronVisible: false,
               rightChevronVisible: false,
             ),
@@ -241,7 +199,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                             _eventsFromCalendar[time]![index].toString();
 
                         //checking in userevents
-                        final resultEvent = userEvents.firstWhere(
+                        final resultEvent = widget.userSharedEvents.firstWhere(
                             (element) => element.toString().contains(id));
                         final startTime = DateTime.fromMillisecondsSinceEpoch(
                             resultEvent['startTime']);
@@ -253,7 +211,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           child: CalendarEvent(
                             id: id,
                             notificationId: resultEvent['notificationId'],
-                            isSharedView: false,
+                            isSharedView: true,
                             title: resultEvent['title'],
                             notes: resultEvent['notes'],
                             eventType: resultEvent['eventType'],
@@ -282,24 +240,24 @@ class _CalenderScreenState extends State<CalenderScreen> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: appColors.primaryColor,
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              reverseDuration: const Duration(milliseconds: 300),
-              duration: const Duration(milliseconds: 300),
-              type: PageTransitionType.bottomToTop,
-              child: AddEventScreen(selectedDateTime: _selectedDay),
-            ),
-          );
-        },
-        child: const Icon(
-          Iconsax.note_add5,
-          size: 30,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: appColors.primaryColor,
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       PageTransition(
+      //         reverseDuration: const Duration(milliseconds: 300),
+      //         duration: const Duration(milliseconds: 300),
+      //         type: PageTransitionType.bottomToTop,
+      //         child: AddEventScreen(selectedDateTime: _selectedDay),
+      //       ),
+      //     );
+      //   },
+      //   child: const Icon(
+      //     Iconsax.note_add5,
+      //     size: 30,
+      //   ),
+      // ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dlog;
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,10 +19,80 @@ class FirebaseServices {
 
 //function to create db instance
   Future<void> createProfile(
-      {required String username, required String userId}) async {
+      {required String username,
+      required String userId,
+      required String email}) async {
     await database
-        .doc(userId)
-        .set({'username': username}, SetOptions(merge: true));
+        .doc(userId.trim().toString())
+        .set({'username': username, 'email': email}, SetOptions(merge: true));
+  }
+
+  //read all users
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await database.get();
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs
+        .map((data) => {
+              'userId': data.id,
+              'username': data.get('username'),
+              'email': data.get('email')
+            })
+        .toList();
+    return allData;
+    // return allData;
+  }
+
+  //sharing calendar events
+  Future<void> shareCalendarEvent(
+      {required List<dynamic> userEvents,
+      required String senderId,
+      required String senderName,
+      required String sharingOption,
+      required receiverId}) async {
+    final time = Timestamp.now();
+    await database
+        .doc(receiverId.trim().toString())
+        .collection('SharedCalendar')
+        .doc(senderId.trim().toString())
+        .collection('SharedEvents')
+        .doc()
+        .set({
+      'allEvents': jsonEncode(userEvents),
+      'name': senderName,
+      'sharingOption': sharingOption,
+      'mode': 'Received',
+      'time': time,
+    }, SetOptions(merge: true));
+    database
+        .doc(receiverId.trim().toString())
+        .collection('SharedCalendar')
+        .doc(senderId.trim().toString())
+        .set({
+      'time': Timestamp.now(),
+    }, SetOptions(merge: true));
+    //current user id end
+    await database
+        .doc(senderId.trim().toString())
+        .collection('SharedCalendar')
+        .doc(receiverId.trim().toString())
+        .collection('SharedEvents')
+        .doc()
+        .set({
+      'allEvents': jsonEncode(userEvents),
+      'name': senderName,
+      'sharingOption': sharingOption,
+      'mode': 'Sent',
+      'time': time,
+    }, SetOptions(merge: true));
+
+    database
+        .doc(senderId.trim().toString())
+        .collection('SharedCalendar')
+        .doc(receiverId.trim().toString())
+        .set({
+      'time': Timestamp.now(),
+    }, SetOptions(merge: true));
   }
 
   //function to upload user event list into cloud
@@ -30,7 +101,7 @@ class FirebaseServices {
     final userJsonData = jsonEncode(userEventsFile);
     String userId;
     try {
-      userId = FirebaseAuth.instance.currentUser!.uid;
+      userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
     } catch (e) {
       return;
     }
@@ -42,7 +113,7 @@ class FirebaseServices {
 
   //checking cloud data into device
   void checkCloudHasFile({required BuildContext parentContext}) {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
     List<dynamic> allEvents = [];
     database.doc(userId).get().then((value) {
       final datas = value.data();
@@ -62,7 +133,7 @@ class FirebaseServices {
 
 //updating synctime
   void updateSyncTime() {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
     database.doc(userId).set({
       'syncTime': Timestamp.now(),
     }, SetOptions(merge: true));
@@ -74,7 +145,7 @@ class FirebaseServices {
     required bool fileExist,
     String? filePath,
   }) {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
     int flag = 0;
     String fPath = '';
     List<dynamic> allEvents = [];

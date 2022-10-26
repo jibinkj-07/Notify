@@ -9,7 +9,6 @@ import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/home/calender_screen.dart';
-import 'package:mynotify/presentation/screens/home/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../../logic/cubit/internet_cubit.dart';
@@ -155,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   borderRadius: BorderRadius.circular(50),
                                   child: SvgPicture.asset(
-                                    'assets/images/illustrations/profile_avatar.svg',
+                                    'assets/images/illustrations/male_avatar.svg',
                                   ),
                                 ),
                               );
@@ -223,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 DateFormat.EEEE().format(state.dateTime),
                                 style: const TextStyle(
-                                  fontSize: 28,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -243,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       //Date display
 
                       Container(
-                        padding: const EdgeInsets.all(25),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
                           color: Colors.white,
@@ -251,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           day.length < 2 ? '0$day' : day,
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 30,
                             fontWeight: FontWeight.w900,
                             color: AppColors().primaryColor,
                           ),

@@ -31,7 +31,7 @@ class AuthenticationHelper {
         User? user = result.user;
         user!.updateDisplayName(username);
         firebaseServices.createProfile(
-            username: username, userId: result.user!.uid);
+            email: email, username: username, userId: result.user!.uid);
         //navigating to homescreen
         Navigator.of(parentContext)
             .pushNamedAndRemoveUntil('/home', (Route route) => false);
