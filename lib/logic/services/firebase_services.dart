@@ -18,13 +18,17 @@ class FirebaseServices {
   final database = FirebaseFirestore.instance.collection('AllUserEvents');
 
 //function to create db instance
-  Future<void> createProfile(
-      {required String username,
-      required String userId,
-      required String email}) async {
-    await database
-        .doc(userId.trim().toString())
-        .set({'username': username, 'email': email}, SetOptions(merge: true));
+  Future<void> createProfile({
+    required String username,
+    required String userId,
+    required String email,
+    required String gender,
+  }) async {
+    await database.doc(userId.trim().toString()).set({
+      'username': username,
+      'email': email,
+      'gender': gender,
+    }, SetOptions(merge: true));
   }
 
   //read all users
@@ -143,6 +147,7 @@ class FirebaseServices {
   void syncCloudEvents({
     required BuildContext parentContext,
     required bool fileExist,
+    required String gender,
     String? filePath,
   }) {
     final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
@@ -238,7 +243,9 @@ class FirebaseServices {
         }
         Future.delayed(const Duration(seconds: 2), () {
           parentContext.read<CloudSyncCubit>().cloudDataSynced();
-          parentContext.read<AuthenticationCubit>().loggingWithCloud();
+          parentContext
+              .read<AuthenticationCubit>()
+              .loggingWithCloud(gender: gender);
           Navigator.of(parentContext)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         });

@@ -12,12 +12,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState>
 
   //function for user not interested in cloud sync
   void loggingWithoutCloud() {
-    emit(AuthenticationState(isNew: false, isCloudConnected: false));
+    emit(AuthenticationState(
+        isNew: false, isCloudConnected: false, gender: 'male'));
   }
 
   //function for user with cloud sync
-  void loggingWithCloud() {
-    emit(AuthenticationState(isNew: false, isCloudConnected: true));
+  void loggingWithCloud({required String gender}) {
+    emit(AuthenticationState(
+        isNew: false, isCloudConnected: true, gender: gender));
   }
 
   @override

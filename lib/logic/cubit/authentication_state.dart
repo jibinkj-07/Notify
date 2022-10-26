@@ -5,12 +5,18 @@ part of 'authentication_cubit.dart';
 class AuthenticationState {
   final bool isNew;
   final bool isCloudConnected;
-  AuthenticationState({required this.isNew, required this.isCloudConnected});
+  final String gender;
+  AuthenticationState({
+    required this.isNew,
+    required this.isCloudConnected,
+    required this.gender,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'isNew': isNew,
       'isCloudConnected': isCloudConnected,
+      'gender': gender,
     };
   }
 
@@ -18,6 +24,7 @@ class AuthenticationState {
     return AuthenticationState(
       isNew: map['isNew'] as bool,
       isCloudConnected: map['isCloudConnected'] as bool,
+      gender: map['gender'] as String,
     );
   }
 
@@ -28,5 +35,6 @@ class AuthenticationState {
 }
 
 class AuthenticationInitial extends AuthenticationState {
-  AuthenticationInitial() : super(isNew: true, isCloudConnected: false);
+  AuthenticationInitial()
+      : super(isNew: true, isCloudConnected: false, gender: 'male');
 }

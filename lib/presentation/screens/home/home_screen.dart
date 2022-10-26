@@ -9,6 +9,7 @@ import 'package:mynotify/logic/cubit/date_cubit.dart';
 import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:mynotify/presentation/screens/home/add_event_screen.dart';
 import 'package:mynotify/presentation/screens/home/calender_screen.dart';
+import 'package:mynotify/presentation/screens/home/user_profile_screen.dart';
 import 'package:mynotify/presentation/widgets/homescreen/event_list.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../../logic/cubit/internet_cubit.dart';
@@ -143,21 +144,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 );
-                              }
-
-                              return CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.white,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed('/user');
-                                  },
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: SvgPicture.asset(
-                                    'assets/images/illustrations/male_avatar.svg',
+                              } else {
+                                final gender = state.gender.toLowerCase();
+                                return CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Colors.white,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              UserProfileScreen(gender: gender),
+                                        ),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: SvgPicture.asset(
+                                      'assets/images/illustrations/${gender}_avatar.svg',
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             },
                           ),
                           // const SizedBox(width: 10)

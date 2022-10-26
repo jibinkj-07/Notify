@@ -1,17 +1,16 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import '../../../constants/app_colors.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({Key? key}) : super(key: key);
+  final String gender;
+  const UserProfileScreen({Key? key, required this.gender}) : super(key: key);
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -81,7 +80,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 //user avatar
                 SvgPicture.asset(
-                  'assets/images/illustrations/male_avatar.svg',
+                  'assets/images/illustrations/${widget.gender}_avatar.svg',
                   height: 200,
                 ),
                 const SizedBox(height: 20),

@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,6 +23,7 @@ class _SignUpFormState extends State<SignUpForm> {
   String _password = '';
   String _username = '';
   bool isLoading = false;
+  String gender = 'male';
   final _formKey = GlobalKey<FormState>();
 
   //submit function
@@ -34,8 +36,11 @@ class _SignUpFormState extends State<SignUpForm> {
       });
       _formKey.currentState!.save();
       String error = '';
-      error = await AuthenticationHelper(parentContext: context)
-          .signUp(username: _username, email: _email, password: _password);
+      error = await AuthenticationHelper(parentContext: context).signUp(
+          username: _username,
+          email: _email,
+          password: _password,
+          gender: gender);
       if (error.isNotEmpty) {
         setState(() {
           isLoading = false;
@@ -237,6 +242,29 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ),
             const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: CupertinoSegmentedControl(
+                  borderColor: appColors.primaryColor,
+                  selectedColor: appColors.primaryColor,
+                  children: const {
+                    'male': Text(
+                      "Male",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    'female': Text(
+                      "Female",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  },
+                  groupValue: gender,
+                  onValueChanged: (value) {
+                    setState(() {
+                      gender = value.toString();
+                    });
+                  }),
+            ),
+            const SizedBox(height: 20),
             //signup button
 
             isLoading

@@ -12,8 +12,10 @@ import 'package:mynotify/logic/cubit/internet_cubit.dart';
 import 'package:mynotify/logic/services/firebase_services.dart';
 
 class UserCloudEventSync extends StatefulWidget {
+  final String gender;
   const UserCloudEventSync({
     Key? key,
+    required this.gender,
   }) : super(key: key);
 
   @override
@@ -146,6 +148,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                               context,
                                                           fileExist: state
                                                               .isFileExists,
+                                                          gender: widget.gender,
                                                           filePath:
                                                               state.filePath);
                                                     },
@@ -248,7 +251,9 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                                 context
                                                                     .read<
                                                                         AuthenticationCubit>()
-                                                                    .loggingWithCloud();
+                                                                    .loggingWithCloud(
+                                                                        gender:
+                                                                            widget.gender);
                                                               },
                                                             )
                                                           ],
@@ -320,7 +325,8 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                             .cloudDataSynced();
                                         context
                                             .read<AuthenticationCubit>()
-                                            .loggingWithCloud();
+                                            .loggingWithCloud(
+                                                gender: widget.gender);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:

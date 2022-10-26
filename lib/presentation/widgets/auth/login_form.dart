@@ -240,11 +240,14 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         );
                       } else {
-                        return Text(
-                          "Enable mobile data or Wifi to continue",
-                          style: TextStyle(
-                            color: appColors.redColor,
-                            fontWeight: FontWeight.bold,
+                        return Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Enable mobile data or Wifi to continue",
+                            style: TextStyle(
+                              color: appColors.redColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         );
                       }
