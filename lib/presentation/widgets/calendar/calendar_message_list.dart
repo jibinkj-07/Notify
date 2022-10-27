@@ -75,8 +75,11 @@ class CalendarMessageList extends StatelessWidget {
                         itemBuilder: (ctx1, i) {
                           DateTime date =
                               snapshot.data!.docs[i].get('time').toDate();
+                          final bool readStatus =
+                              snapshot.data!.docs[i].get('read');
 
                           return CalendarMessageListItem(
+                              readStatus: readStatus,
                               date: date,
                               currentUserId: currentUserId,
                               sharedUserId: snapshot.data!.docs[i].id);

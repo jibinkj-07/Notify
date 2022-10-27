@@ -33,7 +33,7 @@ class _CalendarMessageScreenState extends State<CalendarMessageScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        foregroundColor: appColors.primaryColor,
         elevation: 0,
         leading: IconButton(
             onPressed: () {

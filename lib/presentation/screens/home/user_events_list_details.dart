@@ -548,7 +548,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                               "Are you sure you want to delete this event?",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 14,
                               ),
                             ),
@@ -561,6 +561,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                       'Delete',
                                       style: TextStyle(
                                         color: appColors.redColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
                                       ),
                                     ),
                                     onPressed: () {
@@ -583,7 +585,8 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                               child: const Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                  // fontWeight: FontWeight.w500,
+                                  fontSize: 18,
                                 ),
                               ),
                               onPressed: () {

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/presentation/widgets/calendar/messages.dart';
 
 class CalendarMessageListItem extends StatefulWidget {
@@ -10,10 +11,12 @@ class CalendarMessageListItem extends StatefulWidget {
     required this.date,
     required this.currentUserId,
     required this.sharedUserId,
+    required this.readStatus,
   });
   final DateTime date;
   final String currentUserId;
   final String sharedUserId;
+  final bool readStatus;
 
   @override
   State<CalendarMessageListItem> createState() =>
@@ -22,6 +25,7 @@ class CalendarMessageListItem extends StatefulWidget {
 
 class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
   String userName = 'User';
+  String gender = 'male';
   @override
   void initState() {
     FirebaseFirestore.instance
@@ -31,6 +35,7 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
         .then((DocumentSnapshot data) {
       setState(() {
         userName = data.get('username');
+        gender = data.get('gender');
       });
     });
     super.initState();
@@ -62,21 +67,46 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                 )
               : ListTile(
                   leading: SvgPicture.asset(
-                    'assets/images/illustrations/male_avatar.svg',
+                    'assets/images/illustrations/${gender}_avatar.svg',
                     height: 50,
                   ),
+                  subtitle: widget.readStatus
+                      ? null
+                      : Text(
+                          'New calendar view',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors().primaryColor),
+                        ),
                   title: Text(
                     userName,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   trailing: sharedDate == todayDate
-                      ? Text(DateFormat.jm().format(widget.date))
-                      : Text(DateFormat.MMMd().format(widget.date)),
+                      ? Text(
+                          DateFormat.jm().format(widget.date),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: widget.readStatus
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                          ),
+                        )
+                      : Text(
+                          DateFormat.MMMd().format(widget.date),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: widget.readStatus
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                          ),
+                        ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => Messages(
                             username: userName,
+                            gender: gender,
                             currentUserId: widget.currentUserId,
                             sharedUserId: widget.sharedUserId),
                       ),

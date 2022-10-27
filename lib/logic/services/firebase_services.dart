@@ -73,7 +73,8 @@ class FirebaseServices {
         .collection('SharedCalendar')
         .doc(senderId.trim().toString())
         .set({
-      'time': Timestamp.now(),
+      'time': time,
+      'read': false,
     }, SetOptions(merge: true));
     //current user id end
     await database
@@ -95,7 +96,8 @@ class FirebaseServices {
         .collection('SharedCalendar')
         .doc(receiverId.trim().toString())
         .set({
-      'time': Timestamp.now(),
+      'time': time,
+      'read': true,
     }, SetOptions(merge: true));
   }
 
@@ -133,6 +135,58 @@ class FirebaseServices {
         parentContext.read<CloudSyncCubit>().cloudHasNoData();
       }
     });
+  }
+
+  //clearing sharedCalendar views
+  Future<void> clearAllSharedCalendarViews(
+      {required String currentUserId, required String targetUserId}) async {
+    // await database
+    //     .doc(currentUserId)
+    //     .collection('SharedCalendar')
+    //     .doc(targetUserId)
+    //     .collection('SharedEvents').
+
+    final instance = FirebaseFirestore.instance;
+    final batch = instance.batch();
+    var collection = instance
+        .collection('AllUserEvents')
+        .doc(currentUserId)
+        .collection('SharedCalendar')
+        .doc(targetUserId)
+        .collection('SharedEvents');
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
+  }
+
+  Future<void> deleteSharedCalendarView({
+    required String currentUserId,
+    required String targetUserId,
+    required String id,
+  }) async {
+    await database
+        .doc(currentUserId)
+        .collection('SharedCalendar')
+        .doc(targetUserId)
+        .collection('SharedEvents')
+        .doc(id)
+        .delete();
+
+    // final instance = FirebaseFirestore.instance;
+    // final batch = instance.batch();
+    // var collection = instance
+    //     .collection('AllUserEvents')
+    //     .doc(currentUserId)
+    //     .collection('SharedCalendar')
+    //     .doc(targetUserId)
+    //     .collection('SharedEvents');
+    // var snapshots = await collection.get();
+    // for (var doc in snapshots.docs) {
+    //   batch.delete(doc.reference);
+    // }
+    // await batch.commit();
   }
 
 //updating synctime

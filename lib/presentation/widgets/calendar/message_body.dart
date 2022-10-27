@@ -14,7 +14,9 @@ class MessageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       width: MediaQuery.of(context).size.width,
       // decoration: const BoxDecoration(
       //   // image: DecorationImage(
@@ -85,6 +87,9 @@ class MessageBody extends StatelessWidget {
                       sharedUser: name,
                       calendarEvents: events,
                       type: type,
+                      currentUserid: currentUserid,
+                      targetUserid: targetUserid,
+                      messageId: snapshot.data!.docs[index].id,
                     );
                   }),
             );

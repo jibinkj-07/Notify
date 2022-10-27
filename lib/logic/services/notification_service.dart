@@ -22,8 +22,7 @@ class NotificationService {
     );
   }
 
-  Future<NotificationDetails> _notificationDetails(
-      ) async {
+  Future<NotificationDetails> _notificationDetails() async {
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'userEvent',
@@ -76,6 +75,46 @@ class NotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
+  }
+
+  //showing notificaion for calendar share
+  Future<void> showNotificationForCalendar({
+    required int id,
+    required String title,
+  }) async {
+    final detail = await _notificationDetails();
+    _notifications.show(
+      id,
+      title,
+      'tesdt machaa',
+      detail,
+    );
+
+    // final time = DateTime.now().add(const Duration(minutes: 5));
+    // if (dateTime.isBefore(time)) {
+    //   log('time is lower that 5 mins');
+    //   return;
+    // }
+
+    // await _notifications.zonedSchedule(
+    //   id,
+    //   title,
+    //   body,
+    //   // tz.TZDateTime.from(
+    //   //     dateTime.subtract(
+    //   //       const Duration(minutes: 1),
+    //   //     ),
+    //   //     tz.local),
+    //   tz.TZDateTime.from(
+    //       dateTime.subtract(
+    //         const Duration(minutes: 5),
+    //       ),
+    //       tz.local),
+    //   detail,
+    //   androidAllowWhileIdle: true,
+    //   uiLocalNotificationDateInterpretation:
+    //       UILocalNotificationDateInterpretation.absoluteTime,
+    // );
   }
 
   Future<void> cancelNotification({required int id}) async {

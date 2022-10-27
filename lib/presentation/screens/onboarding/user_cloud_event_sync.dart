@@ -221,6 +221,9 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                             style: TextStyle(
                                                               color: Colors
                                                                   .black54,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
                                                               fontSize: 14,
                                                             ),
                                                           ),
@@ -232,6 +235,10 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                                     TextStyle(
                                                                   color: appColors
                                                                       .redColor,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
                                                               ),
                                                               onPressed: () {
@@ -262,9 +269,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                             child: const Text(
                                                               'Cancel',
                                                               style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                fontSize: 18,
                                                               ),
                                                             ),
                                                             onPressed: () {
