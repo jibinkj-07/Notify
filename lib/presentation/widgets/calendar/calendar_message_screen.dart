@@ -9,11 +9,18 @@ import 'package:mynotify/logic/cubit/authentication_cubit.dart';
 import 'package:mynotify/logic/cubit/internet_cubit.dart';
 import 'package:mynotify/presentation/widgets/calendar/calendar_message_list_item.dart';
 
-class CalendarMessageScreen extends StatelessWidget {
+import 'calendar_message_list.dart';
+
+class CalendarMessageScreen extends StatefulWidget {
   const CalendarMessageScreen({
     super.key,
   });
 
+  @override
+  State<CalendarMessageScreen> createState() => _CalendarMessageScreenState();
+}
+
+class _CalendarMessageScreenState extends State<CalendarMessageScreen> {
   //main
   @override
   Widget build(BuildContext context) {
@@ -49,104 +56,10 @@ class CalendarMessageScreen extends StatelessWidget {
             return BlocBuilder<InternetCubit, InternetState>(
               builder: (context, state) {
                 if (state is InternetEnabled) {
-                  return SizedBox(
-                    width: screen.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // //choosing sent or inbox option
-                        // CupertinoSegmentedControl(
-                        //     borderColor: appColors.primaryColor,
-                        //     selectedColor: appColors.primaryColor,
-                        //     children: const {
-                        //       'inbox': Text(
-                        //         "Inbox",
-                        //         style: TextStyle(fontWeight: FontWeight.bold),
-                        //       ),
-                        //       'sent': Text(
-                        //         "Sent",
-                        //         style: TextStyle(fontWeight: FontWeight.bold),
-                        //       )
-                        //     },
-                        //     groupValue: pageOption,
-                        //     onValueChanged: (value) {
-                        //       setState(() {
-                        //         pageOption = value.toString();
-                        //       });
-                        //     }),
-
-                        //MAIN BODY PART
-
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('AllUserEvents')
-                              .doc(currentUserId.trim().toString())
-                              .collection('SharedCalendar')
-                              .orderBy('time', descending: true)
-                              .snapshots(),
-                          builder:
-                              (ctx, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Expanded(
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: appColors.primaryColor,
-                                  ),
-                                ),
-                              );
-                            }
-
-                            if (snapshot.hasData) {
-                              // log('legnth is ${snapshot.data!.docs.toString()}');
-                              if (snapshot.data!.docs.isEmpty) {
-                                return Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/illustrations/no_events.svg',
-                                        height: 100,
-                                      ),
-                                      const Text(
-                                        "No shared calendar",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              return Expanded(
-                                child: NotificationListener<
-                                    OverscrollIndicatorNotification>(
-                                  onNotification: (overscroll) {
-                                    overscroll.disallowIndicator();
-                                    return true;
-                                  },
-                                  child: ListView.builder(
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: (ctx1, i) {
-                                        DateTime date = snapshot.data!.docs[i]
-                                            .get('time')
-                                            .toDate();
-
-                                        return CalendarMessageListItem(
-                                            date: date,
-                                            currentUserId: currentUserId,
-                                            sharedUserId:
-                                                snapshot.data!.docs[i].id);
-                                      }),
-                                ),
-                              );
-                            }
-                            return const SizedBox();
-                          },
-                        ),
-                      ],
-                    ),
+                  return CalendarMessageList(
+                    currentUserId: currentUserId,
+                    appColors: appColors,
+                    screen: screen,
                   );
                 }
                 //no internet

@@ -7,7 +7,7 @@ class CloudSyncCubit extends Cubit<CloudSyncState> with HydratedMixin {
   CloudSyncCubit() : super(CloudSyncInitial());
 
   void cloudDataSynced() {
-    emit(const CloudSyncState(isSynced: true, hasData: true));
+    emit(const CloudSyncState(isSynced: true, hasData: false));
   }
 
   void cloudHasData() {

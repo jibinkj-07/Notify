@@ -316,7 +316,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                     const SizedBox(height: 10),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.of(ctx).pop();
+                                        // Navigator.of(ctx).pop();
                                         Navigator.of(context)
                                             .pushNamedAndRemoveUntil('/home',
                                                 (Route route) => false);

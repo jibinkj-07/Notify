@@ -243,7 +243,7 @@ class _LoginFormState extends State<LoginForm> {
                         return Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Enable mobile data or Wifi to continue",
+                            "Please turn on Mobile data or Wifi",
                             style: TextStyle(
                               color: appColors.redColor,
                               fontWeight: FontWeight.bold,
