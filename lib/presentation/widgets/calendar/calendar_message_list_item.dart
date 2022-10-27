@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:mynotify/constants/app_colors.dart';
 import 'package:mynotify/presentation/widgets/calendar/messages.dart';
 
+import '../../../logic/services/firebase_services.dart';
+
 class CalendarMessageListItem extends StatefulWidget {
   const CalendarMessageListItem({
     super.key,
@@ -65,53 +67,77 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                     ),
                   ),
                 )
-              : ListTile(
-                  leading: SvgPicture.asset(
-                    'assets/images/illustrations/${gender}_avatar.svg',
-                    height: 50,
+              : Dismissible(
+                  key: ValueKey(widget.sharedUserId),
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: AppColors().redColor.withOpacity(.8),
+                    ),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      // size: 30,
+                    ),
                   ),
-                  subtitle: widget.readStatus
-                      ? null
-                      : Text(
-                          'New calendar view',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors().primaryColor),
-                        ),
-                  title: Text(
-                    userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  trailing: sharedDate == todayDate
-                      ? Text(
-                          DateFormat.jm().format(widget.date),
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: widget.readStatus
-                                ? FontWeight.normal
-                                : FontWeight.bold,
-                          ),
-                        )
-                      : Text(
-                          DateFormat.MMMd().format(widget.date),
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: widget.readStatus
-                                ? FontWeight.normal
-                                : FontWeight.bold,
-                          ),
-                        ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => Messages(
-                            username: userName,
-                            gender: gender,
-                            currentUserId: widget.currentUserId,
-                            sharedUserId: widget.sharedUserId),
-                      ),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    FirebaseServices().deleteChatUser(
+                      currentUserId: widget.currentUserId,
+                      targetUserId: widget.sharedUserId,
                     );
                   },
+                  child: ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/images/illustrations/${gender}_avatar.svg',
+                      height: 50,
+                    ),
+                    subtitle: widget.readStatus
+                        ? null
+                        : Text(
+                            'New calendar view',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors().primaryColor),
+                          ),
+                    title: Text(
+                      userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    trailing: sharedDate == todayDate
+                        ? Text(
+                            DateFormat.jm().format(widget.date),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: widget.readStatus
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
+                            ),
+                          )
+                        : Text(
+                            DateFormat.MMMd().format(widget.date),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: widget.readStatus
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
+                            ),
+                          ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => Messages(
+                              username: userName,
+                              gender: gender,
+                              currentUserId: widget.currentUserId,
+                              sharedUserId: widget.sharedUserId),
+                        ),
+                      );
+                    },
+                  ),
                 ),
         ),
         const Divider(

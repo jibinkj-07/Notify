@@ -189,6 +189,18 @@ class FirebaseServices {
     // await batch.commit();
   }
 
+  //deleting chat user
+  Future<void> deleteChatUser({
+    required String currentUserId,
+    required String targetUserId,
+  }) async {
+    await database
+        .doc(currentUserId)
+        .collection('SharedCalendar')
+        .doc(targetUserId)
+        .delete();
+  }
+
 //updating synctime
   void updateSyncTime() {
     final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
