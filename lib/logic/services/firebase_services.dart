@@ -53,6 +53,7 @@ class FirebaseServices {
       required String senderId,
       required String senderName,
       required String sharingOption,
+      required String sharedViewDate,
       required receiverId}) async {
     final time = Timestamp.now();
     await database
@@ -67,6 +68,7 @@ class FirebaseServices {
       'sharingOption': sharingOption,
       'mode': 'Received',
       'time': time,
+      'sharedViewDate': sharedViewDate,
     }, SetOptions(merge: true));
     database
         .doc(receiverId.trim().toString())
@@ -89,6 +91,7 @@ class FirebaseServices {
       'sharingOption': sharingOption,
       'mode': 'Sent',
       'time': time,
+      'sharedViewDate': sharedViewDate,
     }, SetOptions(merge: true));
 
     database

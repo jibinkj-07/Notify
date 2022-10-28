@@ -75,7 +75,7 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                     margin: const EdgeInsets.symmetric(vertical: 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
-                      color: AppColors().redColor.withOpacity(.8),
+                      color: AppColors().redColor.withOpacity(.9),
                     ),
                     child: const Icon(
                       Icons.delete,

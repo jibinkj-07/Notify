@@ -16,6 +16,7 @@ class MessageItem extends StatelessWidget {
     required this.currentUserid,
     required this.messageId,
     required this.targetUserid,
+    required this.sharedViewDate,
   });
   final String mode;
   final String type;
@@ -24,13 +25,20 @@ class MessageItem extends StatelessWidget {
   final String currentUserid;
   final String targetUserid;
   final String messageId;
+  final String sharedViewDate;
   final List<dynamic> calendarEvents;
 
   @override
   Widget build(BuildContext context) {
     late DateTime sDate;
+    late String viewMode;
     final data = calendarEvents.first;
     sDate = DateTime.fromMillisecondsSinceEpoch(data['startTime']);
+    if (type == 'month') {
+      viewMode = 'Month';
+    } else {
+      viewMode = "Day";
+    }
 
     var formatter = DateFormat('yyyy-MM-dd');
     String sharedDate = formatter.format(dateTime);
@@ -61,11 +69,10 @@ class MessageItem extends StatelessWidget {
                 background: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.all(15),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  margin: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: AppColors().redColor.withOpacity(.8),
+                    color: AppColors().redColor.withOpacity(.9),
                   ),
                   child: const Icon(
                     Icons.delete,
@@ -101,10 +108,14 @@ class MessageItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '$mode Calendar events of $type',
+                        '$viewMode view',
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 12, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        sharedViewDate,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       const SizedBox(height: 8),
                       Text(

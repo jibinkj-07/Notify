@@ -1,26 +1,19 @@
-import 'dart:convert';
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mynotify/logic/cubit/internet_cubit.dart';
 import 'package:mynotify/logic/services/firebase_services.dart';
-
 import '../../../constants/app_colors.dart';
 import '../../../logic/cubit/authentication_cubit.dart';
 
 class CalendarMessageSend extends StatefulWidget {
   const CalendarMessageSend(
       {super.key, required this.sharingDateTime, required this.userAllEvents});
-  final DateTime? sharingDateTime;
+  final DateTime sharingDateTime;
   final List<Map<String, dynamic>> userAllEvents;
 
   @override
@@ -62,7 +55,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
   Widget build(BuildContext context) {
     AppColors appColors = AppColors();
     final screen = MediaQuery.of(context).size;
-    final DateTime dateTime = widget.sharingDateTime as DateTime;
+    final DateTime dateTime = widget.sharingDateTime;
     List<Map<String, dynamic>> sortedUserEvents = [];
     FirebaseServices firebaseServices = FirebaseServices();
 
@@ -71,7 +64,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
       sortedUserEvents = widget.userAllEvents.where((element) {
         final dateFromEvents = element['eventDate'].toString();
         final selectedMonth =
-            '${widget.sharingDateTime!.year}-${widget.sharingDateTime!.month}';
+            '${widget.sharingDateTime.year}-${widget.sharingDateTime.month}';
         return dateFromEvents.contains(selectedMonth);
       }).toList();
       // log('sorted events from month are $sortedUserEvents');
@@ -79,14 +72,14 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
       sortedUserEvents = widget.userAllEvents.where((element) {
         final dateFromEvents = element['eventDate'].toString();
         final selectedDay =
-            '${widget.sharingDateTime!.year}-${widget.sharingDateTime!.month}-${widget.sharingDateTime!.day}';
+            '${widget.sharingDateTime.year}-${widget.sharingDateTime.month}-${widget.sharingDateTime.day}';
         return dateFromEvents.contains(selectedDay);
       }).toList();
       log('sorted events from day are $sortedUserEvents');
     }
 
     String sharingDate;
-    if (shareOption == 'month' && widget.sharingDateTime != null) {
+    if (shareOption == 'month') {
       sharingDate = DateFormat.yMMMM().format(dateTime);
     } else {
       sharingDate = DateFormat.yMMMMEEEEd().format(dateTime);
@@ -100,7 +93,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
         return nameLower.contains(searchQuery) ||
             emailLower.contains(searchQuery);
       }).toList();
-      log('search result $users');
+      // log('search result $users');
       setState(() {
         this.query = query;
         allUsers = users;
@@ -298,19 +291,13 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                                                           FocusScope.of(context)
                                                                               .unfocus();
                                                                           //sending events
-                                                                          firebaseServices
-                                                                              .shareCalendarEvent(
-                                                                            userEvents:
-                                                                                sortedUserEvents,
-                                                                            senderId:
-                                                                                currentUserId,
-                                                                            senderName:
-                                                                                currentUsername ?? 'user',
-                                                                            sharingOption:
-                                                                                shareOption,
-                                                                            receiverId:
-                                                                                userId,
-                                                                          );
+                                                                          firebaseServices.shareCalendarEvent(
+                                                                              userEvents: sortedUserEvents,
+                                                                              senderId: currentUserId,
+                                                                              senderName: currentUsername ?? 'user',
+                                                                              sharingOption: shareOption,
+                                                                              receiverId: userId,
+                                                                              sharedViewDate: sharingDate);
                                                                           Navigator.of(context)
                                                                               .pop();
                                                                         },
@@ -395,7 +382,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                               height: 100,
                                             ),
                                             const Text(
-                                              "Events not found",
+                                              "Can't share with empty events",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,

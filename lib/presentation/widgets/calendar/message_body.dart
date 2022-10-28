@@ -62,6 +62,13 @@ class MessageBody extends StatelessWidget {
                 ],
               );
             }
+            //change the read status to false
+            FirebaseFirestore.instance
+                .collection('AllUserEvents')
+                .doc(currentUserid)
+                .collection('SharedCalendar')
+                .doc(targetUserid)
+                .set({'read': true}, SetOptions(merge: true));
 
             //list
             return NotificationListener<OverscrollIndicatorNotification>(
@@ -81,6 +88,8 @@ class MessageBody extends StatelessWidget {
                     final name = snapshot.data!.docs[index].get('name');
                     final events =
                         jsonDecode(snapshot.data!.docs[index].get('allEvents'));
+                    final sharedViewDate =
+                        snapshot.data!.docs[index].get('sharedViewDate');
                     return MessageItem(
                       mode: mode,
                       dateTime: dateTime,
@@ -90,6 +99,7 @@ class MessageBody extends StatelessWidget {
                       currentUserid: currentUserid,
                       targetUserid: targetUserid,
                       messageId: snapshot.data!.docs[index].id,
+                      sharedViewDate: sharedViewDate,
                     );
                   }),
             );

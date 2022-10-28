@@ -51,14 +51,6 @@ class Messages extends StatelessWidget {
               ));
     }
 
-    //change the read status to false
-    FirebaseFirestore.instance
-        .collection('AllUserEvents')
-        .doc(currentUserId)
-        .collection('SharedCalendar')
-        .doc(sharedUserId)
-        .set({'read': true}, SetOptions(merge: true));
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
