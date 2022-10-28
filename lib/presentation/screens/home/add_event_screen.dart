@@ -283,7 +283,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                         CupertinoDatePicker(
                                           minimumYear: 1800,
                                           maximumYear: 2300,
-                                          initialDateTime: DateTime.now(),
+                                          initialDateTime: _startTime,
                                           onDateTimeChanged: (value) {
                                             setState(() {
                                               _startTime = value;
