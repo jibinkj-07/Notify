@@ -6,9 +6,9 @@ part 'cloud_sync_state.dart';
 class CloudSyncCubit extends Cubit<CloudSyncState> with HydratedMixin {
   CloudSyncCubit() : super(CloudSyncInitial());
 
-  void cloudDataSynced() {
-    emit(const CloudSyncState(isSynced: true, hasData: false));
-  }
+  // void cloudDataSynced() {
+  //   emit(const CloudSyncState(isSynced: true, hasData: trur));
+  // }
 
   void cloudHasData() {
     emit(const CloudSyncState(isSynced: false, hasData: true));

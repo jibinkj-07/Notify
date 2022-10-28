@@ -51,7 +51,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         message = 'Something went wrong.Try again';
       }
     }
-    log(message);
+    // log(message);
 
     return Column(
       children: [

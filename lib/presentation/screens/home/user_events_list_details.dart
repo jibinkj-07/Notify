@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:notify/constants/app_colors.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
 import 'package:notify/logic/services/event_data_services.dart';
 import 'package:notify/logic/services/notification_service.dart';
 import 'package:provider/provider.dart';
@@ -498,38 +499,49 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                       (_endTime != null && _endTime != widget.endTime) ||
                       (_oldSelectedEvent != _selectedEvent))
                   ? BlocBuilder<EventFileHandlerCubit, EventFileHandlerState>(
-                      builder: (ctx1, state) {
-                      return SizedBox(
-                        width: screen.width * .9,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            //deleting exiting items
-                            Provider.of<EventDataServices>(context,
-                                    listen: false)
-                                .deleteEvent(
-                                    id: widget.id, filePath: state.filePath);
-                            //adding new data into the list
-                            updateEventList(state.filePath);
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appColors.primaryColor,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                      builder: (ctx1, fileState) {
+                      return BlocBuilder<AuthenticationCubit,
+                          AuthenticationState>(
+                        builder: (context, authState) {
+                          return SizedBox(
+                            width: screen.width * .9,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                //deleting exiting items
+                                Provider.of<EventDataServices>(context,
+                                        listen: false)
+                                    .deleteEvent(
+                                  id: widget.id,
+                                  filePath: fileState.filePath,
+                                  notificationId:
+                                      widget.notificationId.toString(),
+                                  isCloudConnected: authState.isCloudConnected,
+                                );
+                                //adding new data into the list
+                                updateEventList(fileState.filePath);
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: appColors.primaryColor,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                "Update",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            "Update",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       );
                     })
                   : const SizedBox(),
@@ -555,27 +567,40 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                             actions: [
                               BlocBuilder<EventFileHandlerCubit,
                                   EventFileHandlerState>(
-                                builder: (context, state) {
-                                  return CupertinoActionSheetAction(
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: appColors.redColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      NotificationService().cancelNotification(
-                                          id: widget.notificationId);
-                                      //main
-                                      Navigator.of(ctx).pop();
-                                      Navigator.of(context).pop();
-                                      Provider.of<EventDataServices>(context,
-                                              listen: false)
-                                          .deleteEvent(
-                                              id: widget.id,
-                                              filePath: state.filePath);
+                                builder: (context, fileState) {
+                                  return BlocBuilder<AuthenticationCubit,
+                                      AuthenticationState>(
+                                    builder: (context, authState) {
+                                      return CupertinoActionSheetAction(
+                                        child: Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: appColors.redColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          NotificationService()
+                                              .cancelNotification(
+                                                  id: widget.notificationId);
+                                          //main
+                                          Navigator.of(ctx).pop();
+                                          Navigator.of(context).pop();
+                                          Provider.of<EventDataServices>(
+                                                  context,
+                                                  listen: false)
+                                              .deleteEvent(
+                                            id: widget.id,
+                                            filePath: fileState.filePath,
+                                            isCloudConnected:
+                                                authState.isCloudConnected,
+                                            notificationId: widget
+                                                .notificationId
+                                                .toString(),
+                                          );
+                                        },
+                                      );
                                     },
                                   );
                                 },

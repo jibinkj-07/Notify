@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dlog;
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,36 +106,65 @@ class FirebaseServices {
   }
 
   //function to upload user event list into cloud
-  Future<void> uploadFileToCloud(
-      {required List<dynamic> userEventsFile}) async {
-    final userJsonData = jsonEncode(userEventsFile);
-    String userId;
+  Future<void> uploadEventToCloud({
+    required String id,
+    required int notificationId,
+    required String title,
+    required String notes,
+    required int startTime,
+    required int endTime,
+    required String eventDate,
+    required String eventType,
+  }) async {
+    String currentUserId;
     try {
-      userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
+      currentUserId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
     } catch (e) {
       return;
     }
-    await database.doc(userId).set({
-      "allEvents": userJsonData,
-      'createdTime': Timestamp.now(),
+    //adding events into firebase cloud
+    await database
+        .doc(currentUserId)
+        .collection('CloudEvents')
+        .doc(notificationId.toString())
+        .set({
+      'id': id,
+      'title': title,
+      'notes': notes,
+      'startTime': startTime,
+      'endTime': endTime,
+      'eventDate': eventDate,
+      'eventType': eventType,
+      'time': Timestamp.now(),
     }, SetOptions(merge: true));
   }
 
+  //function to delete event from firebase cloud
+  Future<void> deleteEventFromCloud({required String notificationId}) async {
+    final String currentUserId;
+    try {
+      currentUserId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
+      await database
+          .doc(currentUserId)
+          .collection('CloudEvents')
+          .doc(notificationId)
+          .delete();
+    } catch (e) {
+      log('error from firebase service while deleting event ${e.toString()}');
+      return;
+    }
+  }
+
   //checking cloud data into device
-  void checkCloudHasFile({required BuildContext parentContext}) {
-    final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
-    List<dynamic> allEvents = [];
-    database.doc(userId).get().then((value) {
-      final datas = value.data();
-      try {
-        allEvents = jsonDecode(datas!['allEvents']);
-        if (allEvents.toString().length < 3) {
-          parentContext.read<CloudSyncCubit>().cloudHasNoData();
-          return;
-        }
+  void checkCloudEvents({
+    required BuildContext parentContext,
+  }) {
+    final currentUserId =
+        FirebaseAuth.instance.currentUser!.uid.trim().toString();
+    database.doc(currentUserId).collection('CloudEvents').get().then((value) {
+      if (value.docs.isNotEmpty) {
         parentContext.read<CloudSyncCubit>().cloudHasData();
-      } catch (error) {
-        dlog.log('Error in checkCloudHasFile ${error.toString()}');
+      } else {
         parentContext.read<CloudSyncCubit>().cloudHasNoData();
       }
     });
@@ -143,12 +173,6 @@ class FirebaseServices {
   //clearing sharedCalendar views
   Future<void> clearAllSharedCalendarViews(
       {required String currentUserId, required String targetUserId}) async {
-    // await database
-    //     .doc(currentUserId)
-    //     .collection('SharedCalendar')
-    //     .doc(targetUserId)
-    //     .collection('SharedEvents').
-
     final instance = FirebaseFirestore.instance;
     final batch = instance.batch();
     var collection = instance
@@ -176,20 +200,6 @@ class FirebaseServices {
         .collection('SharedEvents')
         .doc(id)
         .delete();
-
-    // final instance = FirebaseFirestore.instance;
-    // final batch = instance.batch();
-    // var collection = instance
-    //     .collection('AllUserEvents')
-    //     .doc(currentUserId)
-    //     .collection('SharedCalendar')
-    //     .doc(targetUserId)
-    //     .collection('SharedEvents');
-    // var snapshots = await collection.get();
-    // for (var doc in snapshots.docs) {
-    //   batch.delete(doc.reference);
-    // }
-    // await batch.commit();
   }
 
   //deleting chat user
@@ -213,45 +223,58 @@ class FirebaseServices {
   }
 
   //syncinf cloud events function
-  void syncCloudEvents({
-    required BuildContext parentContext,
-    required bool fileExist,
-    required String gender,
-    String? filePath,
-  }) {
-    final userId = FirebaseAuth.instance.currentUser!.uid.trim().toString();
+  Future<void> syncCloudEventsFromCloud(
+      {required BuildContext parentContext,
+      required bool fileExist,
+      required String filePath,
+      required String gender}) async {
+    final currentUserId =
+        FirebaseAuth.instance.currentUser!.uid.trim().toString();
     int flag = 0;
     String fPath = '';
-    List<dynamic> allEvents = [];
-    database.doc(userId).get().then((value) {
-      final datas = value.data();
-      try {
-        allEvents = jsonDecode(datas!['allEvents']);
-        //looping between all cloud events
-        for (var event in allEvents) {
-          final data = jsonDecode(event);
-          final id = data['id'];
-          final notiID = data['notificationId'];
-          final title = data['title'];
-          final notes = data['notes'];
-          final eventType = data['eventType'];
-          DateTime startTime =
-              DateTime.fromMillisecondsSinceEpoch(data['startTime']);
-          DateTime endTime =
-              DateTime.fromMillisecondsSinceEpoch(data['endTime']);
-          String notiBody =
-              'Event of type $eventType in 5 minutes.Check it out';
+    await database
+        .doc(currentUserId)
+        .collection('CloudEvents')
+        .get()
+        .then((value) {
+      for (var i = 0; i < value.docs.length; i++) {
+        final event = value.docs[i];
+        //getting details from cloud event
+        final id = event.get('id');
+        final notificationId = int.parse(event.id);
+        final title = event.get('title');
+        final notes = event.get('notes');
+        final startTime =
+            DateTime.fromMillisecondsSinceEpoch(event.get('startTime'));
+        final endTime =
+            DateTime.fromMillisecondsSinceEpoch(event.get('endTime'));
+        final eventType = event.get('eventType');
 
-          //setting notification
-          NotificationService().showNotification(
-              id: notiID, title: title, body: notiBody, dateTime: startTime);
-          //file is already exist
-          if (fileExist) {
-            //adding events to device
+        //checking if  device contain current cloud event
+        if (fileExist) {
+          log('file exist from fb');
+          final deviceEventList =
+              EventDataServices().readDataFromFile(filePath: filePath);
+          if (deviceEventList.toString().contains(id)) {
+            log('Device already have this event $title');
+            return;
+          } else {
+            log('$title added to device file');
+            //NOTIFICATION PART
+            String notiBody =
+                'Event of type $eventType in 5 minutes.Check it out';
+            NotificationService().showNotification(
+              id: notificationId,
+              title: title,
+              body: notiBody,
+              dateTime: startTime,
+            );
+
+            //ADDING CLOUD EVENTS INTO DEVICE FILE
             Provider.of<EventDataServices>(parentContext, listen: false)
                 .addNewEvent(
               id: id,
-              notificationId: notiID,
+              notificationId: notificationId,
               title: title,
               notes: notes,
               startTime: startTime,
@@ -262,66 +285,71 @@ class FirebaseServices {
               parentContext: parentContext,
               isSyncing: true,
             );
+
+            //end of if (deviceEventList.toString().contains(id)) ..else
+          }
+
+          //end of if (fileExist)
+        } else {
+          //creating file if it was first event
+          if (flag == 0) {
+            log('file created from fb and added $title');
+            EventListModel content = EventListModel(
+              id: id.toString(),
+              title: title,
+              notes: notes,
+              startTime: startTime,
+              endTime: endTime,
+              eventType: eventType,
+              notificationId: notificationId,
+              eventDate: startTime.toString(),
+            );
+            List<EventListModel> newData = [content];
+            getApplicationDocumentsDirectory().then((dir) {
+              fPath = '${dir.path}/userEvents';
+              File fileName = File(fPath);
+              fileName.createSync();
+              fileName.writeAsStringSync(jsonEncode(newData));
+
+              //updating the cubit
+              parentContext
+                  .read<EventFileHandlerCubit>()
+                  .fileExists(filePath: fPath);
+            });
           } else {
-            //creating file if it was first event
-            if (flag == 0) {
-              EventListModel content = EventListModel(
-                id: id.toString(),
+            log('file not  exist but created then added from fb and added $title');
+            getApplicationDocumentsDirectory().then((dir) {
+              final fiPath = '${dir.path}/userEvents';
+              //adding events to device
+              Provider.of<EventDataServices>(parentContext, listen: false)
+                  .addNewEvent(
+                id: id,
+                notificationId: notificationId,
                 title: title,
                 notes: notes,
                 startTime: startTime,
                 endTime: endTime,
                 eventType: eventType,
-                notificationId: notiID,
-                eventDate: startTime.toString(),
+                fileExists: true,
+                filePath: fiPath,
+                parentContext: parentContext,
+                isSyncing: true,
               );
-              List<EventListModel> newData = [content];
-              getApplicationDocumentsDirectory().then((dir) {
-                fPath = '${dir.path}/userEvents';
-                File fileName = File(fPath);
-                fileName.createSync();
-                fileName.writeAsStringSync(jsonEncode(newData));
-
-                //updating the cubit
-                parentContext
-                    .read<EventFileHandlerCubit>()
-                    .fileExists(filePath: fPath);
-              });
-            } else {
-              getApplicationDocumentsDirectory().then((dir) {
-                final fiPath = '${dir.path}/userEvents';
-                //adding events to device
-                Provider.of<EventDataServices>(parentContext, listen: false)
-                    .addNewEvent(
-                  id: id,
-                  notificationId: notiID,
-                  title: title,
-                  notes: notes,
-                  startTime: startTime,
-                  endTime: endTime,
-                  eventType: eventType,
-                  fileExists: true,
-                  filePath: fiPath,
-                  parentContext: parentContext,
-                  isSyncing: true,
-                );
-              });
-            } //end of else
-          } //end of for
-          flag++;
+            });
+          } //end of else
         }
-        Future.delayed(const Duration(seconds: 2), () {
-          parentContext.read<CloudSyncCubit>().cloudDataSynced();
-          parentContext
-              .read<AuthenticationCubit>()
-              .loggingWithCloud(gender: gender);
-          Navigator.of(parentContext)
-              .pushNamedAndRemoveUntil('/home', (route) => false);
-        });
-      } catch (error) {
-        dlog.log('Error in syncCloudEvents ${error.toString()}');
+        flag++;
+        //end of for (var i = 0; i < value.docs.length; i++)
       }
     });
     FirebaseServices().updateSyncTime();
+    //ROUTING USER TO HOMEPAGE
+    Future.delayed(const Duration(seconds: 5), () {
+      parentContext
+          .read<AuthenticationCubit>()
+          .loggingWithCloud(gender: gender);
+      Navigator.of(parentContext)
+          .pushNamedAndRemoveUntil('/home', (route) => false);
+    });
   }
 }

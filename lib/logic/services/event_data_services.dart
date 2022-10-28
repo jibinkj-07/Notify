@@ -44,11 +44,6 @@ class EventDataServices with ChangeNotifier {
       File fileName = File(name);
       fileName.createSync();
       fileName.writeAsStringSync(jsonEncode(_allEvents));
-      if (!isSyncing) {
-        firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
-      } else {
-        firebaseServices.updateSyncTime();
-      }
       //updating the cubit
       parentContext.read<EventFileHandlerCubit>().fileExists(filePath: name);
     });
@@ -65,11 +60,6 @@ class EventDataServices with ChangeNotifier {
     // List<dynamic> oldData = jsonDecode(fileName.readAsStringSync());
     // oldData.addAll(newData);
     fileName.writeAsStringSync(jsonEncode(_allEvents));
-    if (!isSyncing) {
-      firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
-    } else {
-      firebaseServices.updateSyncTime();
-    }
   }
 
   //For adding items to event list
@@ -87,7 +77,6 @@ class EventDataServices with ChangeNotifier {
     String? filePath,
   }) {
     //body part
-
     _allEvents.add(EventListModel(
       id: id,
       notificationId: notificationId,
@@ -103,31 +92,45 @@ class EventDataServices with ChangeNotifier {
       log('device list contain already $title');
       return;
     }
-    //storing into file
-    // EventListModel newData = EventListModel(
-    //   id: id,
-    //   notificationId: notificationId,
-    //   title: title,
-    //   notes: notes,
-    //   dateTime: dateTime,
-    //   eventDate: dateTime.toString(),
-    //   eventType: eventType,
-    // );
+
     if (fileExists) {
       writeToFile(filePath: filePath!, isSyncing: isSyncing);
     } else {
       createFile(parentContext: parentContext, isSyncing: isSyncing);
     }
+
+    //If user is not syncing events then add this to firebase db
+    if (isSyncing) {
+      firebaseServices.updateSyncTime();
+    } else {
+      firebaseServices.uploadEventToCloud(
+        id: id,
+        notificationId: notificationId,
+        title: title,
+        notes: notes,
+        startTime: startTime.millisecondsSinceEpoch,
+        endTime: endTime.millisecondsSinceEpoch,
+        eventDate: startTime.toString(),
+        eventType: eventType,
+      );
+    }
     notifyListeners();
   }
 
   //function to delete an event from list
-  void deleteEvent({required String id, required String filePath}) {
+  void deleteEvent(
+      {required String id,
+      required String notificationId,
+      required String filePath,
+      required bool isCloudConnected}) {
+    log('log from event data services cloud connected is $isCloudConnected');
     _allEvents.removeWhere((element) => element.toString().contains(id));
     //writing the data to file
     File fileName = File(filePath);
     fileName.writeAsStringSync(jsonEncode(_allEvents));
-    firebaseServices.uploadFileToCloud(userEventsFile: _allEvents);
+    if (isCloudConnected) {
+      firebaseServices.deleteEventFromCloud(notificationId: notificationId);
+    }
     notifyListeners();
   }
 }

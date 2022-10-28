@@ -51,8 +51,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     //current user
-    final userEmail = FirebaseAuth.instance.currentUser!.email;
-    final username = FirebaseAuth.instance.currentUser!.displayName;
+    String userEmail = '';
+    String username = '';
+    try {
+      userEmail = FirebaseAuth.instance.currentUser!.email.toString();
+      username = FirebaseAuth.instance.currentUser!.displayName.toString();
+    } catch (e) {
+      log('error in profile screen ${e.toString()}');
+      userEmail = 'notify@notify.com';
+      username = 'User';
+    }
+
     AppColors appColors = AppColors();
 
     return Scaffold(

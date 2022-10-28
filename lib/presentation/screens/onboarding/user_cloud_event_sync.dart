@@ -36,7 +36,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
     });
     //calling db function to check cloud events
     Future.delayed(Duration.zero).then((value) {
-      db.checkCloudHasFile(parentContext: context);
+      db.checkCloudEvents(parentContext: context);
     });
     super.initState();
   }
@@ -142,14 +142,14 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                       setState(() {
                                                         _isSyncing = true;
                                                       });
-                                                      db.syncCloudEvents(
-                                                          parentContext:
-                                                              context,
-                                                          fileExist: state
-                                                              .isFileExists,
-                                                          gender: widget.gender,
-                                                          filePath:
-                                                              state.filePath);
+                                                      db.syncCloudEventsFromCloud(
+                                                        parentContext: context,
+                                                        fileExist:
+                                                            state.isFileExists,
+                                                        gender: widget.gender,
+                                                        filePath:
+                                                            state.filePath,
+                                                      );
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(
@@ -250,10 +250,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                                         '/home',
                                                                         (Route route) =>
                                                                             false);
-                                                                context
-                                                                    .read<
-                                                                        CloudSyncCubit>()
-                                                                    .cloudDataSynced();
+
                                                                 context
                                                                     .read<
                                                                         AuthenticationCubit>()
@@ -324,9 +321,6 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                         Navigator.of(context)
                                             .pushNamedAndRemoveUntil('/home',
                                                 (Route route) => false);
-                                        context
-                                            .read<CloudSyncCubit>()
-                                            .cloudDataSynced();
                                         context
                                             .read<AuthenticationCubit>()
                                             .loggingWithCloud(
