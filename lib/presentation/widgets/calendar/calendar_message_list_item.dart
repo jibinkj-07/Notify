@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,11 +37,20 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
         .doc(widget.sharedUserId)
         .get()
         .then((DocumentSnapshot data) {
-      setState(() {
-        userName = data.get('username');
-        gender = data.get('gender');
-      });
+      try {
+        setState(() {
+          userName = data.get('username');
+          gender = data.get('gender');
+        });
+      } catch (e) {
+        log('error ${e.toString()}');
+        setState(() {
+          userName = 'Account Deleted';
+          gender = 'male';
+        });
+      }
     });
+
     super.initState();
   }
 
@@ -126,17 +137,19 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                                   : FontWeight.bold,
                             ),
                           ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => Messages(
-                              username: userName,
-                              gender: gender,
-                              currentUserId: widget.currentUserId,
-                              sharedUserId: widget.sharedUserId),
-                        ),
-                      );
-                    },
+                    onTap: (userName == 'Account Deleted' || userName == 'User')
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => Messages(
+                                    username: userName,
+                                    gender: gender,
+                                    currentUserId: widget.currentUserId,
+                                    sharedUserId: widget.sharedUserId),
+                              ),
+                            );
+                          },
                   ),
                 ),
         ),

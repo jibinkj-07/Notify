@@ -382,7 +382,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                               height: 100,
                                             ),
                                             const Text(
-                                              "Can't share with empty events",
+                                              "Empty events cannot be shared",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
