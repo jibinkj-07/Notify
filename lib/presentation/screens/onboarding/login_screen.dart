@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mynotify/presentation/widgets/auth/login_form.dart';
-
+import 'package:notify/presentation/widgets/auth/login_form.dart';
 import '../../../constants/app_colors.dart';
 
 class LoginScreen extends StatelessWidget {

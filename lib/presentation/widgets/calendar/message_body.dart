@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/presentation/widgets/calendar/message_item.dart';
+import 'package:notify/constants/app_colors.dart';
+import 'package:notify/presentation/widgets/calendar/message_item.dart';
 
 class MessageBody extends StatelessWidget {
   const MessageBody(

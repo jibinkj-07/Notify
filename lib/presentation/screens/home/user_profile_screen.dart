@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
 import '../../../constants/app_colors.dart';
 
 class UserProfileScreen extends StatefulWidget {

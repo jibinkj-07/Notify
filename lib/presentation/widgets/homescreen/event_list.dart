@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/logic/services/event_data_services.dart';
-import 'package:mynotify/presentation/widgets/homescreen/event_list_item.dart';
+import 'package:notify/logic/cubit/event_file_handler_cubit.dart';
+import 'package:notify/logic/services/event_data_services.dart';
+import 'package:notify/presentation/widgets/homescreen/event_list_item.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-
 import '../../../constants/app_colors.dart';
 import '../../screens/home/user_events_list_details.dart';
 

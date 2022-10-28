@@ -4,12 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/logic/cubit/authentication_cubit.dart';
-import 'package:mynotify/logic/cubit/cloud_sync_cubit.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/logic/cubit/internet_cubit.dart';
-import 'package:mynotify/logic/services/firebase_services.dart';
+import 'package:notify/constants/app_colors.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/cubit/cloud_sync_cubit.dart';
+import 'package:notify/logic/cubit/event_file_handler_cubit.dart';
+import 'package:notify/logic/services/firebase_services.dart';
 
 class UserCloudEventSync extends StatefulWidget {
   final String gender;

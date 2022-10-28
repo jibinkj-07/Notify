@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/presentation/widgets/calendar/calendarEvent.dart';
-import 'package:mynotify/util/event.dart';
+import 'package:notify/constants/app_colors.dart';
+import 'package:notify/presentation/widgets/calendar/calendarEvent.dart';
+import 'package:notify/util/event.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SharedCalendarView extends StatefulWidget {

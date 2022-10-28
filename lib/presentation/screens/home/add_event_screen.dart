@@ -1,16 +1,13 @@
-import 'dart:developer' as dev;
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/logic/services/event_data_services.dart';
+import 'package:notify/logic/cubit/event_file_handler_cubit.dart';
+import 'package:notify/logic/services/event_data_services.dart';
 import 'package:provider/provider.dart';
-import 'package:mynotify/constants/app_colors.dart';
+import 'package:notify/constants/app_colors.dart';
 
 import '../../../logic/services/notification_service.dart';
 

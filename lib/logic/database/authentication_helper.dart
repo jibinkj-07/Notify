@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mynotify/logic/cubit/authentication_cubit.dart';
-import 'package:mynotify/logic/services/firebase_services.dart';
-import 'package:mynotify/presentation/screens/onboarding/user_cloud_event_sync.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/services/firebase_services.dart';
+import 'package:notify/presentation/screens/onboarding/user_cloud_event_sync.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 

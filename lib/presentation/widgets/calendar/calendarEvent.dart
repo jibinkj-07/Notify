@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:mynotify/constants/app_colors.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:notify/constants/app_colors.dart';
 import 'package:provider/provider.dart';
-
 import '../../../logic/cubit/event_file_handler_cubit.dart';
 import '../../../logic/services/event_data_services.dart';
 import '../../../logic/services/notification_service.dart';

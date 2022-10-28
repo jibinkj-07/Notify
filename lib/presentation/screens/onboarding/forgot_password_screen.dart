@@ -1,12 +1,5 @@
-import 'dart:developer';
-
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mynotify/presentation/widgets/auth/login_form.dart';
-
-import '../../../constants/app_colors.dart';
-import '../../../logic/database/authentication_helper.dart';
 import '../../widgets/auth/forgot_password_form.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {

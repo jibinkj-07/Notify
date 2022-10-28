@@ -1,12 +1,10 @@
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mynotify/constants/app_colors.dart';
-import 'package:mynotify/logic/cubit/authentication_cubit.dart';
-import 'package:mynotify/logic/cubit/internet_cubit.dart';
+import 'package:notify/constants/app_colors.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/cubit/internet_cubit.dart';
 import 'calendar_message_list.dart';
 
 class CalendarMessageScreen extends StatefulWidget {

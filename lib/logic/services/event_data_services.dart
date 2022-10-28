@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mynotify/logic/cubit/event_file_handler_cubit.dart';
-import 'package:mynotify/logic/services/firebase_services.dart';
+import 'package:notify/logic/cubit/event_file_handler_cubit.dart';
+import 'package:notify/logic/services/firebase_services.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/event_list_model.dart';
 
