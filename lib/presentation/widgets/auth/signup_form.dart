@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +38,15 @@ class _SignUpFormState extends State<SignUpForm> {
       });
       _formKey.currentState!.save();
       String error = '';
-      error = await AuthenticationHelper(parentContext: context).signUp(
-          username: _username,
-          email: _email,
-          password: _password,
-          gender: gender);
+      try {
+        error = await AuthenticationHelper(parentContext: context).signUp(
+            username: _username,
+            email: _email,
+            password: _password,
+            gender: gender);
+      } catch (e) {
+        log('error in signup form');
+      }
       if (error.isNotEmpty) {
         setState(() {
           isLoading = false;

@@ -46,7 +46,6 @@ class AuthenticationHelper {
         Navigator.of(parentContext)
             .pushNamedAndRemoveUntil('/home', (Route route) => false);
       });
-      return 'success';
     } on FirebaseAuthException catch (e) {
       if (e.toString().contains('email-already')) {
         showTopSnackBar(
@@ -86,7 +85,6 @@ class AuthenticationHelper {
         // Navigator.of(parentContext)
         //     .pushNamedAndRemoveUntil('/user-sync', (Route route) => false);
       });
-      return 'success';
     } on FirebaseAuthException catch (e) {
       if (e.toString().contains('user-not-found')) {
         showTopSnackBar(

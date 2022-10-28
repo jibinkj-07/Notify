@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,8 +35,13 @@ class _LoginFormState extends State<LoginForm> {
       });
       _formKey.currentState!.save();
       String error = '';
-      error = await AuthenticationHelper(parentContext: context)
-          .signIn(email: _email, password: _password);
+      try {
+        error = await AuthenticationHelper(parentContext: context)
+            .signIn(email: _email, password: _password);
+      } catch (e) {
+        log('error occured in login form');
+      }
+
       if (error.isNotEmpty) {
         setState(() {
           isLoading = false;
