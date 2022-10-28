@@ -18,11 +18,6 @@ class MessageBody extends StatelessWidget {
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       width: MediaQuery.of(context).size.width,
-      // decoration: const BoxDecoration(
-      //   // image: DecorationImage(
-      //   //     image: AssetImage("assets/images/chat_background.png"),
-      //   //     fit: BoxFit.cover),
-      // ),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('AllUserEvents')
@@ -57,6 +52,7 @@ class MessageBody extends StatelessWidget {
                     "No shared events",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ],

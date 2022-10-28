@@ -24,33 +24,6 @@ class Messages extends StatelessWidget {
     final screen = MediaQuery.of(context).size;
     final AppColors appColors = AppColors();
 
-    // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoDatePicker.
-    void showDialog(Widget child) {
-      showCupertinoModalPopup<void>(
-          context: context,
-          builder: (BuildContext context) => Container(
-                height: screen.height * .25,
-                // padding: const EdgeInsets.only(top: 6.0),
-                // The Bottom margin is provided to align the popup above the system navigation bar.
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                // Provide a background color for the popup.
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                  color: Colors.white,
-                ),
-                // Use a SafeArea widget to avoid system overlaps.
-                child: SafeArea(
-                  top: false,
-                  child: child,
-                ),
-              ));
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -147,55 +120,4 @@ class Messages extends StatelessWidget {
       )),
     );
   }
-
-  // //widget for head
-  // Widget messageHead(BuildContext context) => Container(
-  //       color: Colors.blue,
-  //       padding: const EdgeInsets.symmetric(vertical: 5),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           IconButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             icon: const Icon(Icons.arrow_back_ios_new_rounded),
-  //             splashRadius: 20.0,
-  //           ),
-  //           Column(
-  //             children: [
-  //               SvgPicture.asset(
-  //                 'assets/images/illustrations/${gender}_avatar.svg',
-  //                 height: 40,
-  //               ),
-  //               Text(
-  //                 username,
-  //                 style: const TextStyle(
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               // Navigator.of(context).pop();
-  //             },
-  //             style: TextButton.styleFrom(
-  //               foregroundColor: Colors.black,
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(8),
-  //               ),
-  //             ),
-  //             child: const Text(
-  //               'Clear',
-  //               style: TextStyle(
-  //                 fontSize: 14,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
 }

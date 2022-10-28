@@ -98,18 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context, state) {
                               return IconButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      reverseDuration:
-                                          const Duration(milliseconds: 300),
-                                      duration:
-                                          const Duration(milliseconds: 400),
-                                      type: PageTransitionType.fade,
-                                      child: CalenderScreen(
-                                          filePath: state.filePath),
-                                    ),
-                                  );
+                                  Navigator.pushNamed(context, '/calendar');
                                 },
                                 icon: const Icon(
                                   Iconsax.calendar_1,

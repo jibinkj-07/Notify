@@ -58,6 +58,7 @@ class CalendarMessageList extends StatelessWidget {
                           "No shared calendar",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
                       ],
