@@ -42,7 +42,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
     } else {
       _startTime = DateTime.now();
     }
-    _endTime = _startTime.add(const Duration(days: 1));
+    _endTime =
+        DateTime(_startTime.year, _startTime.month, _startTime.day, 23, 59);
     _notes = '';
     _title = '';
     super.initState();
