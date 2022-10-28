@@ -71,7 +71,7 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                   key: ValueKey(widget.sharedUserId),
                   background: Container(
                     alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.symmetric(vertical: 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
