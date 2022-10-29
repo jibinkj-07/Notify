@@ -58,6 +58,7 @@ dependencies:
   share_plus: ^5.0.0
   flutter_native_splash: ^2.2.11
   skeletons: ^0.0.3
+  percent_indicator: ^4.0.1
 
 
 dev_dependencies:

@@ -9,6 +9,7 @@ import 'package:notify/logic/cubit/authentication_cubit.dart';
 import 'package:notify/logic/cubit/cloud_sync_cubit.dart';
 import 'package:notify/logic/cubit/event_file_handler_cubit.dart';
 import 'package:notify/logic/services/firebase_services.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class UserCloudEventSync extends StatefulWidget {
   final String gender;
@@ -114,11 +115,6 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                         ? Center(
                                             child: Column(
                                               children: [
-                                                CircularProgressIndicator(
-                                                  color: appColors.primaryColor,
-                                                  strokeWidth: 1.5,
-                                                ),
-                                                const SizedBox(height: 10),
                                                 Text(
                                                   'Syncing Cloud Events',
                                                   style: TextStyle(
@@ -126,6 +122,27 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                     fontWeight: FontWeight.bold,
                                                     color:
                                                         appColors.primaryColor,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      15.0),
+                                                  child: LinearPercentIndicator(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            50,
+                                                    animation: true,
+                                                    lineHeight: 8.0,
+                                                    animationDuration: 4800,
+                                                    percent: 1,
+                                                    barRadius:
+                                                        const Radius.circular(
+                                                            20),
+                                                    curve: Curves.slowMiddle,
+                                                    progressColor: AppColors()
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                               ],
