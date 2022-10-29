@@ -211,70 +211,17 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                               //login button
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  showCupertinoModalPopup(
-                                                      context: context,
-                                                      builder: (ctx) {
-                                                        return CupertinoActionSheet(
-                                                          title: const Text(
-                                                            "Going home withoud sync may cause deletion of your backed up events permanantly",
-                                                            style: TextStyle(
-                                                              color: Colors
-                                                                  .black54,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontSize: 14,
-                                                            ),
-                                                          ),
-                                                          actions: [
-                                                            CupertinoActionSheetAction(
-                                                              child: Text(
-                                                                'Go Home',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: appColors
-                                                                      .redColor,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        ctx)
-                                                                    .pop();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pushNamedAndRemoveUntil(
-                                                                        '/home',
-                                                                        (Route route) =>
-                                                                            false);
-
-                                                                context
-                                                                    .read<
-                                                                        AuthenticationCubit>()
-                                                                    .loggingWithCloud(
-                                                                        gender:
-                                                                            widget.gender);
-                                                              },
-                                                            )
-                                                          ],
-                                                          cancelButton:
-                                                              CupertinoActionSheetAction(
-                                                            child: const Text(
-                                                              'Cancel',
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                              ),
-                                                            ),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  ctx);
-                                                            },
-                                                          ),
-                                                        );
-                                                      });
+                                                  Navigator.of(context)
+                                                      .pushNamedAndRemoveUntil(
+                                                          '/home',
+                                                          (Route route) =>
+                                                              false);
+                                                  context
+                                                      .read<
+                                                          AuthenticationCubit>()
+                                                      .loggingWithCloud(
+                                                          gender:
+                                                              widget.gender);
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: Colors.grey

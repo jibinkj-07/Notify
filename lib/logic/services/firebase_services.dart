@@ -348,6 +348,7 @@ class FirebaseServices {
       parentContext
           .read<AuthenticationCubit>()
           .loggingWithCloud(gender: gender);
+      parentContext.read<CloudSyncCubit>().cloudDataSynced();
       Navigator.of(parentContext)
           .pushNamedAndRemoveUntil('/home', (route) => false);
     });
