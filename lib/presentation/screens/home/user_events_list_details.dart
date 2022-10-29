@@ -119,7 +119,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                         Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: AppColors().primaryColor,
+                        foregroundColor: appColors.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -473,7 +473,7 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                                           Icon(
                                             Iconsax.edit_25,
                                             size: 20,
-                                            color: AppColors().primaryColor,
+                                            color: appColors.primaryColor,
                                           ),
                                         ],
                                       ),
@@ -624,9 +624,9 @@ class _UserEventListDetailsState extends State<UserEventListDetails> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.redColor,
                     disabledBackgroundColor:
-                        AppColors().primaryColor.withOpacity(.2),
+                        appColors.primaryColor.withOpacity(.2),
                     disabledForegroundColor:
-                        AppColors().primaryColor.withOpacity(.4),
+                        appColors.primaryColor.withOpacity(.4),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     shape: RoundedRectangleBorder(

@@ -32,12 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final AppColors appColors = AppColors();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocBuilder<DateCubit, DateState>(builder: (context, state) {
           final day = DateFormat.d().format(state.dateTime);
+
           //checking cloud data
           return SizedBox(
             width: screen.width,
@@ -56,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             return CircleAvatar(
                               radius: 15,
                               backgroundColor:
-                                  AppColors().greenColor.withOpacity(.3),
+                                  appColors.greenColor.withOpacity(.3),
                               child: CircleAvatar(
                                 radius: 10,
                                 backgroundColor:
-                                    AppColors().greenColor.withOpacity(.8),
+                                    appColors.greenColor.withOpacity(.8),
                                 child: const Icon(
                                   Iconsax.cloud5,
                                   color: Colors.white,
@@ -72,10 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             return CircleAvatar(
                               radius: 15,
                               backgroundColor:
-                                  AppColors().redColor.withOpacity(.3),
+                                  appColors.redColor.withOpacity(.3),
                               child: CircleAvatar(
                                 radius: 10,
-                                backgroundColor: AppColors().redColor,
+                                backgroundColor: appColors.redColor,
                                 child: const Icon(
                                   Iconsax.cloud_cross5,
                                   color: Colors.white,
@@ -100,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 icon: const Icon(
                                   Iconsax.calendar_1,
                                 ),
-                                color: AppColors().primaryColor,
+                                color: appColors.primaryColor,
                                 splashRadius: 20.0,
                                 iconSize: 25.0,
                               );
@@ -117,9 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .pushNamed('/authentication');
                                   },
                                   style: TextButton.styleFrom(
-                                    foregroundColor: AppColors()
-                                        .primaryColor
-                                        .withOpacity(.5),
+                                    foregroundColor:
+                                        appColors.primaryColor.withOpacity(.5),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30),
                                     ),
@@ -127,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     'Connect',
                                     style: TextStyle(
-                                      color: AppColors().primaryColor,
+                                      color: appColors.primaryColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -168,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: screen.height * .21,
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   decoration: BoxDecoration(
-                    color: AppColors().primaryColor,
+                    color: appColors.primaryColor,
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w900,
-                            color: AppColors().primaryColor,
+                            color: appColors.primaryColor,
                           ),
                         ),
                       ),
@@ -294,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
-        backgroundColor: AppColors().primaryColor,
+        backgroundColor: appColors.primaryColor,
         foregroundColor: Colors.white,
         child: const Icon(
           Iconsax.note_add5,

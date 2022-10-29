@@ -136,7 +136,7 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
                                   child: const Text(
                                     'Cancel',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

@@ -207,6 +207,8 @@ class FirebaseServices {
     required String currentUserId,
     required String targetUserId,
   }) async {
+    await clearAllSharedCalendarViews(
+        currentUserId: currentUserId, targetUserId: targetUserId);
     await database
         .doc(currentUserId)
         .collection('SharedCalendar')

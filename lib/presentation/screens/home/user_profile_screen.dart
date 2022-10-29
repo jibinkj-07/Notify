@@ -52,6 +52,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors appColors = AppColors();
     //current user
     String userEmail = '';
     String username = '';
@@ -63,8 +64,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       userEmail = 'notify@notify.com';
       username = 'User';
     }
-
-    AppColors appColors = AppColors();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -112,6 +111,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               "Name",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 12,
                                 color: Colors.black54,
                               ),
                             ),
@@ -153,6 +153,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black54,
+                                fontSize: 12,
                               ),
                             ),
                           ),
@@ -192,6 +193,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black54,
+                                  fontSize: 12,
                                 ),
                               ),
                             ),

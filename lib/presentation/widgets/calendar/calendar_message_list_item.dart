@@ -97,8 +97,8 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
                     FirebaseServices().deleteChatUser(
-                      currentUserId: widget.currentUserId,
-                      targetUserId: widget.sharedUserId,
+                      currentUserId: widget.currentUserId.trim(),
+                      targetUserId: widget.sharedUserId.trim(),
                     );
                   },
                   child: ListTile(
@@ -109,7 +109,7 @@ class _CalendarMessageListItemState extends State<CalendarMessageListItem> {
                     subtitle: widget.readStatus
                         ? null
                         : Text(
-                            'New calendar view',
+                            'Shared calendar view',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors().primaryColor),

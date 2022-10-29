@@ -60,6 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     //variables
     final screen = MediaQuery.of(context).size;
+    final AppColors appColors = AppColors();
 
     const List<String> eventNames = <String>[
       'Birthday',
@@ -120,11 +121,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Add Event",
                       style: TextStyle(
-                        fontSize: 23,
+                        fontSize: 24,
                         fontWeight: FontWeight.w900,
+                        color: appColors.primaryColor,
                       ),
                     ),
                     TextButton(
@@ -132,7 +134,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: AppColors().primaryColor,
+                        foregroundColor: appColors.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -140,7 +142,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       child: const Text(
                         'Cancel',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -187,10 +189,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors().primaryColor,
+                                color: appColors.primaryColor,
                               ),
                               textAlign: TextAlign.center,
-                              cursorColor: AppColors().primaryColor,
+                              cursorColor: appColors.primaryColor,
                               maxLength: 25,
                               textCapitalization: TextCapitalization.sentences,
                               textInputAction: TextInputAction.next,
@@ -200,7 +202,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                 hintText: 'Title',
                                 hintStyle: TextStyle(
                                   color:
-                                      AppColors().primaryColor.withOpacity(.35),
+                                      appColors.primaryColor.withOpacity(.35),
                                 ),
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
@@ -313,7 +315,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                           ),
                                           Icon(
                                             Icons.arrow_forward_ios_rounded,
-                                            color: AppColors().primaryColor,
+                                            color: appColors.primaryColor,
                                           ),
                                         ],
                                       ),
@@ -381,7 +383,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                           ),
                                           Icon(
                                             Icons.arrow_forward_ios_rounded,
-                                            color: AppColors().primaryColor,
+                                            color: appColors.primaryColor,
                                           ),
                                         ],
                                       ),
@@ -460,7 +462,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                           ),
                                           Icon(
                                             Icons.arrow_forward_ios_rounded,
-                                            color: AppColors().primaryColor,
+                                            color: appColors.primaryColor,
                                           ),
                                         ],
                                       ),
@@ -524,11 +526,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               Navigator.of(context).pop();
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors().primaryColor,
+                        backgroundColor: appColors.primaryColor,
                         disabledBackgroundColor:
-                            AppColors().primaryColor.withOpacity(.2),
+                            appColors.primaryColor.withOpacity(.2),
                         disabledForegroundColor:
-                            AppColors().primaryColor.withOpacity(.4),
+                            appColors.primaryColor.withOpacity(.4),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                             vertical: 13, horizontal: 100),
