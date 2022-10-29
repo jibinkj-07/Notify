@@ -257,7 +257,7 @@ class _UserCloudEventSyncState extends State<UserCloudEventSync> {
                                                   ),
                                                 ),
                                                 child: const Text(
-                                                  "Go to Home",
+                                                  "Skip",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
