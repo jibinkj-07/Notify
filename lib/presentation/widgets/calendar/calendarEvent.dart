@@ -67,7 +67,9 @@ class CalendarEvent extends StatelessWidget {
                   // size: 30,
                 ),
               ),
-              direction: DismissDirection.endToStart,
+              direction: isSharedView
+                  ? DismissDirection.none
+                  : DismissDirection.endToStart,
               onDismissed: (direction) {
                 NotificationService().cancelNotification(id: notificationId);
                 Provider.of<EventDataServices>(context, listen: false)
