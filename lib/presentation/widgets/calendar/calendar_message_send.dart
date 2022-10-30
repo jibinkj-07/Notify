@@ -63,16 +63,25 @@ class _CalendarMessageSendState extends State<CalendarMessageSend> {
     if (shareOption == 'month' && widget.userAllEvents.isNotEmpty) {
       sortedUserEvents = widget.userAllEvents.where((element) {
         final dateFromEvents = element['eventDate'].toString();
-        final selectedMonth =
-            '${widget.sharingDateTime.year}-${widget.sharingDateTime.month}';
+        final month = widget.sharingDateTime.month.toString().length < 2
+            ? '0${widget.sharingDateTime.month}'
+            : '${widget.sharingDateTime.month}';
+
+        final selectedMonth = '${widget.sharingDateTime.year}-$month';
         return dateFromEvents.contains(selectedMonth);
       }).toList();
       // log('sorted events from month are $sortedUserEvents');
     } else if (shareOption == 'day' && widget.userAllEvents.isNotEmpty) {
       sortedUserEvents = widget.userAllEvents.where((element) {
         final dateFromEvents = element['eventDate'].toString();
-        final selectedDay =
-            '${widget.sharingDateTime.year}-${widget.sharingDateTime.month}-${widget.sharingDateTime.day}';
+        final month = widget.sharingDateTime.month.toString().length < 2
+            ? '0${widget.sharingDateTime.month}'
+            : '${widget.sharingDateTime.month}';
+
+        final day = widget.sharingDateTime.day.toString().length < 2
+            ? '0${widget.sharingDateTime.day}'
+            : '${widget.sharingDateTime.day}';
+        final selectedDay = '${widget.sharingDateTime.year}-$month-$day';
         return dateFromEvents.contains(selectedDay);
       }).toList();
       log('sorted events from day are $sortedUserEvents');
