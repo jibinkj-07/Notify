@@ -1,7 +1,5 @@
 import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'dart:developer';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'cloud_sync_state.dart';
@@ -10,7 +8,8 @@ class CloudSyncCubit extends Cubit<CloudSyncState> with HydratedMixin {
   CloudSyncCubit() : super(CloudSyncInitial());
 
   void cloudDataSynced() {
-    emit(const CloudSyncState(isSynced: true, hasData: true));
+    log('cloud data synced and hasdata is ${state.hasData}');
+    emit(CloudSyncState(isSynced: true, hasData: state.hasData));
   }
 
   void cloudHasData() {

@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mynotify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/cubit/authentication_cubit.dart';
+import 'package:notify/logic/services/firebase_services.dart';
+import 'package:notify/presentation/screens/onboarding/user_cloud_event_sync.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -12,9 +15,15 @@ class AuthenticationHelper {
   AuthenticationHelper({required this.parentContext});
   final FirebaseAuth _auth = FirebaseAuth.instance;
   get user => _auth.currentUser;
+  FirebaseServices firebaseServices = FirebaseServices();
 
   //SIGN UP METHOD
-  Future signUp({required String email, required String password}) async {
+  Future signUp({
+    required String username,
+    required String email,
+    required String password,
+    required String gender,
+  }) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(
@@ -22,8 +31,17 @@ class AuthenticationHelper {
         password: password,
       )
           .then((result) {
-        parentContext.read<AuthenticationCubit>().loggingWithCloud();
+        parentContext
+            .read<AuthenticationCubit>()
+            .loggingWithCloud(gender: gender);
+        User? user = result.user;
+        user!.updateDisplayName(username);
 
+        firebaseServices.createProfile(
+            email: email,
+            username: username,
+            userId: result.user!.uid,
+            gender: gender);
         //navigating to homescreen
         Navigator.of(parentContext)
             .pushNamedAndRemoveUntil('/home', (Route route) => false);
@@ -42,15 +60,30 @@ class AuthenticationHelper {
   }
 
   //SIGN IN METHOD
-  Future signIn({required String email, required String password}) async {
+  Future signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((result) {
-        parentContext.read<AuthenticationCubit>().loggingWithCloud();
+        // parentContext.read<AuthenticationCubit>().loggingWithCloud();
+        FirebaseFirestore.instance
+            .collection('AllUserEvents')
+            .doc(result.user!.uid)
+            .get()
+            .then((value) {
+          final gender = value.get('gender');
+          Navigator.of(parentContext).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (_) => UserCloudEventSync(gender: gender),
+              ),
+              (route) => false);
+        });
         //navigating to homescreen
-        Navigator.of(parentContext)
-            .pushNamedAndRemoveUntil('/user-sync', (Route route) => false);
+        // Navigator.of(parentContext)
+        //     .pushNamedAndRemoveUntil('/user-sync', (Route route) => false);
       });
     } on FirebaseAuthException catch (e) {
       if (e.toString().contains('user-not-found')) {
@@ -65,7 +98,7 @@ class AuthenticationHelper {
         showTopSnackBar(
           parentContext,
           const CustomSnackBar.error(
-            message: "Invalid passowrd",
+            message: "Invalid password",
           ),
         );
         return 'error';

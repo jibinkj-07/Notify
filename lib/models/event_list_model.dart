@@ -6,7 +6,8 @@ class EventListModel {
   final int notificationId;
   final String title;
   final String notes;
-  final DateTime dateTime;
+  final DateTime startTime;
+  final DateTime endTime;
   final String eventDate;
   final String eventType;
 
@@ -15,7 +16,8 @@ class EventListModel {
     required this.notificationId,
     required this.title,
     required this.notes,
-    required this.dateTime,
+    required this.startTime,
+    required this.endTime,
     required this.eventDate,
     required this.eventType,
   });
@@ -26,7 +28,8 @@ class EventListModel {
       'notificationId': notificationId,
       'title': title,
       'notes': notes,
-      'dateTime': dateTime.millisecondsSinceEpoch,
+      'startTime': startTime.millisecondsSinceEpoch,
+      'endTime': endTime.millisecondsSinceEpoch,
       'eventDate': eventDate,
       'eventType': eventType,
     };
@@ -38,7 +41,8 @@ class EventListModel {
       notificationId: map['notificationId'] as int,
       title: map['title'] as String,
       notes: map['notes'] as String,
-      dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime'] as int),
+      startTime: DateTime.fromMillisecondsSinceEpoch(map['startTime'] as int),
+      endTime: DateTime.fromMillisecondsSinceEpoch(map['endTime'] as int),
       eventDate: map['eventDate'] as String,
       eventType: map['eventType'] as String,
     );

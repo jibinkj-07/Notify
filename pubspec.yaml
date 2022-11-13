@@ -1,4 +1,4 @@
-name: mynotify
+name: notify
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 2.10.30+2
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -56,6 +56,10 @@ dependencies:
   flutter_countdown_timer:
   table_calendar: ^3.0.7
   share_plus: ^5.0.0
+  flutter_native_splash: ^2.2.11
+  skeletons: ^0.0.3
+  percent_indicator: ^4.0.1
+
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +86,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/illustrations/
+    - assets/images/illustrations/events/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
