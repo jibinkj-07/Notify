@@ -1,6 +1,6 @@
-# mynotify
+# Notify
 
-A new Flutter project.
+A Flutter project which help users to save their memorable events not only locally but also cloud wise. Also users can share their event calender with other users, month wise or day wise.
 
 
 # Sample Output
